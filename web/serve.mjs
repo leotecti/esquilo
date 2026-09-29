@@ -4,7 +4,7 @@ import {stat} from 'node:fs/promises';
 import {resolve, extname, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const root = resolve(fileURLToPath(new URL('../builds/web/etapa_4/', import.meta.url)));
+const root = resolve(fileURLToPath(new URL('../builds/web/etapa_5/', import.meta.url)));
 const port = Number(process.env.PORT || 8080);
 const host = process.env.HOST || '127.0.0.1';
 const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.webmanifest':'application/manifest+json','.wasm':'application/wasm','.pck':'application/octet-stream','.png':'image/png','.svg':'image/svg+xml'};

@@ -14,7 +14,7 @@ test('teclado, salto, planar, pausa e tela cheia',async({page})=>{
   await boot(page);
   const initial=await snapshot(page);
   expect(initial.health).toBe(3);
-  expect(initial.total_nuts).toBe(14);
+  expect(initial.total_nuts).toBe(9);
   expect(initial.hud_width).toBe(initial.width);
   expect(initial.bar_width).toBeGreaterThan(initial.width-100);
   expect(initial.touch).toBe(false);
@@ -104,25 +104,83 @@ test('celular emulado: multitoque, planar, pausa, rotação e alvos',async({brow
   await context.close();
 });
 
-test('minigame: percurso completo, resultado e nova partida',async({page})=>{
+test('dupla: pedra, túnel, investida, faro, chegada e nova partida',async({page})=>{
   const errors=[];
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
   await boot(page);
   await page.keyboard.down('ArrowRight');
-  for(let i=0;i<30;i++) {
-    await page.keyboard.down('Space'); await page.waitForTimeout(750);
-    await page.keyboard.up('Space'); await page.waitForTimeout(750);
-    if((await snapshot(page)).completed) break;
-  }
+  await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(320);
+  await page.keyboard.down('Space');
+  await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(720);
+  await page.keyboard.up('Space');
+  await page.keyboard.up('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).grounded).toBe(true);
+  await page.keyboard.press('q');
+  await expect.poll(async()=>(await snapshot(page)).character).toBe('Pipo');
+  await page.keyboard.down('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).gate_open,{timeout:15000}).toBe(true);
+  await page.keyboard.up('ArrowRight');
+  await page.keyboard.press('q');
+  await expect.poll(async()=>(await snapshot(page)).character).toBe('Tico');
+  await page.keyboard.down('ArrowRight'); await page.keyboard.down('Space');
+  await expect.poll(async()=>(await snapshot(page)).x,{timeout:12000}).toBeGreaterThan(1280);
+  await page.keyboard.up('Space');
+  await expect.poll(async()=>(await snapshot(page)).x,{timeout:10000}).toBeGreaterThan(2020);
+  await page.keyboard.up('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).checkpoint).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).grounded).toBe(true);
+  await page.keyboard.press('q');
+  await expect.poll(async()=>(await snapshot(page)).character).toBe('Pipo');
+  await page.keyboard.down('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(2110);
+  await page.keyboard.up('ArrowRight');
+  await page.keyboard.press('e');
+  await expect.poll(async()=>(await snapshot(page)).heavy_broken).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).ability).toBe('ready');
+  await page.keyboard.down('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).secret_revealed,{timeout:10000}).toBe(true);
+  await page.screenshot({path:'builds/web/preview-etapa5-faro.png'});
+  await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(2970);
+  await page.keyboard.down('Space'); await page.waitForTimeout(850); await page.keyboard.up('Space');
+  await expect.poll(async()=>(await snapshot(page)).completed,{timeout:10000}).toBe(true);
   await page.keyboard.up('ArrowRight');
   await expect.poll(async()=>(await snapshot(page)).completed).toBe(true);
   await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
   expect((await snapshot(page)).nuts).toBeGreaterThan(0);
-  await page.screenshot({path:'builds/web/preview-etapa4-final.png'});
+  await page.screenshot({path:'builds/web/preview-etapa5-final.png'});
   // Botão Jogar de novo no painel central do canvas.
   await page.mouse.click(640,440);
   await expect.poll(async()=>(await snapshot(page)).completed).toBe(false);
   await expect.poll(async()=>(await snapshot(page)).nuts).toBe(0);
   expect((await snapshot(page)).health).toBe(3);
   expect(errors).toEqual([]);
+});
+
+test('Pipo no touch: trocar, investir com direção e cancelar contatos',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true});
+  const page=await context.newPage();
+  const errors=[];page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
+  await page.goto('http://127.0.0.1:8080/tico/?test=1');
+  await page.locator('#play').tap();
+  await expect.poll(()=>page.evaluate(()=>window.__ticoTest?.grounded),{timeout:45000}).toBe(true);
+  let s=await snapshot(page);
+  const r=s.switch_rect;
+  expect(r[3]*390/s.height).toBeGreaterThanOrEqual(44);
+  await page.touchscreen.tap((r[0]+r[2]/2)*844/s.width,(r[1]+r[3]/2)*390/s.height);
+  await expect.poll(async()=>(await snapshot(page)).character).toBe('Pipo');
+  s=await snapshot(page);
+  const point=(name,id)=>({id,x:(s.buttons[name][0]+64)*844/s.width,y:(s.buttons[name][1]+64)*390/s.height});
+  const cdp=await context.newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point('Right',1),point('Action',2)]});
+  await expect.poll(async()=>(await snapshot(page)).ability,{intervals:[30,50,100]}).toBe('prepare');
+  await expect.poll(async()=>(await snapshot(page)).ability,{intervals:[30,50,100]}).toBe('charge');
+  await page.screenshot({path:'builds/web/preview-etapa5-pipo-touch.png'});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+  await expect.poll(async()=>(await snapshot(page)).right).toBe(false);
+  await expect.poll(async()=>(await snapshot(page)).action).toBe(false);
+  await expect.poll(async()=>(await snapshot(page)).ability).toBe('ready');
+  await page.touchscreen.tap((r[0]+r[2]/2)*844/s.width,(r[1]+r[3]/2)*390/s.height);
+  await expect.poll(async()=>(await snapshot(page)).character).toBe('Tico');
+  expect(errors).toEqual([]);
+  await context.close();
 });

@@ -3,14 +3,15 @@
 Destino informado: **https://projetosdoleo.com/tico/**.
 Hospedagem informada: **HostGator**. As instruções abaixo usam o cPanel.
 O usuário aprovou publicação, instalação, jogabilidade e offline da **etapa 3**.
-A **etapa 4 — Trilha das Nozes** está preparada localmente para atualizar o site.
+O usuário também confirmou publicação e bom funcionamento da **etapa 4**.
+A **etapa 5 — Trilha da Amizade** está preparada localmente para atualizar o site.
 
 ## Pacote
 
-`builds/web/Tico-etapa-4-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-etapa-5-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `etapa_4` entre `/tico/` e os arquivos.
+Não coloque outra pasta `etapa_5` entre `/tico/` e os arquivos.
 
 1. Guarde uma cópia do conteúdo existente em `/tico/` antes da substituição.
 2. No cPanel da HostGator, abra **Gerenciador de arquivos** e localize a raiz
@@ -53,10 +54,11 @@ O cache offline é administrado pelo service worker dentro de `/tico/`.
 7. Feche novamente, desligue Wi-Fi e dados móveis e reabra pelo ícone.
    Pressione Jogar e confirme movimento, salto e planar sem conexão.
 
-Na etapa 4, teste também dano, pisão, blocos, recuperação e bandeira. Perca
-os três corações após ativar a bandeira e confira o retorno; chegue à árvore,
-confira o resultado e use Jogar de novo. AÇÃO continua reservada para interações
-futuras. Pipo ainda não está implementado. Os gráficos permanecem provisórios.
+Na etapa 5, teste Trocar, o movimento mais pesado de Pipo, empurrar a pedra,
+passar pelo túnel com Tico, investir na parede com Pipo e seguir as partículas
+do faro. Perca a vida após ativar a bandeira e confira personagem, corações e
+progresso do puzzle no retorno. Chegue à árvore e use Jogar de novo.
+O botão INVESTIR é o mesmo AÇÃO; o faro é automático. Os gráficos são provisórios.
 
 ## Atualizações
 

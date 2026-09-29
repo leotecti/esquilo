@@ -26,6 +26,15 @@ func _physics_process(delta: float) -> void:
 	for body in $Contact.get_overlapping_bodies():
 		if not body.is_in_group("player") or not body.controls_enabled:
 			continue
+		var player_shape: CollisionShape2D = body.get_node("Collision")
+		var player_rect: Rect2 = player_shape.global_transform * player_shape.shape.get_rect()
+		var contact_rect: Rect2 = $Contact/Collision.global_transform * $Contact/Collision.shape.get_rect()
+		if not contact_rect.intersects(player_rect):
+			continue
+		if body.is_in_group("pipo") and body.ability == "charge":
+			defeated = true
+			stomped.emit(self)
+			break
 		if body.velocity.y > 0.0 and body.previous_position.y <= global_position.y - 22.0:
 			defeated = true
 			body.bounce()

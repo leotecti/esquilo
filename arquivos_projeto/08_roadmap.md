@@ -691,8 +691,9 @@ abrir novamente
 
 **Execução:** implementação e testes técnicos concluídos. A Trilha das Nozes
 possui vida, lesmas, pisão, nozes, blocos, checkpoint e resultado. Uma fase
-completa foi percorrida por testes de engine e navegador. Marco 3 disponível
-para playtest do usuário. Resultados: `tests/etapa_4.md`.
+completa foi percorrida por testes de engine e navegador. O usuário publicou
+a etapa 4 e confirmou que funcionou muito bem. Marco 3 aprovado.
+Resultados: `tests/etapa_4.md`.
 
 ## OBJETIVO
 
@@ -857,6 +858,11 @@ Deverá existir uma pequena fase jogável do início ao fim.
 ---
 
 # 52. ETAPA 5 — PIPO
+
+**Execução:** Pipo, troca, empurrar, investida, faro e puzzle cooperativo
+implementados na Trilha da Amizade. Testes em `tests/etapa_5.md`.
+O marco 4 aguarda playtest para confirmar a clareza dos papéis e o conforto
+da troca e das ações no celular físico.
 
 ## OBJETIVO
 

@@ -1,15 +1,17 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 4 — Gameplay básico: implementação e testes técnicos concluídos
+**Etapa atual:** 5 — Pipo: implementação e testes técnicos concluídos
 
-**Próximo trabalho:** playtest da Trilha das Nozes e atualização da PWA na HostGator
+**Próximo trabalho:** publicar a etapa 5 e avaliar troca, força e agilidade no celular
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
 **Marco 2 — Tico PWA:** concluído; instalação, jogabilidade e offline aprovados
 
-**Marco 3 — Tico Mini Game:** fase completa disponível para playtest
+**Marco 3 — Tico Mini Game:** publicado e aprovado pelo usuário
+
+**Marco 4 — Tico + Pipo:** implementado; clareza dos papéis e conforto aguardam playtest
 
 ## Etapa 0 — Entregas
 
@@ -48,7 +50,8 @@ pacote oficial. Os templates Web da mesma versão também foram instalados.
 O SDK/JDK para Android nativo e ferramentas gráficas adicionais serão
 preparados quando essas atividades começarem. A etapa 3 inclui testes de
 navegador e toque emulado; o usuário também aprovou instalação, jogabilidade
-e offline da etapa 3 no aparelho. A nova fase da etapa 4 aguarda playtest.
+e offline da etapa 3 no aparelho. A etapa 4 também foi publicada e aprovada.
+A nova fase da etapa 5 aguarda playtest.
 
 ## Etapa 1 — Entregas
 
@@ -84,8 +87,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Jogar a Trilha das Nozes, publicar o pacote da etapa 4 e verificar a atualização
-da PWA no celular. Depois, etapa 5 — Pipo, conforme o roadmap.
+Publicar o pacote da etapa 5 e jogar a Trilha da Amizade no celular.
+Avaliar se fica claro quando usar cada personagem e se Trocar/INVESTIR são
+confortáveis. Depois, etapa 6 — Protótipo completo, conforme o roadmap.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
 jogabilidade muito boa em `https://projetosdoleo.com/tico/`. Também confirmou
 o teste offline no aparelho, encerrando a etapa 3 e o marco 2.
@@ -143,12 +147,32 @@ Detalhes: [testes da etapa 3](../tests/etapa_3.md) e
 - [x] Fase percorrida do início ao fim nos testes de engine e navegador.
 - [x] 99 verificações de engine e quatro cenários de navegador aprovados.
 - [x] Pacotes Web e Windows da etapa 4 preparados.
-- [ ] Playtest do usuário e publicação desta atualização na HostGator.
+- [x] Usuário publicou a etapa 4 e confirmou que funcionou muito bem.
 
 Cena: `scenes/levels/tico_minigame.tscn`. O playground continua disponível
 separadamente. Os builds antigos foram preservados. A fase tem 14 nozes
 opcionais, três lesmas, um item de recuperação, uma bandeira e uma chegada.
 Detalhes: [testes da etapa 4](../tests/etapa_4.md).
+
+## Etapa 5 — Entregas
+
+- [x] `pipo.tscn` e `pipo.gd`, arte provisória com camisa verde e referência preservada.
+- [x] Movimento mais pesado: velocidade e salto menores; Pipo não plana.
+- [x] Pedra empurrável somente por Pipo, com limite de deslocamento.
+- [x] Bloco pesado quebrável somente pela investida de Pipo.
+- [x] Preparação, avanço, impacto e recuperação, com postura, som e fragmentos.
+- [x] Faro automático, pista direcional em partículas e noz escondida.
+- [x] Q/Trocar, câmera e HUD do personagem ativo, vida e contador compartilhados.
+- [x] Verificação de espaço na troca; personagem inativo sem colisão ou controle.
+- [x] Puzzle: empurrar a pedra, abrir o portão e atravessar com Tico.
+- [x] Checkpoint, derrota, reinício e resultado adaptados à dupla.
+- [x] 54 testes novos de integração e 99 verificações anteriores aprovados.
+- [x] Cinco cenários de navegador, incluindo troca e investida por multitoque.
+- [ ] Publicação e playtest da etapa 5 em celular físico.
+
+Cena: `scenes/levels/coop_trail.tscn`. Pacotes:
+`builds/web/Tico-etapa-5-web.zip` e `builds/windows/Tico-etapa-5-windows.zip`.
+Detalhes e roteiro: [testes da etapa 5](../tests/etapa_5.md).
 
 ## Decisões ainda abertas
 

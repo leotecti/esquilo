@@ -28,6 +28,11 @@ func _draw() -> void:
 func _collect(body: Node2D) -> void:
 	if taken or not body.is_in_group("player") or not body.controls_enabled:
 		return
+	var body_shape: CollisionShape2D = body.get_node("Collision")
+	var body_rect: Rect2 = body_shape.global_transform * body_shape.shape.get_rect()
+	var area_rect: Rect2 = $Collision.global_transform * $Collision.shape.get_rect()
+	if not area_rect.intersects(body_rect):
+		return
 	if healing and not body.recover():
 		return
 	taken = true

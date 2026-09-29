@@ -2844,4 +2844,38 @@ Testes e critérios de playtest: `tests/etapa_4.md`.
 
 ---
 
+## DEC-110 — PIPO E TROCA NO PROTÓTIPO
+
+**Categoria:** Personagens / Input / Cooperação
+
+**Status:** IMPLEMENTADA; PLAYTEST DA ETAPA 5 PENDENTE
+
+Pipo usa arte vetorial provisória baseada em `img/porquinho.png`, com camisa
+verde, corpo maior, focinho e boné claros. Seu controlador reutiliza vida e
+salto básico de Tico, com velocidade de 220 px/s, aceleração de 1300 px/s²,
+salto de -500 px/s e corpo de 48 × 72. Pipo não plana; Tico mantém os parâmetros
+aprovados e corpo de 32 × 56. Valores continuam provisórios e ajustáveis.
+
+Empurrar acontece ao caminhar contra uma pedra apropriada. AÇÃO/E inicia a
+investida no chão: preparação de 0,22 s, avanço de até 0,42 s a 580 px/s,
+recuperação de 0,30 s. Impactar uma parede encerra o avanço. Som, postura e
+fragmentos comunicam a ação. A investida afasta lesmas e quebra blocos pesados.
+O faro é automático a 300 px de um segredo; partículas indicam a direção e
+a aproximação a 90 px revela a noz. Não adicionar botão exclusivo de faro.
+
+Q/Trocar alterna no chão, fora de ações, pausa, derrota e conclusão. Preservar
+vida, proteção e nozes; desativar física e colisão do personagem inativo.
+Verificar o espaço do novo corpo antes de trocar, admitindo ajuste horizontal
+de até 12 px junto a obstáculos. Pipo não pode aparecer dentro do túnel baixo.
+Contatos de áreas também conferem a posição atual, evitando ativações indevidas
+após reposicionar ou reativar um personagem.
+
+A Trilha da Amizade tem uma pedra que abre um portão, passagem de 64 px para
+Tico, checkpoint, parede pesada, segredo, lesmas e chegada. Empurrar e atravessar
+formam o primeiro puzzle da dupla. A etapa 6 ainda construirá o protótipo
+completo previsto no roadmap. Retorno após derrota preserva o puzzle; reinício
+completo restaura os objetos e seleciona Tico. Sem save persistente nesta etapa.
+
+---
+
 **FIM DO DOCUMENTO**

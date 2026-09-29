@@ -51,10 +51,18 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_tick_status(delta)
+	_move_character(delta)
+
+
+func _tick_status(delta: float) -> void:
 	previous_position = global_position
 	invulnerability_left = maxf(0.0, invulnerability_left - delta)
 	_hurt_left = maxf(0.0, _hurt_left - delta)
 	sprite.modulate.a = 0.45 if invulnerability_left > 0.0 and fmod(invulnerability_left, 0.16) < 0.08 else 1.0
+
+
+func _move_character(delta: float) -> void:
 	if not controls_enabled:
 		velocity = Vector2.ZERO
 		return
@@ -138,6 +146,7 @@ func _update_animation() -> void:
 
 func reset_at(point: Vector2) -> void:
 	global_position = point
+	force_update_transform()
 	previous_position = point
 	controls_enabled = true
 	_hurt_left = 0.0

@@ -10,6 +10,12 @@ func _ready() -> void:
 func _on_body(body: Node2D) -> void:
 	if activated or not body.is_in_group("player") or not body.controls_enabled:
 		return
+	# Uma troca pode ocorrer antes de a física atualizar os contatos da área.
+	var body_shape: CollisionShape2D = body.get_node("Collision")
+	var body_rect: Rect2 = body_shape.global_transform * body_shape.shape.get_rect()
+	var area_rect: Rect2 = $Collision.global_transform * $Collision.shape.get_rect()
+	if not area_rect.intersects(body_rect):
+		return
 	activated = true
 	queue_redraw()
 	reached.emit(self)

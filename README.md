@@ -5,10 +5,10 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 4 implementada: **Trilha das Nozes**, uma pequena fase com corações,
-lesmas, pisão, coleta, blocos, checkpoint e chegada com resultado.
-As etapas 2 e 3 foram aprovadas pelo usuário, incluindo instalação e offline.
-A nova fase está pronta para playtest e atualização da versão na HostGator.
+Etapa 4 publicada e aprovada pelo usuário. Etapa 5 implementada:
+**Trilha da Amizade**, com Tico e Pipo, troca, empurrar, investida, faro e
+um desafio que exige a força de Pipo e a passagem estreita de Tico.
+A nova versão está pronta para playtest e atualização na HostGator.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -16,7 +16,7 @@ Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 1. Use **Godot 4.7.2 stable, edição padrão** (sem .NET).
 2. No gerenciador da Godot, importe o arquivo `project.godot` desta pasta.
 3. Abra o projeto e pressione **F6** para executar a cena aberta ou **F5**
-   para executar o projeto e abrir a Trilha das Nozes.
+   para executar o projeto e abrir a Trilha da Amizade.
 4. Use **F8** para interromper a execução e **Ctrl+S** para salvar a cena.
 
 Nesta máquina, a instalação escolhida fica em
@@ -52,27 +52,34 @@ Na fase, A/D e setas movem Tico. Toque em Espaço para um salto curto;
 segure para subir mais. Durante a queda, manter Espaço abre a cauda e permite
 planar por até 2 segundos. Soltar encerra o planar; aterrissar recarrega a cauda.
 Esc pausa e retoma. O botão **Recomeçar** volta ao início, inclusive durante a pausa.
-Perder o foco da janela pausa o jogo. E e Q permanecem reservados, sem efeito aqui.
+Perder o foco da janela pausa o jogo. **Q/Trocar** alterna os personagens;
+**E/AÇÃO** inicia a investida de Pipo. A troca acontece no chão, fora da
+investida e onde há espaço para o outro personagem.
 No celular, use ◀/▶ e PULO; manter PULO durante a queda permite planar.
-AÇÃO está ligada ao input reservado, ainda sem interação nesta fase. Gamepad futuro.
+Com Pipo, AÇÃO passa a mostrar **INVESTIR**. Seu faro é automático perto de
+segredos, sem botão extra. Gamepad futuro.
 
-### Como jogar a Trilha das Nozes
+### Como jogar a Trilha da Amizade
 
-- Colete as 14 nozes pelos caminhos baixo e alto; uma está no bloco dourado.
-- Pule sobre a lesma para afastá-la e receber um pequeno impulso.
-- Bata por baixo: o bloco rachado quebra e o dourado libera uma noz uma vez.
-- Você tem três corações e 1,5 s de proteção após dano. O item com símbolo
-  de recuperação devolve um coração; a bandeira recupera a vida e marca o retorno.
-- Ao perder os corações, Tico retorna ao último ponto seguro. Nozes e blocos
-  utilizados permanecem como estavam; as lesmas voltam a patrulhar.
+- Colete até nove nozes; uma está escondida e exige o faro de Pipo.
+- Chame Pipo e caminhe contra a pedra para empurrá-la até a marca dourada.
+- Troque para Tico, pule a pedra e entre na passagem baixa aberta.
+- Ative a bandeira. Chame Pipo e use E/INVESTIR na parede pesada.
+- Perto dos arbustos, siga as partículas douradas do faro para revelar o segredo.
+- Os amigos compartilham três corações. Trocar não recupera vida. A bandeira
+  recupera os corações e marca o retorno.
+- Ao perder a vida, o personagem ativo retorna ao ponto seguro; nozes,
+  pedra, passagem aberta e parede quebrada permanecem como estavam.
 - Entre na árvore no fim da trilha para concluir. Coletar todas as nozes é opcional.
 - **Recomeçar** ou **Jogar de novo** reinicia a fase inteira.
 
-## Web/PWA — etapa 4
+As cenas das etapas anteriores continuam disponíveis para abrir com F6.
+
+## Web/PWA — etapa 5
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-etapa-4-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
-O build da etapa 3 foi preservado. O upload da etapa 4 ainda precisa ser feito.
+`builds/web/Tico-etapa-5-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+Os builds anteriores foram preservados. O upload da etapa 5 ainda precisa ser feito.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
 
@@ -87,10 +94,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da etapa 4
+## Build Windows da etapa 5
 
-Abra `builds/windows/etapa_4/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-4-windows.zip` contém os dois arquivos.
+Abra `builds/windows/etapa_5/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-etapa-5-windows.zip` contém os dois arquivos.
 É um build de desenvolvimento com gráficos provisórios em SVG e formas 2D. As pranchas
 em `img/` continuam sendo a referência para a arte final.
 
@@ -100,8 +107,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_4 | Out-Null
-& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_4/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/etapa_5 | Out-Null
+& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_5/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -157,6 +164,7 @@ $godotConsole = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.
 & $godotConsole --headless --path . --script tests/foundation_test.gd
 & $godotConsole --headless --path . --script tests/tico_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/minigame_test.gd --fixed-fps 60
+& $godotConsole --headless --path . --script tests/coop_test.gd --fixed-fps 60
 ```
 
 Esses comandos verificam importação, execução, input, colisões, salto, planar,
@@ -164,4 +172,5 @@ câmera e pausa. Resultados em [testes da etapa 1](tests/etapa_1.md) e
 [testes da etapa 2](tests/etapa_2.md). O usuário aprovou o playtest da etapa 2.
 Os testes Web/PWA estão em [testes da etapa 3](tests/etapa_3.md).
 O gameplay e a nova versão Web estão em [testes da etapa 4](tests/etapa_4.md).
+Pipo e a cooperação estão em [testes da etapa 5](tests/etapa_5.md).
 O build Android nativo permanece para uma etapa futura.

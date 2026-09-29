@@ -23,6 +23,7 @@ func _ready() -> void:
 		button.shape = hit_shape
 		button.passby_press = binding[0] in ["Left", "Right"]
 		var caption := Label.new()
+		caption.name = "Caption"
 		caption.text = binding[2]
 		if binding[0] in ["Left", "Right"]:
 			caption.text = ""
@@ -92,3 +93,9 @@ func release_all() -> void:
 
 func is_portrait() -> bool:
 	return _portrait
+
+
+func set_action_caption(text: String) -> void:
+	var caption: Label = _buttons["Action"].get_node("Caption")
+	caption.text = text
+	caption.add_theme_font_size_override("font_size", 21 if text.length() > 5 else 27)

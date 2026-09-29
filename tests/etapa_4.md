@@ -74,6 +74,6 @@ erros de script. O ZIP Web foi conferido quanto aos arquivos essenciais.
 6. Alcance a árvore, veja o resultado e reinicie a partida.
 7. Após publicar, atualize a PWA e repita o percurso e o offline no celular.
 
-A aprovação de jogabilidade da etapa 3 está preservada. Esta fase adiciona
-inimigos, áudio e objetivos e ainda precisa do playtest do usuário no aparelho;
-os testes automatizados não medem conforto ou FPS do celular.
+Os testes automatizados não medem conforto ou FPS do celular.
+O usuário confirmou o upload da etapa 4 e relatou que
+funcionou muito bem, autorizando o início da etapa 5. Marco 3 aprovado.
