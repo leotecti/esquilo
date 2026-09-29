@@ -3,7 +3,7 @@
 **Data:** 2026-09-29  
 **Etapa atual:** 5 — Pipo: implementação e testes técnicos concluídos
 
-**Próximo trabalho:** publicar a etapa 5 e avaliar troca, força e agilidade no celular
+**Próximo trabalho:** confirmar faro e conclusão do puzzle no playtest da etapa 5
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -11,7 +11,7 @@
 
 **Marco 3 — Tico Mini Game:** publicado e aprovado pelo usuário
 
-**Marco 4 — Tico + Pipo:** implementado; clareza dos papéis e conforto aguardam playtest
+**Marco 4 — Tico + Pipo:** controles aprovados pelo usuário; faro e percurso completo aguardam confirmação
 
 ## Etapa 0 — Entregas
 
@@ -51,7 +51,7 @@ O SDK/JDK para Android nativo e ferramentas gráficas adicionais serão
 preparados quando essas atividades começarem. A etapa 3 inclui testes de
 navegador e toque emulado; o usuário também aprovou instalação, jogabilidade
 e offline da etapa 3 no aparelho. A etapa 4 também foi publicada e aprovada.
-A nova fase da etapa 5 aguarda playtest.
+Na etapa 5, o usuário confirmou acesso, corrida, salto, troca, empurrar e ação.
 
 ## Etapa 1 — Entregas
 
@@ -168,7 +168,8 @@ Detalhes: [testes da etapa 4](../tests/etapa_4.md).
 - [x] Checkpoint, derrota, reinício e resultado adaptados à dupla.
 - [x] 54 testes novos de integração e 99 verificações anteriores aprovados.
 - [x] Cinco cenários de navegador, incluindo troca e investida por multitoque.
-- [ ] Publicação e playtest da etapa 5 em celular físico.
+- [x] Usuário confirmou acesso e funcionamento de corrida, salto, troca, empurrar e ação.
+- [ ] Confirmar faro e conclusão do puzzle no playtest; aparelho não informado.
 
 Cena: `scenes/levels/coop_trail.tscn`. Pacotes:
 `builds/web/Tico-etapa-5-web.zip` e `builds/windows/Tico-etapa-5-windows.zip`.

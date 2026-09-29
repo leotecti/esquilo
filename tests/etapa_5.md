@@ -76,8 +76,10 @@ O cancelamento de toque libera direção e ação. Capturas em `builds/web/`:
 O executável Windows exportado foi aberto a partir da pasta do build em modo
 headless, encerrando com código 0 e sem erros. As capturas Web foram inspecionadas.
 
-A etapa 5 ainda precisa ser publicada e jogada no celular físico. Avaliar:
-se força/agilidade ficam claras, conforto do botão Trocar, compreensão da
-investida e do faro, espaço dos botões, resposta e fluidez. Repetir atualização
-da PWA e reabertura offline. A emulação não mede desempenho do aparelho.
-O marco 4 depende dessa aprovação de experiência do usuário.
+O usuário confirmou acesso normal e funcionamento de corrida, salto, troca
+de personagem, empurrar e botão de ação. Esses controles estão aprovados no
+playtest relatado. O aparelho e o navegador não foram especificados.
+
+Falta confirmar no playtest o faro para encontrar o segredo e a conclusão do
+puzzle até a chegada. Esses fluxos já passaram nos testes automatizados.
+A emulação não mede desempenho do aparelho.
