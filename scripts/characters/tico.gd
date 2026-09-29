@@ -2,6 +2,18 @@ extends CharacterBody2D
 ## Controlador de Tico. Valores iniciais ajustáveis no Inspector para playtest.
 
 signal landed
+signal health_changed(current: int)
+signal hurt
+signal defeated
+
+@export_group("Vida")
+@export var max_health: int = 3
+@export var invulnerability_duration: float = 1.5
+var health: int = 3
+var invulnerability_left: float = 0.0
+var controls_enabled: bool = true
+var previous_position: Vector2
+var _hurt_left: float = 0.0
 
 @export_group("Movimento")
 @export var move_speed: float = 300.0
@@ -34,10 +46,18 @@ var _reset_pending: bool = false
 
 
 func _ready() -> void:
+	health = max_health
 	glide_remaining = glide_duration
 
 
 func _physics_process(delta: float) -> void:
+	previous_position = global_position
+	invulnerability_left = maxf(0.0, invulnerability_left - delta)
+	_hurt_left = maxf(0.0, _hurt_left - delta)
+	sprite.modulate.a = 0.45 if invulnerability_left > 0.0 and fmod(invulnerability_left, 0.16) < 0.08 else 1.0
+	if not controls_enabled:
+		velocity = Vector2.ZERO
+		return
 	# A informação de contato da física anterior não vale após reposicionar.
 	var grounded := is_on_floor() and not _reset_pending
 	_reset_pending = false
@@ -54,7 +74,8 @@ func _physics_process(delta: float) -> void:
 	var rate := acceleration if grounded else air_acceleration
 	if is_zero_approx(direction):
 		rate = deceleration if grounded else air_acceleration
-	velocity.x = move_toward(velocity.x, direction * move_speed, rate * delta)
+	if _hurt_left <= 0.0:
+		velocity.x = move_toward(velocity.x, direction * move_speed, rate * delta)
 	if not is_zero_approx(direction):
 		facing = signf(direction)
 
@@ -83,7 +104,14 @@ func _physics_process(delta: float) -> void:
 			gravity_multiplier = fall_gravity_multiplier
 		velocity.y += get_gravity().y * gravity_multiplier * delta
 		velocity.y = minf(velocity.y, glide_fall_speed if _gliding else max_fall_speed)
+	var rising: bool = velocity.y < 0.0
 	move_and_slide()
+	if rising:
+		for index in get_slide_collision_count():
+			var collision := get_slide_collision(index)
+			var collider = collision.get_collider()
+			if collision.get_normal().y > 0.5 and collider.has_method("hit_from_below"):
+				collider.hit_from_below()
 
 	if is_on_floor() and not grounded:
 		_landing_left = 0.10
@@ -110,6 +138,9 @@ func _update_animation() -> void:
 
 func reset_at(point: Vector2) -> void:
 	global_position = point
+	previous_position = point
+	controls_enabled = true
+	_hurt_left = 0.0
 	velocity = Vector2.ZERO
 	facing = 1.0
 	_coyote_left = 0.0
@@ -123,3 +154,40 @@ func reset_at(point: Vector2) -> void:
 	if is_node_ready():
 		sprite.flip_h = false
 		sprite.play(state)
+
+
+func take_damage(source: Vector2) -> bool:
+	if health <= 0 or invulnerability_left > 0.0 or not controls_enabled:
+		return false
+	health -= 1
+	invulnerability_left = invulnerability_duration
+	_hurt_left = 0.2
+	velocity = Vector2(-240.0 if source.x >= global_position.x else 240.0, -240.0)
+	_jump_cut_applied = true
+	health_changed.emit(health)
+	hurt.emit()
+	if health == 0:
+		controls_enabled = false
+		defeated.emit()
+	return true
+
+
+func recover(amount: int = 1) -> bool:
+	if health <= 0 or health >= max_health:
+		return false
+	health = mini(max_health, health + amount)
+	health_changed.emit(health)
+	return true
+
+
+func restore_health() -> void:
+	health = max_health
+	health_changed.emit(health)
+
+
+func bounce() -> void:
+	velocity.y = -360.0
+	_jump_cut_applied = true
+	_coyote_left = 0.0
+	_buffer_left = 0.0
+	_reset_pending = true

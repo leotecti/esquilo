@@ -13,6 +13,10 @@ test('teclado, salto, planar, pausa e tela cheia',async({page})=>{
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
   await boot(page);
   const initial=await snapshot(page);
+  expect(initial.health).toBe(3);
+  expect(initial.total_nuts).toBe(14);
+  expect(initial.hud_width).toBe(initial.width);
+  expect(initial.bar_width).toBeGreaterThan(initial.width-100);
   expect(initial.touch).toBe(false);
   await page.keyboard.down('ArrowRight');
   await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(initial.x+70);
@@ -63,6 +67,8 @@ test('celular emulado: multitoque, planar, pausa, rotação e alvos',async({brow
   await page.getByRole('button',{name:'Jogar',exact:true}).tap();
   await expect.poll(()=>page.evaluate(()=>Boolean(window.__ticoTest)),{timeout:45000}).toBe(true);
   const s=await snapshot(page); expect(s.touch).toBe(true);
+  expect(s.hud_width).toBe(s.width);
+  expect(s.bar_width).toBeGreaterThan(s.width-100);
   const point=(name,id)=>({id,x:(s.buttons[name][0]+64)*844/s.width,y:(s.buttons[name][1]+64)*390/s.height});
   expect(128*390/s.height).toBeGreaterThanOrEqual(44);
   const cdp=await context.newCDPSession(page);
@@ -96,4 +102,27 @@ test('celular emulado: multitoque, planar, pausa, rotação e alvos',async({brow
   await page.keyboard.press('Escape');
   await expect.poll(async()=>(await snapshot(page)).paused).toBe(false);
   await context.close();
+});
+
+test('minigame: percurso completo, resultado e nova partida',async({page})=>{
+  const errors=[];
+  page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
+  await boot(page);
+  await page.keyboard.down('ArrowRight');
+  for(let i=0;i<30;i++) {
+    await page.keyboard.down('Space'); await page.waitForTimeout(750);
+    await page.keyboard.up('Space'); await page.waitForTimeout(750);
+    if((await snapshot(page)).completed) break;
+  }
+  await page.keyboard.up('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).completed).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
+  expect((await snapshot(page)).nuts).toBeGreaterThan(0);
+  await page.screenshot({path:'builds/web/preview-etapa4-final.png'});
+  // Botão Jogar de novo no painel central do canvas.
+  await page.mouse.click(640,440);
+  await expect.poll(async()=>(await snapshot(page)).completed).toBe(false);
+  await expect.poll(async()=>(await snapshot(page)).nuts).toBe(0);
+  expect((await snapshot(page)).health).toBe(3);
+  expect(errors).toEqual([]);
 });

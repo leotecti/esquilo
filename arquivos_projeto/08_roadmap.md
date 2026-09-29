@@ -689,6 +689,11 @@ abrir novamente
 
 # 40. ETAPA 4 — GAMEPLAY BÁSICO
 
+**Execução:** implementação e testes técnicos concluídos. A Trilha das Nozes
+possui vida, lesmas, pisão, nozes, blocos, checkpoint e resultado. Uma fase
+completa foi percorrida por testes de engine e navegador. Marco 3 disponível
+para playtest do usuário. Resultados: `tests/etapa_4.md`.
+
 ## OBJETIVO
 
 Transformar Tico Playground em um pequeno jogo.

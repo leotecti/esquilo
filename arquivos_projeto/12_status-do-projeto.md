@@ -1,13 +1,15 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 3 — Web, touch e PWA: concluída
+**Etapa atual:** 4 — Gameplay básico: implementação e testes técnicos concluídos
 
-**Próximo trabalho:** etapa 4 — Gameplay básico
+**Próximo trabalho:** playtest da Trilha das Nozes e atualização da PWA na HostGator
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
 **Marco 2 — Tico PWA:** concluído; instalação, jogabilidade e offline aprovados
+
+**Marco 3 — Tico Mini Game:** fase completa disponível para playtest
 
 ## Etapa 0 — Entregas
 
@@ -45,7 +47,8 @@ pacote oficial. Os templates Web da mesma versão também foram instalados.
 
 O SDK/JDK para Android nativo e ferramentas gráficas adicionais serão
 preparados quando essas atividades começarem. A etapa 3 inclui testes de
-navegador e toque emulado; o celular físico ainda precisa ser validado.
+navegador e toque emulado; o usuário também aprovou instalação, jogabilidade
+e offline da etapa 3 no aparelho. A nova fase da etapa 4 aguarda playtest.
 
 ## Etapa 1 — Entregas
 
@@ -81,7 +84,8 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Etapa 4 — Gameplay básico, conforme o roadmap.
+Jogar a Trilha das Nozes, publicar o pacote da etapa 4 e verificar a atualização
+da PWA no celular. Depois, etapa 5 — Pipo, conforme o roadmap.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
 jogabilidade muito boa em `https://projetosdoleo.com/tico/`. Também confirmou
 o teste offline no aparelho, encerrando a etapa 3 e o marco 2.
@@ -100,11 +104,11 @@ o teste offline no aparelho, encerrando a etapa 3 e o marco 2.
 - [x] Build Windows executado fora do projeto e capturas inspecionadas.
 - [x] Playtest humano: usuário testou, considerou bem jogável e aprovou avançar.
 
-Build atual: `builds/windows/etapa_2/Tico.exe` com `Tico.pck`.
+Build preservado da etapa 2: `builds/windows/etapa_2/Tico.exe` com `Tico.pck`.
 Pacote: `builds/windows/Tico-etapa-2-windows.zip`.
 Registro: [testes da etapa 2](../tests/etapa_2.md).
 
-A cena principal agora abre o playground de Tico. A área e o build da etapa 1
+Na etapa 2, a cena principal passou a abrir o playground de Tico. A área e o build da etapa 1
 foram preservados. A arte vetorial é provisória; Pipo, inimigos, coleta,
 áudio ainda não fazem parte deste playground. Touch e Web/PWA foram adicionados
 na etapa 3, sem alterar os parâmetros de movimento aprovados.
@@ -126,6 +130,25 @@ O retorno aprova a experiência de jogo; não foi fornecida medição de FPS.
 Pacote: `builds/web/Tico-etapa-3-web.zip`.
 Detalhes: [testes da etapa 3](../tests/etapa_3.md) e
 [publicação](../web/deployment.md).
+
+## Etapa 4 — Entregas
+
+- [x] Três corações, dano, reação, proteção temporária, recuperação e derrota.
+- [x] Lesma com patrulha, viradas, dano lateral, pisão e saída amigável.
+- [x] Nozes com som, feedback visual, contagem e prevenção de coleta duplicada.
+- [x] HUD de corações e nozes, adaptado a teclado e toque.
+- [x] Blocos comum, quebrável e de noz, acionados por cabeçada.
+- [x] Checkpoint, retorno com vida restaurada e regras de reinício definidas.
+- [x] Chegada com controles bloqueados, comemoração, resultado e nova partida.
+- [x] Fase percorrida do início ao fim nos testes de engine e navegador.
+- [x] 99 verificações de engine e quatro cenários de navegador aprovados.
+- [x] Pacotes Web e Windows da etapa 4 preparados.
+- [ ] Playtest do usuário e publicação desta atualização na HostGator.
+
+Cena: `scenes/levels/tico_minigame.tscn`. O playground continua disponível
+separadamente. Os builds antigos foram preservados. A fase tem 14 nozes
+opcionais, três lesmas, um item de recuperação, uma bandeira e uma chegada.
+Detalhes: [testes da etapa 4](../tests/etapa_4.md).
 
 ## Decisões ainda abertas
 

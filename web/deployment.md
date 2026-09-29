@@ -2,15 +2,15 @@
 
 Destino informado: **https://projetosdoleo.com/tico/**.
 Hospedagem informada: **HostGator**. As instruções abaixo usam o cPanel.
-O usuário confirmou upload, acesso e instalação da PWA, com boa jogabilidade.
-O usuário também confirmou o teste de reabertura pelo ícone sem conexão.
+O usuário aprovou publicação, instalação, jogabilidade e offline da **etapa 3**.
+A **etapa 4 — Trilha das Nozes** está preparada localmente para atualizar o site.
 
 ## Pacote
 
-`builds/web/Tico-etapa-3-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-etapa-4-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `etapa_3` entre `/tico/` e os arquivos.
+Não coloque outra pasta `etapa_4` entre `/tico/` e os arquivos.
 
 1. Guarde uma cópia do conteúdo existente em `/tico/` antes da substituição.
 2. No cPanel da HostGator, abra **Gerenciador de arquivos** e localize a raiz
@@ -38,7 +38,7 @@ do site. Use `Cache-Control: no-cache` para HTML, JS, JSON, PCK e WASM;
 habilite gzip/Brotli para reduzir a transferência, especialmente do WASM.
 O cache offline é administrado pelo service worker dentro de `/tico/`.
 
-## Roteiro no celular — necessário para concluir a etapa 3
+## Roteiro no celular — repetir após atualizar
 
 1. Abra o endereço HTTPS com internet, em landscape. Aguarde a indicação
    **Pronto para jogar offline neste dispositivo** e pressione **Jogar**.
@@ -53,8 +53,10 @@ O cache offline é administrado pelo service worker dentro de `/tico/`.
 7. Feche novamente, desligue Wi-Fi e dados móveis e reabra pelo ícone.
    Pressione Jogar e confirme movimento, salto e planar sem conexão.
 
-AÇÃO está reservada para interações futuras. Pipo e troca de personagem ainda
-não fazem parte deste playground. Os gráficos permanecem provisórios.
+Na etapa 4, teste também dano, pisão, blocos, recuperação e bandeira. Perca
+os três corações após ativar a bandeira e confira o retorno; chegue à árvore,
+confira o resultado e use Jogar de novo. AÇÃO continua reservada para interações
+futuras. Pipo ainda não está implementado. Os gráficos permanecem provisórios.
 
 ## Atualizações
 

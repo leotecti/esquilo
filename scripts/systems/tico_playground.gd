@@ -92,6 +92,7 @@ func _process(_delta: float) -> void:
 				"height": get_viewport_rect().size.y, "buttons": buttons,
 				"right": Input.is_action_pressed("move_right"),
 				"jump": Input.is_action_pressed("jump"), "action": Input.is_action_pressed("action")}
+			snapshot.merge(_test_details())
 			JavaScriptBridge.eval("window.__ticoTest = " + JSON.stringify(snapshot))
 	if get_tree().paused:
 		status.text = "PAUSADO · Esc ou Continuar para voltar"
@@ -101,3 +102,7 @@ func _process(_delta: float) -> void:
 		status.text = "%s · Cauda: %.1f s" % [names.get(tico.state, ""), tico.glide_remaining]
 	if tico.position.y > 1100.0:
 		restart()
+
+
+func _test_details() -> Dictionary:
+	return {}

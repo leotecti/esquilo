@@ -5,7 +5,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const out = resolve(root, 'builds/web/etapa_3');
+const out = resolve(root, 'builds/web/etapa_4');
 const godot = process.env.GODOT_BIN || 'D:\\Godot\\Godot_v4.7.2-stable\\Godot_v4.7.2-stable_win64_console.exe';
 await mkdir(out,{recursive:true});
 await mkdir(resolve(root,'node_modules'),{recursive:true});

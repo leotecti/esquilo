@@ -2817,4 +2817,31 @@ e [TouchScreenButton](https://docs.godotengine.org/en/stable/classes/class_touch
 
 ---
 
+## DEC-109 — LOOP DO TICO MINI GAME
+
+**Categoria:** Gameplay / Estado da fase
+
+**Status:** IMPLEMENTADA PARA O PROTÓTIPO
+
+Manter os parâmetros de movimento aprovados e criar a Trilha das Nozes como
+cena própria. O playground permanece para regressão. Começar com três corações,
+1,5 s de proteção após dano e retorno amigável de aproximadamente 1 s ao perder
+todos. A recuperação restaura um coração; a bandeira restaura todos e define
+o ponto de retorno. Esses parâmetros continuam ajustáveis no protótipo.
+
+O pisão exige queda e contato por cima da lesma; contato lateral causa dano.
+O impulso do pisão é -360 px/s. Blocos frágeis e de noz respondem à cabeçada;
+blocos comuns permanecem sólidos. A fase tem 14 nozes opcionais; alcançar
+a árvore conclui a partida, bloqueia movimento e mostra o resultado.
+
+Ao retornar após derrota, preservar contador, itens consumidos e blocos usados,
+restaurando apenas vida, posição e inimigos. Recomeçar/Jogar de novo restaura
+a fase inteira. O checkpoint é local à partida; save persistente fica fora
+desta etapa. Pipo e a ação especial permanecem para as próximas etapas.
+
+Arte provisória em formas 2D e efeitos sonoros PCM sintetizados no jogo.
+Testes e critérios de playtest: `tests/etapa_4.md`.
+
+---
+
 **FIM DO DOCUMENTO**

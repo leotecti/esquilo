@@ -74,10 +74,10 @@ func run() -> void:
 	# SceneTree com --script/headless não herda necessariamente a janela do jogo.
 	root.size = Vector2i(1280, 720)
 	root.content_scale_size = Vector2i(1280, 720)
-	var main := load("res://scenes/main.tscn").instantiate() as Node2D
+	var main := load("res://scenes/levels/tico_playground.tscn").instantiate() as Node2D
 	root.add_child(main)
 	current_scene = main
-	level = main.get_node("TicoPlayground")
+	level = main
 	tico = level.get_node("Tico")
 	camera = level.get_node("FollowCamera")
 	await frames(35)
