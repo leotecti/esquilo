@@ -523,8 +523,8 @@ Tico deverá:
 
 **Execução em 2026-09-29:** exportação Web/PWA e controles touch implementados.
 Destino: `https://projetosdoleo.com/tico/`. O usuário confirmou publicação,
-acesso, instalação da PWA e jogabilidade muito boa. Falta confirmar a
-reabertura pelo ícone sem conexão no celular para concluir o marco 2.
+acesso, instalação da PWA, jogabilidade muito boa e teste de reabertura pelo
+ícone sem conexão no celular. Etapa 3 e marco 2 concluídos.
 Resultados e roteiro: `tests/etapa_3.md` e `web/deployment.md`.
 
 ## OBJETIVO

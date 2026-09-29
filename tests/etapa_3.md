@@ -43,9 +43,11 @@ dos controles. Capturas: `builds/web/preview-desktop.png` e `preview-touch.png`.
 O usuário confirmou upload na HostGator, acesso e instalação da PWA e avaliou
 a jogabilidade como “muito boa”. Não foi fornecida medição de FPS.
 
-## Pendência para concluir o marco 2
+## Conclusão — Marco 2 aprovado
 
-- Fechar e reabrir pelo ícone sem conexão no aparelho, confirmando que é possível jogar.
+O usuário confirmou a realização do teste offline solicitado: fechar a PWA,
+desligar Wi-Fi e dados móveis, reabrir pelo ícone e jogar. Com essa confirmação,
+a etapa 3 e o marco 2 — Tico PWA estão concluídos.
 
 A emulação confirma o funcionamento do input e do layout testado. A taxa de
 quadros do navegador automatizado não valida desempenho de um celular.

@@ -1,13 +1,13 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 3 — Web, touch e PWA: publicada e instalada pelo usuário
+**Etapa atual:** 3 — Web, touch e PWA: concluída
 
-**Próximo trabalho:** confirmar reabertura offline pelo ícone no celular
+**Próximo trabalho:** etapa 4 — Gameplay básico
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
-**Marco 2 — Tico PWA:** instalação e jogabilidade aprovadas; offline pendente
+**Marco 2 — Tico PWA:** concluído; instalação, jogabilidade e offline aprovados
 
 ## Etapa 0 — Entregas
 
@@ -81,9 +81,10 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Confirmar reabertura pelo ícone sem conexão em celular físico.
+Etapa 4 — Gameplay básico, conforme o roadmap.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
-jogabilidade muito boa em `https://projetosdoleo.com/tico/`.
+jogabilidade muito boa em `https://projetosdoleo.com/tico/`. Também confirmou
+o teste offline no aparelho, encerrando a etapa 3 e o marco 2.
 
 ## Etapa 2 — Entregas
 
@@ -118,7 +119,7 @@ na etapa 3, sem alterar os parâmetros de movimento aprovados.
 - [x] Publicação no endereço HTTPS informado, confirmada pelo usuário.
 - [x] Acesso e instalação da PWA confirmados pelo usuário.
 - [x] Jogabilidade aprovada pelo usuário: “muito boa”.
-- [ ] Fechar e reabrir pelo ícone sem conexão no celular físico.
+- [x] Fechar e reabrir pelo ícone sem conexão no celular físico: teste confirmado pelo usuário.
 
 O retorno aprova a experiência de jogo; não foi fornecida medição de FPS.
 

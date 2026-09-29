@@ -3,7 +3,7 @@
 Destino informado: **https://projetosdoleo.com/tico/**.
 Hospedagem informada: **HostGator**. As instruções abaixo usam o cPanel.
 O usuário confirmou upload, acesso e instalação da PWA, com boa jogabilidade.
-Ainda falta confirmar a reabertura pelo ícone sem conexão.
+O usuário também confirmou o teste de reabertura pelo ícone sem conexão.
 
 ## Pacote
 
