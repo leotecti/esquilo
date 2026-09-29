@@ -1,0 +1,19 @@
+# Cache e configurações locais da Godot.
+.godot/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Exportações, logs e credenciais locais.
+builds/*
+!builds/.gitkeep
+!builds/.gdignore
+*.log
+export_credentials.cfg
+.env
+.env.*
+!.env.example
+
+# Configurações pessoais dos editores.
+.vscode/
+.idea/
