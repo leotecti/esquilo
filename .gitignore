@@ -17,3 +17,8 @@ export_credentials.cfg
 # Configurações pessoais dos editores.
 .vscode/
 .idea/
+
+# Ferramentas e relatórios de teste Web.
+node_modules/
+playwright-report/
+test-results/

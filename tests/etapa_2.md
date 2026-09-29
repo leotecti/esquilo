@@ -84,11 +84,12 @@ configuração atual; não demonstram por si só que o controle é confortável.
 - Reposicionar Tico invalida o contato anterior com o chão, evitando coyote time
   incorreto após um teletransporte de teste.
 
-## Playtest pendente — Marco 1
+## Playtest aprovado — Marco 1
 
 A implementação e os testes técnicos estão concluídos. A seção 27 do roadmap
 exige avaliar se controlar Tico é divertido antes de avançar para a etapa 3.
-Essa avaliação humana ainda não foi realizada.
+Em 2026-09-29, o usuário confirmou que testou a etapa 2, considerou o jogo
+“bem jogável” e pediu o início da etapa 3. Marco 1 aprovado para o protótipo.
 
 Roteiro curto para jogar:
 

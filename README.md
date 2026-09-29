@@ -5,9 +5,9 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 2 implementada: Tico corre, pula, plana e possui animações provisórias
-em um playground com câmera e chão seguro. Os testes técnicos passaram;
-o marco 1 ainda precisa de playtest para avaliar o conforto e a diversão.
+Etapa 2 aprovada pelo usuário após jogar. A etapa 3 adiciona Web/PWA e controles
+de toque ao playground. A publicação e a validação em celular físico ainda
+são necessárias para concluir o marco 2.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -52,7 +52,26 @@ segure para subir mais. Durante a queda, manter Espaço abre a cauda e permite
 planar por até 2 segundos. Soltar encerra o planar; aterrissar recarrega a cauda.
 Esc pausa e retoma. O botão **Recomeçar** volta ao início, inclusive durante a pausa.
 Perder o foco da janela pausa o jogo. E e Q permanecem reservados, sem efeito aqui.
-Os botões touch serão conectados às mesmas ações na etapa 3. Gamepad futuro.
+No celular, use ◀/▶ e PULO; manter PULO durante a queda permite planar.
+AÇÃO está ligada ao input reservado, ainda sem interação no playground. Gamepad futuro.
+
+## Web/PWA — etapa 3
+
+Destino: **https://projetosdoleo.com/tico/**. Pacote local:
+`builds/web/Tico-etapa-3-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+
+Com Node.js instalado e templates Web 4.7.2 disponíveis:
+
+```powershell
+npm.cmd ci
+npm.cmd run build:web
+npm.cmd run serve:web
+```
+
+Abra `http://127.0.0.1:8080/tico/`. Gere sempre com `build:web`, pois o comando
+também prepara o manifesto, os ícones e a versão do cache offline. Em outra
+máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
+Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
 ## Build Windows da etapa 2
 
@@ -127,6 +146,6 @@ $godotConsole = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.
 
 Esses comandos verificam importação, execução, input, colisões, salto, planar,
 câmera e pausa. Resultados em [testes da etapa 1](tests/etapa_1.md) e
-[testes da etapa 2](tests/etapa_2.md). Antes da etapa 3, experimente o playground
-para avaliar se o controle é confortável e divertido, conforme o roadmap.
-Não há exportação Web/PWA nem build Android nesta etapa.
+[testes da etapa 2](tests/etapa_2.md). O usuário aprovou o playtest da etapa 2.
+Os testes Web/PWA estão em [testes da etapa 3](tests/etapa_3.md).
+O build Android nativo permanece para uma etapa futura.

@@ -1,9 +1,13 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 2 — Tico jogável: implementação e testes técnicos concluídos  
-**Próximo trabalho:** playtest do controle; depois, etapa 3 — Web, touch e PWA  
-**Marco 1 — Tico Playground:** disponível para jogar; validação de diversão pendente
+**Etapa atual:** 3 — Web, touch e PWA: implementação local
+
+**Próximo trabalho:** publicar em HTTPS e validar instalação/offline no celular
+
+**Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
+
+**Marco 2 — Tico PWA:** aguarda validação em celular físico
 
 ## Etapa 0 — Entregas
 
@@ -37,11 +41,11 @@ que foi preservada. Nenhum repositório remoto foi configurado.
 
 Templates Windows x86_64 4.7.2 stable instalados em
 `%APPDATA%\Godot\export_templates\4.7.2.stable`, após verificação SHA512 do
-pacote oficial. Os templates de outras plataformas ainda não foram instalados.
+pacote oficial. Os templates Web da mesma versão também foram instalados.
 
 O SDK/JDK para Android nativo e ferramentas gráficas adicionais serão
-preparados quando essas atividades começarem. Testes em celular real,
-touch e PWA ainda não foram executados.
+preparados quando essas atividades começarem. A etapa 3 inclui testes de
+navegador e toque emulado; o celular físico ainda precisa ser validado.
 
 ## Etapa 1 — Entregas
 
@@ -77,10 +81,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Jogar o playground e avaliar resposta, salto, planar e câmera. A seção 27 do
-roadmap pede validar se controlar Tico é divertido antes de avançar.
-Os testes técnicos não substituem essa avaliação. Após playtest e eventuais
-ajustes, iniciar a etapa 3 — Web, touch e PWA.
+Publicar o pacote Web em `https://projetosdoleo.com/tico/` e executar o roteiro
+de instalação, conforto dos controles e reabertura offline em celular físico.
+O endereço foi informado; o serviço e o método de envio ainda não foram informados.
 
 ## Etapa 2 — Entregas
 
@@ -94,7 +97,7 @@ ajustes, iniciar a etapa 3 — Web, touch e PWA.
 - [x] Pausa, pausa ao perder foco e botão Recomeçar.
 - [x] 45 verificações de Tico e 16 de regressão aprovadas.
 - [x] Build Windows executado fora do projeto e capturas inspecionadas.
-- [ ] Playtest humano: conforto, compreensão do planar e diversão.
+- [x] Playtest humano: usuário testou, considerou bem jogável e aprovou avançar.
 
 Build atual: `builds/windows/etapa_2/Tico.exe` com `Tico.pck`.
 Pacote: `builds/windows/Tico-etapa-2-windows.zip`.
@@ -102,7 +105,23 @@ Registro: [testes da etapa 2](../tests/etapa_2.md).
 
 A cena principal agora abre o playground de Tico. A área e o build da etapa 1
 foram preservados. A arte vetorial é provisória; Pipo, inimigos, coleta,
-áudio, touch e Web/PWA ainda não fazem parte deste playground.
+áudio ainda não fazem parte deste playground. Touch e Web/PWA foram adicionados
+na etapa 3, sem alterar os parâmetros de movimento aprovados.
+
+## Etapa 3 — Entregas
+
+- [x] Exportação Web sem threads, shell em português e caminhos relativos a `/tico/`.
+- [x] Botões multitoque de direção, pulo/planar e ação reservada.
+- [x] Layout landscape, áreas seguras, pausa em retrato e tela cheia.
+- [x] Manifesto, ícones, cache versionado e botão de atualização.
+- [x] Scripts de build, servidor local e testes de navegador reproduzíveis.
+- [ ] Publicação no endereço HTTPS informado.
+- [ ] Instalação pelo navegador, abertura pelo ícone e offline no celular físico.
+- [ ] Aprovação de conforto, visibilidade e desempenho no celular.
+
+Pacote: `builds/web/Tico-etapa-3-web.zip`.
+Detalhes: [testes da etapa 3](../tests/etapa_3.md) e
+[publicação](../web/deployment.md).
 
 ## Decisões ainda abertas
 

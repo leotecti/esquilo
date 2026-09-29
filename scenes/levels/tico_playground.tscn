@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/tico.tscn" id="1_tico"]
 [ext_resource type="Script" path="res://scripts/systems/tico_playground.gd" id="2_level"]
 [ext_resource type="Script" path="res://scripts/systems/follow_camera.gd" id="3_camera"]
+[ext_resource type="Script" path="res://scripts/ui/touch_controls.gd" id="4_touch"]
 [sub_resource type="RectangleShape2D" id="SafetyFloorShape"]
 size = Vector2(3800, 140)
 
@@ -351,7 +352,7 @@ offset_left = 32.0
 offset_top = 78.0
 theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
 theme_override_font_sizes/font_size = 19
-text = "A/D ou ←/→: correr · Espaço: pular · Segure no ar: planar"
+text = "A/D ou setas: correr · Espaço: pular · Segure no ar: planar"
 
 [node name="Status" type="Label" parent="Interface/HUD"]
 offset_left = 32.0
@@ -359,3 +360,12 @@ offset_top = 108.0
 theme_override_colors/font_color = Color(0.23, 0.35, 0.29, 1)
 theme_override_font_sizes/font_size = 18
 text = "Parado"
+
+[node name="TouchControls" type="Control" parent="Interface/HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("4_touch")

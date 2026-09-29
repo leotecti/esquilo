@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#244b37">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <meta name="description" content="Explore, pule e plane com Tico. Uma aventura sobre amizade na floresta.">
+  <title>$GODOT_PROJECT_NAME</title>
+  $GODOT_HEAD_INCLUDE
+  <style>
+    * { box-sizing:border-box; }
+    html,body { margin:0; width:100%; height:100%; overflow:hidden; background:#c4e0d9; color:#244b37; font-family:system-ui,sans-serif; }
+    canvas { display:block; outline:none; touch-action:none; }
+    button { font:inherit; font-weight:650; min-height:48px; padding:10px 20px; border:0; border-radius:14px; background:#244b37; color:#fff3d9; cursor:pointer; }
+    button:focus-visible { outline:3px solid #b66b2c; outline-offset:4px; }
+    button:disabled { opacity:.65; cursor:wait; }
+    [hidden] { display:none !important; }
+    .overlay { position:fixed; inset:0; z-index:10; display:grid; place-items:center; padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left)); background:#c4e0d9; text-align:center; }
+    .card { max-width:540px; }
+    .card img { width:112px; height:112px; border-radius:28px; }
+    h1 { font-size:clamp(25px,5vw,38px); line-height:1.1; margin:15px 0; }
+    p { line-height:1.5; }
+    progress { width:100%; height:18px; accent-color:#244b37; }
+    #notice { min-height:24px; }
+    #tools { position:fixed; z-index:3; bottom:max(8px,env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%); display:flex; gap:8px; }
+    #tools button { min-height:44px; padding:8px 14px; font-size:14px; background:#244b37dd; }
+    #rotate { z-index:20; display:none; }
+    #safe { position:fixed; visibility:hidden; pointer-events:none; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+    @media (pointer:coarse) and (orientation:portrait) { #rotate { display:grid; } }
+    @media (max-height:450px) { .card img { width:64px; height:64px; } h1 { margin:8px 0; } .card p { margin:8px 0; } }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" tabindex="0" aria-label="Tico Playground">Seu navegador precisa oferecer suporte a canvas.</canvas>
+  <div id="safe"></div>
+  <section id="boot" class="overlay">
+    <div class="card">
+      <img src="icon-192.png" alt="Tico, o esquilo">
+      <h1>Tico e a Floresta das Nozes</h1>
+      <p>Pule, explore e abra a cauda para planar!</p>
+      <button id="play" type="button">Jogar</button>
+      <progress id="progress" hidden aria-label="Carregando o jogo"></progress>
+      <p id="notice" role="status" aria-live="polite"></p>
+      <small id="offline-status">Preparando o jogo para funcionar offline…</small>
+    </div>
+  </section>
+  <section id="rotate" class="overlay"><div class="card"><h1>Vire o celular</h1><p>Jogue com a tela deitada para enxergar o caminho.</p></div></section>
+  <nav id="tools" aria-label="Opções do aplicativo">
+    <button id="install" type="button" hidden>Instalar</button>
+    <button id="fullscreen" type="button" hidden>Tela cheia</button>
+    <button id="update" type="button" hidden>Atualizar</button>
+  </nav>
+  <noscript><section class="overlay">Ative o JavaScript para jogar com Tico.</section></noscript>
+  <script src="$GODOT_URL"></script>
+  <script>
+    const config = $GODOT_CONFIG;
+    const engine = new Engine(config);
+    const canvas = document.getElementById('canvas');
+    const play = document.getElementById('play');
+    const notice = document.getElementById('notice');
+    const progress = document.getElementById('progress');
+    const install = document.getElementById('install');
+    const update = document.getElementById('update');
+    const fullscreen = document.getElementById('fullscreen');
+    let installPrompt;
+    let registration;
+    let started = false;
+    window.ticoSafeInsets = () => {
+      const s = getComputedStyle(document.getElementById('safe'));
+      return [s.paddingLeft,s.paddingTop,s.paddingRight,s.paddingBottom].map(v => parseFloat(v) || 0);
+    };
+    addEventListener('beforeinstallprompt', event => {
+      event.preventDefault(); installPrompt = event; install.hidden = false;
+    });
+    addEventListener('appinstalled', () => { install.hidden = true; installPrompt = null; });
+    install.addEventListener('click', async () => {
+      if (!installPrompt) return;
+      await installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null; install.hidden = true;
+      if (started) canvas.focus();
+    });
+    fullscreen.addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else { await document.documentElement.requestFullscreen(); await screen.orientation?.lock?.('landscape').catch(() => {}); }
+      } catch { /* O jogo permanece utilizável quando o navegador não oferece fullscreen. */ }
+      canvas.focus();
+    });
+    document.addEventListener('fullscreenchange', () => { fullscreen.textContent = document.fullscreenElement ? 'Sair da tela cheia' : 'Tela cheia'; });
+    update.addEventListener('click', () => registration?.waiting?.postMessage({type:'ACTIVATE_UPDATE'}));
+    if ('serviceWorker' in navigator && isSecureContext) {
+      navigator.serviceWorker.register(config.serviceWorker, {scope:'./', updateViaCache:'none'}).then(async reg => {
+        registration = reg;
+        const showUpdate = () => { update.hidden = !(reg.waiting && reg.active); };
+        showUpdate();
+        reg.addEventListener('updatefound', () => reg.installing?.addEventListener('statechange', showUpdate));
+        await navigator.serviceWorker.ready;
+        document.getElementById('offline-status').textContent = 'Pronto para jogar offline neste dispositivo.';
+      }).catch(() => { document.getElementById('offline-status').textContent = 'Jogue online. O modo offline ainda não está disponível.'; });
+      let hadController = Boolean(navigator.serviceWorker.controller);
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (hadController) location.reload();
+        hadController = true;
+      });
+    } else {
+      document.getElementById('offline-status').textContent = 'Instalação e modo offline ficam disponíveis pelo endereço HTTPS.';
+    }
+    play.addEventListener('click', async () => {
+      if (started) return;
+      play.disabled = true; progress.hidden = false; notice.textContent = 'Carregando a floresta…';
+      try {
+        const missing = Engine.getMissingFeatures({threads:false});
+        if (missing.length) throw new Error('Este navegador não oferece os recursos gráficos necessários. Tente um navegador atualizado.');
+        await engine.startGame({onProgress:(current,total) => {
+          if (total > 0) { progress.max = total; progress.value = current; }
+          else progress.removeAttribute('value');
+        }});
+        started = true;
+        document.getElementById('boot').hidden = true;
+        fullscreen.hidden = !document.fullscreenEnabled;
+        canvas.focus();
+      } catch (error) {
+        console.error(error);
+        notice.textContent = 'Não foi possível abrir o jogo. Verifique a conexão e tente novamente.';
+        progress.hidden = true; play.disabled = false; play.textContent = 'Tentar novamente';
+      }
+    });
+  </script>
+</body>
+</html>

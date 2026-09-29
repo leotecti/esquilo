@@ -495,7 +495,8 @@ Playtests deverão confirmar se a interação é intuitiva.
 
 Na etapa 2, a proposta foi implementada no playground: segurar pulo durante
 a queda ativa o planar por até 2 segundos, com recarga ao aterrissar.
-Os testes técnicos passaram. O status continua EM VALIDAÇÃO até o playtest;
+Os testes técnicos passaram e o usuário aprovou o playtest no teclado.
+O status continua EM VALIDAÇÃO para o touch em celular físico;
 o tempo inicial é ajustável e não representa balanceamento definitivo.
 
 Caso não seja:
@@ -2768,8 +2769,8 @@ até 110 px e limites. A cena principal passa a abrir esse playground;
 `test_level.tscn` permanece disponível para regressão da etapa 1.
 
 **Validação:** 45 verificações de Tico e 16 de regressão aprovadas, exportação
-Windows executada e capturas inspecionadas. O marco 1 permanece em playtest
-para avaliar conforto e diversão, conforme a seção 27 do roadmap.
+Windows executada e capturas inspecionadas. O usuário aprovou o playtest
+em 2026-09-29 e autorizou a etapa 3; marco 1 concluído para o protótipo.
 
 ## DEC-107 — ANIMAÇÕES PROVISÓRIAS EM VETOR
 
@@ -2785,6 +2786,33 @@ grande da referência `img/esquilo.png`. Planar abre a cauda acima do corpo.
 **Motivo:** tornar o personagem reconhecível e comunicar os estados de
 movimento enquanto o controle é testado. A prancha continua como referência
 da arte final; esses vetores não substituem seu acabamento ilustrado.
+
+---
+
+## DEC-108 — WEB/PWA DO PLAYGROUND
+
+**Categoria:** Distribuição / Input
+
+**Status:** IMPLEMENTADA; VALIDAÇÃO EM CELULAR PENDENTE
+
+**Data:** 2026-09-29
+
+Exportar com Compatibility, sem threads, e publicar os arquivos estáticos em
+`https://projetosdoleo.com/tico/`. Usar caminhos relativos, manifesto standalone
+em landscape e service worker com cache completo versionado pelo conteúdo.
+A atualização de uma sessão aberta exige o botão Atualizar; caches de outras
+aplicações não são removidos. Gerar pelo script `npm.cmd run build:web`.
+
+Usar `TouchScreenButton` para direções, PULO e AÇÃO, ligados ao mesmo Input Map
+do teclado. Manter os parâmetros de movimento aprovados na etapa 2. AÇÃO
+permanece reservada e a troca de personagem será introduzida com Pipo.
+
+Testes automatizados de navegador e multitoque emulado estão em
+`tests/browser/tico.spec.js`. Instalação pelo ícone, conforto e desempenho
+no celular físico precisam ser validados para concluir o marco 2.
+
+Referências: [exportação Web](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html)
+e [TouchScreenButton](https://docs.godotengine.org/en/stable/classes/class_touchscreenbutton.html).
 
 ---
 

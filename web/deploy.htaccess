@@ -1,0 +1,15 @@
+# Apache/LiteSpeed. Em nginx, configurar os equivalentes no servidor.
+DirectoryIndex index.html
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+  AddType application/json .json
+  AddType application/octet-stream .pck
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|js|json|pck|wasm)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE application/wasm application/javascript text/javascript application/json text/html application/octet-stream
+</IfModule>

@@ -1,0 +1,14 @@
+{
+  "name": "tico-floresta-nozes",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:web": "node web/build.mjs",
+    "serve:web": "node web/serve.mjs",
+    "test:web": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

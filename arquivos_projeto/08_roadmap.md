@@ -352,8 +352,8 @@ Concluir quando:
 # 18. ETAPA 2 — TICO JOGÁVEL
 
 **Execução em 2026-09-29:** implementação e verificações técnicas concluídas.
-O Tico Playground está disponível no build Windows da etapa 2. O playtest
-da seção 27 continua pendente; a etapa 3 ainda não foi iniciada.
+O usuário jogou o build Windows, considerou o controle bem jogável e autorizou
+a etapa 3. O playtest da seção 27 e o marco 1 estão aprovados para o protótipo.
 Resultados: `tests/etapa_2.md` e `arquivos_projeto/12_status-do-projeto.md`.
 
 ## OBJETIVO
@@ -520,6 +520,11 @@ Tico deverá:
 ---
 
 # 29. ETAPA 3 — WEB, TOUCH E PWA
+
+**Execução em 2026-09-29:** exportação Web/PWA e controles touch implementados.
+Destino informado: `https://projetosdoleo.com/tico/`. A conclusão depende da
+publicação e dos testes de instalação, conforto e offline no celular físico.
+Resultados e roteiro: `tests/etapa_3.md` e `web/deployment.md`.
 
 ## OBJETIVO
 
