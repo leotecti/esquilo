@@ -2712,4 +2712,33 @@ referência com assets finalizados nem tornar todos os detalhes imutáveis.
 
 ---
 
+## DEC-105 — FUNDAÇÃO TÉCNICA VALIDADA COM CORPO PROVISÓRIO
+
+**Categoria:** Arquitetura / Testes  
+**Status:** DECIDIDA  
+**Data:** 2026-09-29
+
+A etapa 1 usa `test_level.tscn` com geometria estática e um `CharacterBody2D`
+retangular para verificar teclado e colisões antes de implementar Tico.
+A cena principal instancia essa área de teste. O corpo provisório possui
+movimento e salto simples; E/Q apenas confirmam a recepção do comando.
+Esc pausa a física e mantém a interface de diagnóstico ativa.
+
+Física inicial: 60 ticks/s e gravidade 1200 px/s². A geometria usa World,
+e o corpo usa Player com máscara World. Grupos: `world`, `player` e
+`spawn_points`. Os valores do corpo de teste não definem o controle de Tico.
+
+Exportar um build Windows x86_64 de desenvolvimento, com EXE e PCK separados,
+usando os templates oficiais da mesma versão da engine. Versionar o preset;
+manter os binários em `builds/`, fora do Git.
+
+**Motivo:** testar input, física e o processo real de exportação no escopo
+da fundação técnica. A arte, câmera, planar e qualidade de controle de Tico
+permanecem na etapa 2.
+
+**Validação:** 16 verificações de integração aprovadas e executável Windows
+inicializado fora da pasta do projeto. Registro em `tests/etapa_1.md`.
+
+---
+
 **FIM DO DOCUMENTO**

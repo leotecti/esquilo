@@ -1013,6 +1013,12 @@ Planejamento conceitual:
 
 A configuração definitiva deverá ser registrada durante implementação.
 
+Na etapa 1, essas dez camadas foram nomeadas em `project.godot`. A geometria
+usa a camada World (1), sem máscara de detecção; o corpo de teste usa Player
+(2) e detecta World (máscara 1). Grupos iniciais: `world`, `player` e
+`spawn_points`. Física: 60 ticks/s e gravidade provisória de 1200 px/s².
+Os parâmetros de Tico serão definidos na etapa 2.
+
 ---
 
 # 48. ESTRUTURA DAS FASES

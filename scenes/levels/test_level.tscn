@@ -1,0 +1,145 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/systems/test_level.gd" id="1_level"]
+[ext_resource type="Script" path="res://scripts/characters/test_probe.gd" id="2_probe"]
+
+[sub_resource type="RectangleShape2D" id="ProbeShape"]
+size = Vector2(32, 44)
+
+[sub_resource type="RectangleShape2D" id="FloorShape"]
+size = Vector2(1280, 80)
+
+[sub_resource type="RectangleShape2D" id="LeftWallShape"]
+size = Vector2(32, 640)
+
+[sub_resource type="RectangleShape2D" id="RightWallShape"]
+size = Vector2(32, 640)
+
+[sub_resource type="RectangleShape2D" id="PlatformAShape"]
+size = Vector2(200, 24)
+
+[sub_resource type="RectangleShape2D" id="PlatformBShape"]
+size = Vector2(200, 24)
+
+[sub_resource type="RectangleShape2D" id="PlatformCShape"]
+size = Vector2(200, 24)
+[node name="TestLevel" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_level")
+
+[node name="Geometry" type="Node2D" parent="."]
+
+[node name="Floor" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(640, 680)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/Floor"]
+shape = SubResource("FloorShape")
+
+[node name="Visual" type="Polygon2D" parent="Geometry/Floor"]
+polygon = PackedVector2Array(-640, -40, 640, -40, 640, 40, -640, 40)
+color = Color(0.35, 0.55, 0.38, 1)
+
+[node name="LeftWall" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(16, 320)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/LeftWall"]
+shape = SubResource("LeftWallShape")
+
+[node name="Visual" type="Polygon2D" parent="Geometry/LeftWall"]
+polygon = PackedVector2Array(-16, -320, 16, -320, 16, 320, -16, 320)
+color = Color(0.35, 0.55, 0.38, 1)
+
+[node name="RightWall" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(1264, 320)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/RightWall"]
+shape = SubResource("RightWallShape")
+
+[node name="Visual" type="Polygon2D" parent="Geometry/RightWall"]
+polygon = PackedVector2Array(-16, -320, 16, -320, 16, 320, -16, 320)
+color = Color(0.35, 0.55, 0.38, 1)
+
+[node name="PlatformA" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(390, 550)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/PlatformA"]
+shape = SubResource("PlatformAShape")
+
+[node name="Visual" type="Polygon2D" parent="Geometry/PlatformA"]
+polygon = PackedVector2Array(-100, -12, 100, -12, 100, 12, -100, 12)
+color = Color(0.35, 0.55, 0.38, 1)
+
+[node name="PlatformB" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(650, 440)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/PlatformB"]
+shape = SubResource("PlatformBShape")
+
+[node name="Visual" type="Polygon2D" parent="Geometry/PlatformB"]
+polygon = PackedVector2Array(-100, -12, 100, -12, 100, 12, -100, 12)
+color = Color(0.35, 0.55, 0.38, 1)
+
+[node name="PlatformC" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(910, 330)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/PlatformC"]
+shape = SubResource("PlatformCShape")
+
+[node name="Visual" type="Polygon2D" parent="Geometry/PlatformC"]
+polygon = PackedVector2Array(-100, -12, 100, -12, 100, 12, -100, 12)
+color = Color(0.35, 0.55, 0.38, 1)
+[node name="PlayerSpawn" type="Marker2D" parent="." groups=["spawn_points"]]
+position = Vector2(140, 580)
+
+[node name="Visual" type="Polygon2D" parent="PlayerSpawn"]
+polygon = PackedVector2Array(-22, 54, 22, 54, 22, 58, -22, 58)
+color = Color(0.9, 0.83, 0.48, 1)
+
+[node name="TestProbe" type="CharacterBody2D" parent="." groups=["player"]]
+process_mode = 1
+position = Vector2(140, 580)
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("2_probe")
+
+[node name="Collision" type="CollisionShape2D" parent="TestProbe"]
+shape = SubResource("ProbeShape")
+
+[node name="Visual" type="Polygon2D" parent="TestProbe"]
+polygon = PackedVector2Array(-16, -22, 16, -22, 16, 22, -16, 22)
+color = Color(0.96, 0.64, 0.30, 1)
+
+[node name="Interface" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="VBoxContainer" parent="Interface"]
+offset_left = 56.0
+offset_top = 28.0
+offset_right = 1224.0
+offset_bottom = 150.0
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Interface/Panel"]
+theme_override_font_sizes/font_size = 28
+text = "Tico e a Floresta das Nozes · Área de teste"
+
+[node name="Instructions" type="Label" parent="Interface/Panel"]
+theme_override_font_sizes/font_size = 19
+text = "A/D ou ←/→: mover   ·   Espaço: pular   ·   Esc: pausar\nE e Q: verificar comandos reservados. O retângulo é um corpo de teste."
+
+[node name="Status" type="Label" parent="Interface/Panel"]
+theme_override_colors/font_color = Color(0.96, 0.80, 0.48, 1)
+theme_override_font_sizes/font_size = 19
+text = "Iniciando teste..."
