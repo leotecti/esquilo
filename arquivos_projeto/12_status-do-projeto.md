@@ -1,9 +1,9 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 5 — Pipo: implementação e testes técnicos concluídos
+**Etapa atual:** 5 — Pipo: concluída e aprovada pelo usuário
 
-**Próximo trabalho:** confirmar faro e conclusão do puzzle no playtest da etapa 5
+**Próximo trabalho:** etapa 6 — Protótipo completo
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -11,7 +11,7 @@
 
 **Marco 3 — Tico Mini Game:** publicado e aprovado pelo usuário
 
-**Marco 4 — Tico + Pipo:** controles aprovados pelo usuário; faro e percurso completo aguardam confirmação
+**Marco 4 — Tico + Pipo:** concluído; controles, faro e percurso completo aprovados
 
 ## Etapa 0 — Entregas
 
@@ -87,9 +87,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Publicar o pacote da etapa 5 e jogar a Trilha da Amizade no celular.
-Avaliar se fica claro quando usar cada personagem e se Trocar/INVESTIR são
-confortáveis. Depois, etapa 6 — Protótipo completo, conforme o roadmap.
+Etapa 6 — Protótipo completo, conforme o roadmap. O usuário confirmou os
+controles da etapa 5, a descoberta do segredo pelo faro e o percurso até a
+chegada, encerrando a etapa 5 e o marco 4.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
 jogabilidade muito boa em `https://projetosdoleo.com/tico/`. Também confirmou
 o teste offline no aparelho, encerrando a etapa 3 e o marco 2.
@@ -169,7 +169,7 @@ Detalhes: [testes da etapa 4](../tests/etapa_4.md).
 - [x] 54 testes novos de integração e 99 verificações anteriores aprovados.
 - [x] Cinco cenários de navegador, incluindo troca e investida por multitoque.
 - [x] Usuário confirmou acesso e funcionamento de corrida, salto, troca, empurrar e ação.
-- [ ] Confirmar faro e conclusão do puzzle no playtest; aparelho não informado.
+- [x] Usuário confirmou descoberta pelo faro e conclusão do puzzle até a chegada.
 
 Cena: `scenes/levels/coop_trail.tscn`. Pacotes:
 `builds/web/Tico-etapa-5-web.zip` e `builds/windows/Tico-etapa-5-windows.zip`.

@@ -8,7 +8,8 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 Etapa 4 publicada e aprovada pelo usuário. Etapa 5 implementada:
 **Trilha da Amizade**, com Tico e Pipo, troca, empurrar, investida, faro e
 um desafio que exige a força de Pipo e a passagem estreita de Tico.
-A nova versão está pronta para playtest e atualização na HostGator.
+O usuário aprovou acesso, controles, faro e percurso completo. Etapa 5 e
+marco 4 concluídos. Próxima etapa prevista: 6 — Protótipo completo.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -79,7 +80,7 @@ As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
 `builds/web/Tico-etapa-5-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
-Os builds anteriores foram preservados. O upload da etapa 5 ainda precisa ser feito.
+Os builds anteriores foram preservados. O usuário confirmou acesso e playtest da etapa 5.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
 

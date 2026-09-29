@@ -80,6 +80,6 @@ O usuário confirmou acesso normal e funcionamento de corrida, salto, troca
 de personagem, empurrar e botão de ação. Esses controles estão aprovados no
 playtest relatado. O aparelho e o navegador não foram especificados.
 
-Falta confirmar no playtest o faro para encontrar o segredo e a conclusão do
-puzzle até a chegada. Esses fluxos já passaram nos testes automatizados.
+O usuário também confirmou o faro para encontrar o segredo e a conclusão do
+puzzle até a chegada. Etapa 5 e marco 4 — Tico + Pipo concluídos e aprovados.
 A emulação não mede desempenho do aparelho.

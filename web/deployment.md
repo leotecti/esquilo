@@ -4,7 +4,8 @@ Destino informado: **https://projetosdoleo.com/tico/**.
 Hospedagem informada: **HostGator**. As instruções abaixo usam o cPanel.
 O usuário aprovou publicação, instalação, jogabilidade e offline da **etapa 3**.
 O usuário também confirmou publicação e bom funcionamento da **etapa 4**.
-A **etapa 5 — Trilha da Amizade** está preparada localmente para atualizar o site.
+Na **etapa 5 — Trilha da Amizade**, o usuário confirmou acesso e aprovou
+controles, faro e percurso completo.
 
 ## Pacote
 

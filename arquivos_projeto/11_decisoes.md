@@ -2848,7 +2848,7 @@ Testes e critérios de playtest: `tests/etapa_4.md`.
 
 **Categoria:** Personagens / Input / Cooperação
 
-**Status:** IMPLEMENTADA; PLAYTEST DA ETAPA 5 PENDENTE
+**Status:** VALIDADA PARA O PROTÓTIPO; MARCO 4 CONCLUÍDO
 
 Pipo usa arte vetorial provisória baseada em `img/porquinho.png`, com camisa
 verde, corpo maior, focinho e boné claros. Seu controlador reutiliza vida e

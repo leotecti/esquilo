@@ -861,8 +861,8 @@ Deverá existir uma pequena fase jogável do início ao fim.
 
 **Execução:** Pipo, troca, empurrar, investida, faro e puzzle cooperativo
 implementados na Trilha da Amizade. Testes em `tests/etapa_5.md`.
-O marco 4 aguarda playtest para confirmar a clareza dos papéis e o conforto
-da troca e das ações no celular físico.
+O usuário aprovou os controles, o faro e a conclusão do percurso no playtest.
+Etapa 5 e marco 4 — Tico + Pipo concluídos.
 
 ## OBJETIVO
 
