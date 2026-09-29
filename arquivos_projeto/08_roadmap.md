@@ -351,6 +351,11 @@ Concluir quando:
 
 # 18. ETAPA 2 — TICO JOGÁVEL
 
+**Execução em 2026-09-29:** implementação e verificações técnicas concluídas.
+O Tico Playground está disponível no build Windows da etapa 2. O playtest
+da seção 27 continua pendente; a etapa 3 ainda não foi iniciada.
+Resultados: `tests/etapa_2.md` e `arquivos_projeto/12_status-do-projeto.md`.
+
 ## OBJETIVO
 
 Criar o primeiro elemento realmente importante do jogo:

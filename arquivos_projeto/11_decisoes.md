@@ -493,6 +493,11 @@ Evitar botão adicional no touchscreen.
 
 Playtests deverão confirmar se a interação é intuitiva.
 
+Na etapa 2, a proposta foi implementada no playground: segurar pulo durante
+a queda ativa o planar por até 2 segundos, com recarga ao aterrissar.
+Os testes técnicos passaram. O status continua EM VALIDAÇÃO até o playtest;
+o tempo inicial é ajustável e não representa balanceamento definitivo.
+
 Caso não seja:
 
 a decisão poderá ser revista.
@@ -2738,6 +2743,48 @@ permanecem na etapa 2.
 
 **Validação:** 16 verificações de integração aprovadas e executável Windows
 inicializado fora da pasta do projeto. Registro em `tests/etapa_1.md`.
+
+---
+
+## DEC-106 — CONTROLADOR E PLAYGROUND DE TICO
+
+**Categoria:** Gameplay / Arquitetura  
+**Status:** DECIDIDA PARA O PROTÓTIPO  
+**Data:** 2026-09-29
+
+Na etapa 2, implementar Tico como `CharacterBody2D` em `tico.tscn`, com
+controlador `tico.gd`, aceleração, frenagem, controle aéreo, salto variável,
+coyote time de 0,10 s e jump buffer de 0,12 s. Usar estados simples para
+selecionar animações; não criar uma arquitetura genérica de estados nesta etapa.
+
+Implementar a proposta da DEC-013: planar segurando pulo durante a queda,
+com 2 s disponíveis e recarga ao aterrissar. Soltar o botão encerra o planar;
+pressionar novamente no mesmo voo utiliza o tempo restante.
+Parâmetros são provisórios, expostos no Inspector e registrados em `tests/etapa_2.md`.
+
+Criar um playground de 3800 × 900 com chão seguro, plataformas progressivas
+e uma travessia longa. A câmera acompanha com suavização, antecipação de
+até 110 px e limites. A cena principal passa a abrir esse playground;
+`test_level.tscn` permanece disponível para regressão da etapa 1.
+
+**Validação:** 45 verificações de Tico e 16 de regressão aprovadas, exportação
+Windows executada e capturas inspecionadas. O marco 1 permanece em playtest
+para avaliar conforto e diversão, conforme a seção 27 do roadmap.
+
+## DEC-107 — ANIMAÇÕES PROVISÓRIAS EM VETOR
+
+**Categoria:** Direção visual / Produção  
+**Status:** DECIDIDA PARA O PROTÓTIPO  
+**Data:** 2026-09-29
+
+Usar 11 quadros SVG originais e simples em `assets/characters/tico/`, com
+`AnimatedSprite2D` nos estados idle, run, jump, fall, glide e land. A aparência
+provisória preserva cores quentes, áreas claras, olhos expressivos e cauda
+grande da referência `img/esquilo.png`. Planar abre a cauda acima do corpo.
+
+**Motivo:** tornar o personagem reconhecível e comunicar os estados de
+movimento enquanto o controle é testado. A prancha continua como referência
+da arte final; esses vetores não substituem seu acabamento ilustrado.
 
 ---
 

@@ -1,0 +1,361 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/tico.tscn" id="1_tico"]
+[ext_resource type="Script" path="res://scripts/systems/tico_playground.gd" id="2_level"]
+[ext_resource type="Script" path="res://scripts/systems/follow_camera.gd" id="3_camera"]
+[sub_resource type="RectangleShape2D" id="SafetyFloorShape"]
+size = Vector2(3800, 140)
+
+[sub_resource type="RectangleShape2D" id="LeftWallShape"]
+size = Vector2(32, 900)
+
+[sub_resource type="RectangleShape2D" id="RightWallShape"]
+size = Vector2(32, 900)
+
+[sub_resource type="RectangleShape2D" id="StepAShape"]
+size = Vector2(220, 24)
+
+[sub_resource type="RectangleShape2D" id="StepBShape"]
+size = Vector2(220, 24)
+
+[sub_resource type="RectangleShape2D" id="StepCShape"]
+size = Vector2(240, 24)
+
+[sub_resource type="RectangleShape2D" id="TakeoffShape"]
+size = Vector2(240, 24)
+
+[sub_resource type="RectangleShape2D" id="LandingShape"]
+size = Vector2(480, 24)
+
+[sub_resource type="RectangleShape2D" id="ReturnStepShape"]
+size = Vector2(240, 24)
+
+[sub_resource type="RectangleShape2D" id="CeilingShape"]
+size = Vector2(300, 24)
+
+[sub_resource type="RectangleShape2D" id="LastStepShape"]
+size = Vector2(220, 24)
+
+[node name="TicoPlayground" type="Node2D"]
+process_mode = 3
+script = ExtResource("2_level")
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -10
+
+[node name="Sky" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.77, 0.88, 0.85, 1)
+
+[node name="Landscape" type="Polygon2D" parent="."]
+z_index = -2
+polygon = PackedVector2Array(0, 650, 0, 530, 400, 420, 800, 560, 1200, 360, 1700, 520, 2200, 420, 2700, 540, 3300, 390, 3800, 530, 3800, 900, 0, 900)
+color = Color(0.63, 0.77, 0.66, 1)
+
+[node name="Geometry" type="Node2D" parent="."]
+[node name="SafetyFloor" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(1900, 830)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/SafetyFloor"]
+shape = SubResource("SafetyFloorShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/SafetyFloor"]
+polygon = PackedVector2Array(-1900, -70, 1900, -70, 1900, 70, -1900, 70)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/SafetyFloor"]
+polygon = PackedVector2Array(-1900, -70, 1900, -70, 1900, -64, -1900, -64)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="LeftWall" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(16, 450)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/LeftWall"]
+shape = SubResource("LeftWallShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/LeftWall"]
+polygon = PackedVector2Array(-16, -450, 16, -450, 16, 450, -16, 450)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/LeftWall"]
+polygon = PackedVector2Array(-16, -450, 16, -450, 16, -444, -16, -444)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="RightWall" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(3784, 450)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/RightWall"]
+shape = SubResource("RightWallShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/RightWall"]
+polygon = PackedVector2Array(-16, -450, 16, -450, 16, 450, -16, 450)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/RightWall"]
+polygon = PackedVector2Array(-16, -450, 16, -450, 16, -444, -16, -444)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="StepA" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(430, 662)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/StepA"]
+shape = SubResource("StepAShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/StepA"]
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/StepA"]
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, -6, -110, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="StepB" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(700, 552)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/StepB"]
+shape = SubResource("StepBShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/StepB"]
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/StepB"]
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, -6, -110, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="StepC" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(980, 442)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/StepC"]
+shape = SubResource("StepCShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/StepC"]
+polygon = PackedVector2Array(-120, -12, 120, -12, 120, 12, -120, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/StepC"]
+polygon = PackedVector2Array(-120, -12, 120, -12, 120, -6, -120, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="Takeoff" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(1280, 352)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/Takeoff"]
+shape = SubResource("TakeoffShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/Takeoff"]
+polygon = PackedVector2Array(-120, -12, 120, -12, 120, 12, -120, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/Takeoff"]
+polygon = PackedVector2Array(-120, -12, 120, -12, 120, -6, -120, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="Landing" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(1960, 402)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/Landing"]
+shape = SubResource("LandingShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/Landing"]
+polygon = PackedVector2Array(-240, -12, 240, -12, 240, 12, -240, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/Landing"]
+polygon = PackedVector2Array(-240, -12, 240, -12, 240, -6, -240, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="ReturnStep" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(2280, 662)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/ReturnStep"]
+shape = SubResource("ReturnStepShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/ReturnStep"]
+polygon = PackedVector2Array(-120, -12, 120, -12, 120, 12, -120, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/ReturnStep"]
+polygon = PackedVector2Array(-120, -12, 120, -12, 120, -6, -120, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="Ceiling" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(2700, 542)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/Ceiling"]
+shape = SubResource("CeilingShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/Ceiling"]
+polygon = PackedVector2Array(-150, -12, 150, -12, 150, 12, -150, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/Ceiling"]
+polygon = PackedVector2Array(-150, -12, 150, -12, 150, -6, -150, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="LastStep" type="StaticBody2D" parent="Geometry" groups=["world"]]
+position = Vector2(3240, 662)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="Geometry/LastStep"]
+shape = SubResource("LastStepShape")
+
+[node name="Earth" type="Polygon2D" parent="Geometry/LastStep"]
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, 12, -110, 12)
+color = Color(0.43, 0.30, 0.22, 1)
+
+[node name="Grass" type="Polygon2D" parent="Geometry/LastStep"]
+polygon = PackedVector2Array(-110, -12, 110, -12, 110, -6, -110, -6)
+color = Color(0.25, 0.46, 0.30, 1)
+
+[node name="PlayerSpawn" type="Marker2D" parent="." groups=["spawn_points"]]
+position = Vector2(160, 720)
+
+[node name="Tico" parent="." instance=ExtResource("1_tico")]
+position = Vector2(160, 720)
+
+[node name="FollowCamera" type="Camera2D" parent="."]
+process_mode = 1
+position = Vector2(640, 540)
+limit_left = 0
+limit_top = 0
+limit_right = 3800
+limit_bottom = 900
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+process_callback = 0
+script = ExtResource("3_camera")
+target_path = NodePath("../Tico")
+
+[node name="Signs" type="Node2D" parent="."]
+[node name="Walk" type="Label" parent="Signs"]
+offset_left = 80.0
+offset_top = 590.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "1 · Explore com calma\nA/D ou setas para correr."
+
+[node name="Jump" type="Label" parent="Signs"]
+offset_left = 500.0
+offset_top = 420.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "2 · Pule mais alto\nSegure Espaço na subida."
+
+[node name="Glide" type="Label" parent="Signs"]
+offset_left = 1100.0
+offset_top = 380.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "3 · Abra a cauda!\nSegure Espaço durante a queda."
+
+[node name="Land" type="Label" parent="Signs"]
+offset_left = 1750.0
+offset_top = 285.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "Tente pousar aqui!"
+
+[node name="Safe" type="Label" parent="Signs"]
+offset_left = 1420.0
+offset_top = 675.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "Caiu? O chão é seguro.\nRecomeçar leva você ao início."
+
+[node name="Ceiling" type="Label" parent="Signs"]
+offset_left = 2530.0
+offset_top = 450.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "4 · Salto curto\nSolte Espaço mais cedo."
+
+[node name="End" type="Label" parent="Signs"]
+offset_left = 3410.0
+offset_top = 605.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 21
+text = "Muito bem, Tico!\nExplore de novo."
+
+[node name="Interface" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="Interface"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Backdrop" type="ColorRect" parent="Interface/HUD"]
+anchor_right = 1.0
+offset_bottom = 145.0
+mouse_filter = 2
+color = Color(0.77, 0.88, 0.85, 0.96)
+
+[node name="TopBar" type="HBoxContainer" parent="Interface/HUD"]
+anchor_right = 1.0
+offset_left = 32.0
+offset_top = 20.0
+offset_right = -32.0
+offset_bottom = 64.0
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Interface/HUD/TopBar"]
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 26
+text = "Tico Playground"
+
+[node name="Restart" type="Button" parent="Interface/HUD/TopBar"]
+custom_minimum_size = Vector2(150, 44)
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Recomeçar"
+
+[node name="Pause" type="Button" parent="Interface/HUD/TopBar"]
+custom_minimum_size = Vector2(190, 44)
+focus_mode = 0
+theme_override_font_sizes/font_size = 20
+text = "Pausar (Esc)"
+
+[node name="Instructions" type="Label" parent="Interface/HUD"]
+offset_left = 32.0
+offset_top = 78.0
+theme_override_colors/font_color = Color(0.18, 0.29, 0.23, 1)
+theme_override_font_sizes/font_size = 19
+text = "A/D ou ←/→: correr · Espaço: pular · Segure no ar: planar"
+
+[node name="Status" type="Label" parent="Interface/HUD"]
+offset_left = 32.0
+offset_top = 108.0
+theme_override_colors/font_color = Color(0.23, 0.35, 0.29, 1)
+theme_override_font_sizes/font_size = 18
+text = "Parado"

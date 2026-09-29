@@ -1,9 +1,9 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual concluída:** 1 — Fundação técnica  
-**Próxima etapa:** 2 — Tico jogável  
-**Marco 1 — Tico Playground:** ainda não iniciado
+**Etapa atual:** 2 — Tico jogável: implementação e testes técnicos concluídos  
+**Próximo trabalho:** playtest do controle; depois, etapa 3 — Web, touch e PWA  
+**Marco 1 — Tico Playground:** disponível para jogar; validação de diversão pendente
 
 ## Etapa 0 — Entregas
 
@@ -62,6 +62,8 @@ O retângulo de teste não representa o controlador final nem a arte de Tico.
 
 ## Validação
 
+### Etapas 0 e 1
+
 Importação no editor, execução headless, execução gráfica com Compatibility,
 salvamento e reabertura concluídos sem erros. As teclas do Input Map foram
 conferidas pela própria engine, incluindo as setas esquerda e direita.
@@ -75,8 +77,32 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-A etapa 2 implementa Tico, com movimentação, salto, ajustes de controle,
-câmera e planar, e culmina no marco 1 — Tico Playground. Ainda não foi iniciada.
+Jogar o playground e avaliar resposta, salto, planar e câmera. A seção 27 do
+roadmap pede validar se controlar Tico é divertido antes de avançar.
+Os testes técnicos não substituem essa avaliação. Após playtest e eventuais
+ajustes, iniciar a etapa 3 — Web, touch e PWA.
+
+## Etapa 2 — Entregas
+
+- [x] `tico.tscn` e `tico.gd`, com parâmetros configuráveis.
+- [x] Movimento com aceleração, desaceleração, controle aéreo e direção visual.
+- [x] Salto de altura variável, coyote time e jump buffer.
+- [x] Planar na queda, mantendo Espaço, por até 2 segundos; recarga no chão.
+- [x] Animações provisórias idle, run, jump, fall, glide e land; 11 quadros SVG.
+- [x] Playground de 3800 × 900, subida gradual, travessia longa e chão seguro.
+- [x] Câmera suave, antecipação horizontal e limites.
+- [x] Pausa, pausa ao perder foco e botão Recomeçar.
+- [x] 45 verificações de Tico e 16 de regressão aprovadas.
+- [x] Build Windows executado fora do projeto e capturas inspecionadas.
+- [ ] Playtest humano: conforto, compreensão do planar e diversão.
+
+Build atual: `builds/windows/etapa_2/Tico.exe` com `Tico.pck`.
+Pacote: `builds/windows/Tico-etapa-2-windows.zip`.
+Registro: [testes da etapa 2](../tests/etapa_2.md).
+
+A cena principal agora abre o playground de Tico. A área e o build da etapa 1
+foram preservados. A arte vetorial é provisória; Pipo, inimigos, coleta,
+áudio, touch e Web/PWA ainda não fazem parte deste playground.
 
 ## Decisões ainda abertas
 

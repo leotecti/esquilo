@@ -5,8 +5,9 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 1 concluída: área de teste com chão, paredes, três plataformas e um
-corpo provisório controlável. Tico será implementado na etapa 2.
+Etapa 2 implementada: Tico corre, pula, plana e possui animações provisórias
+em um playground com câmera e chão seguro. Os testes técnicos passaram;
+o marco 1 ainda precisa de playtest para avaliar o conforto e a diversão.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -14,7 +15,7 @@ Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 1. Use **Godot 4.7.2 stable, edição padrão** (sem .NET).
 2. No gerenciador da Godot, importe o arquivo `project.godot` desta pasta.
 3. Abra o projeto e pressione **F6** para executar a cena aberta ou **F5**
-   para executar o projeto e abrir a área de teste.
+   para executar o projeto e abrir o Tico Playground.
 4. Use **F8** para interromper a execução e **Ctrl+S** para salvar a cena.
 
 Nesta máquina, a instalação escolhida fica em
@@ -46,15 +47,19 @@ A versão do projeto também está registrada em `.godot-version`.
 | `switch_character` | Q |
 | `pause` | Esc |
 
-Na área de teste, A/D e setas movem o retângulo; Espaço pula; Esc pausa e
-retoma. E e Q exibem o comando recebido, sem habilidades ou troca de personagem.
+No playground, A/D e setas movem Tico. Toque em Espaço para um salto curto;
+segure para subir mais. Durante a queda, manter Espaço abre a cauda e permite
+planar por até 2 segundos. Soltar encerra o planar; aterrissar recarrega a cauda.
+Esc pausa e retoma. O botão **Recomeçar** volta ao início, inclusive durante a pausa.
+Perder o foco da janela pausa o jogo. E e Q permanecem reservados, sem efeito aqui.
 Os botões touch serão conectados às mesmas ações na etapa 3. Gamepad futuro.
 
-## Build Windows da etapa 1
+## Build Windows da etapa 2
 
-Abra `builds/windows/etapa_1/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-1-windows.zip` contém os dois arquivos.
-É um build de desenvolvimento com gráficos provisórios.
+Abra `builds/windows/etapa_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-etapa-2-windows.zip` contém os dois arquivos.
+É um build de desenvolvimento com gráficos provisórios em SVG. As pranchas
+em `img/` continuam sendo a referência para a arte final.
 
 Para gerar novamente, instale os templates de exportação **4.7.2 stable**
 pelo gerenciador de templates da Godot. Nesta máquina, os templates Windows
@@ -62,11 +67,21 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_1 | Out-Null
-& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_1/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/etapa_2 | Out-Null
+& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_2/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
+
+## Ajustar o controle
+
+Abra `scenes/characters/tico.tscn` e selecione Tico. O Inspector expõe velocidade,
+aceleração, frenagem, controle aéreo, salto, tolerâncias e planar. Os valores
+iniciais estão registrados em [testes da etapa 2](tests/etapa_2.md).
+
+A câmera está em `scripts/systems/follow_camera.gd`; o playground está em
+`scenes/levels/tico_playground.tscn`. A cena `test_level.tscn` da etapa 1 foi
+preservada para regressão e pode ser executada separadamente com F6.
 
 ## Estrutura
 
@@ -107,8 +122,11 @@ $godotConsole = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.
 & $godotConsole --headless --path . --editor --import --quit
 & $godotConsole --headless --path . --quit-after 10
 & $godotConsole --headless --path . --script tests/foundation_test.gd
+& $godotConsole --headless --path . --script tests/tico_test.gd --fixed-fps 60
 ```
 
-Esses comandos verificam importação, execução e integração de teclado,
-colisões e pausa. Resultados em [testes da etapa 1](tests/etapa_1.md).
+Esses comandos verificam importação, execução, input, colisões, salto, planar,
+câmera e pausa. Resultados em [testes da etapa 1](tests/etapa_1.md) e
+[testes da etapa 2](tests/etapa_2.md). Antes da etapa 3, experimente o playground
+para avaliar se o controle é confortável e divertido, conforme o roadmap.
 Não há exportação Web/PWA nem build Android nesta etapa.

@@ -1,0 +1,45 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/characters/tico.gd" id="1_controller"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/idle_0.svg" id="idle_0"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/idle_1.svg" id="idle_1"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/run_0.svg" id="run_0"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/run_1.svg" id="run_1"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/run_2.svg" id="run_2"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/run_3.svg" id="run_3"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/jump.svg" id="jump"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/fall.svg" id="fall"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/glide_0.svg" id="glide_0"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/glide_1.svg" id="glide_1"]
+[ext_resource type="Texture2D" path="res://assets/characters/tico/land.svg" id="land"]
+
+[sub_resource type="RectangleShape2D" id="BodyShape"]
+size = Vector2(32, 56)
+
+[sub_resource type="SpriteFrames" id="Animations"]
+animations = [
+{"frames": [{"duration": 1.0, "texture": ExtResource("idle_0")}, {"duration": 1.0, "texture": ExtResource("idle_1")}], "loop": true, "name": &"idle", "speed": 2.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("run_0")}, {"duration": 1.0, "texture": ExtResource("run_1")}, {"duration": 1.0, "texture": ExtResource("run_2")}, {"duration": 1.0, "texture": ExtResource("run_3")}], "loop": true, "name": &"run", "speed": 12.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("jump")}], "loop": true, "name": &"jump", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("fall")}], "loop": true, "name": &"fall", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("glide_0")}, {"duration": 1.0, "texture": ExtResource("glide_1")}], "loop": true, "name": &"glide", "speed": 8.0},
+{"frames": [{"duration": 1.0, "texture": ExtResource("land")}], "loop": true, "name": &"land", "speed": 8.0}
+]
+
+[node name="Tico" type="CharacterBody2D" groups=["player"]]
+process_mode = 1
+collision_layer = 2
+collision_mask = 1
+floor_snap_length = 6.0
+script = ExtResource("1_controller")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+shape = SubResource("BodyShape")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(-4, -40)
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("Animations")
+animation = &"idle"
+autoplay = "idle"

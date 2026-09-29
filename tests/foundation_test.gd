@@ -37,10 +37,10 @@ func place(point: Vector2) -> void:
 
 
 func run() -> void:
-	var main := load("res://scenes/main.tscn").instantiate() as Node2D
+	var main := load("res://scenes/levels/test_level.tscn").instantiate() as Node2D
 	root.add_child(main)
 	current_scene = main
-	level = main.get_node("TestLevel")
+	level = main
 	probe = level.get_node("TestProbe")
 	await frames(50)
 	check(probe.is_on_floor() and absf(probe.position.y - 618.0) < 1.0,

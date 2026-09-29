@@ -14,6 +14,10 @@ $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
 Resultado: **16 verificações aprovadas, 0 falhas, código de saída 0**.
 O teste instancia a cena principal real e injeta eventos de teclado na engine.
 
+Atualização da etapa 2: como a cena principal passou a abrir Tico Playground,
+o teste de regressão agora instancia diretamente `test_level.tscn`, preservada
+com a mesma geometria e o corpo provisório. As 16 verificações passaram novamente.
+
 - Gravidade e apoio no chão no ponto inicial.
 - Movimento por D e A.
 - Salto por Espaço e aterrissagem.

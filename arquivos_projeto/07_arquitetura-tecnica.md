@@ -809,6 +809,17 @@ Raiz recomendada:
 
 # 38. TICO
 
+Implementação da etapa 2: `scenes/characters/tico.tscn` e
+`scripts/characters/tico.gd`. Nesta etapa existem o corpo físico, a colisão
+e o `AnimatedSprite2D`, com estados idle, run, jump, fall, glide e land.
+Dano, hurtbox e interações ainda pertencem às etapas posteriores.
+O Inspector expõe os parâmetros de movimento, salto e planar.
+
+O playground atual fica em `scenes/levels/tico_playground.tscn`. A câmera
+reutilizável está em `scripts/systems/follow_camera.gd`; pausa e reinício do
+playground ficam em `scripts/systems/tico_playground.gd`. A cena de teste
+da fundação técnica foi preservada separadamente.
+
 Estrutura conceitual:
 
 ```text
