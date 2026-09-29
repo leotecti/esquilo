@@ -32,18 +32,20 @@ Três cenários de navegador cobrem:
 
 Resultado: três cenários aprovados. O diagnóstico de instalação do Chrome
 apontou apenas o modo anônimo do contexto de teste, sem outros impedimentos;
-a instalação real permanece pendente. A pausa com direção mantida também foi
+a instalação real foi posteriormente confirmada pelo usuário. A pausa com direção mantida também foi
 verificada, incluindo a ausência de movimento preso ao continuar.
 
 As 45 verificações de Tico e as 16 de fundação também passaram após a inclusão
 dos controles. Capturas: `builds/web/preview-desktop.png` e `preview-touch.png`.
 
-## Pendências para concluir o marco 2
+## Retorno do usuário
 
-- Publicação na hospedagem HTTPS.
-- Instalação e abertura pelo ícone em celular físico.
-- Fechar e reabrir offline no aparelho.
-- Aprovação de conforto, visibilidade e desempenho no dispositivo real.
+O usuário confirmou upload na HostGator, acesso e instalação da PWA e avaliou
+a jogabilidade como “muito boa”. Não foi fornecida medição de FPS.
+
+## Pendência para concluir o marco 2
+
+- Fechar e reabrir pelo ícone sem conexão no aparelho, confirmando que é possível jogar.
 
 A emulação confirma o funcionamento do input e do layout testado. A taxa de
 quadros do navegador automatizado não valida desempenho de um celular.

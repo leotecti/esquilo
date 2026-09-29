@@ -1,13 +1,13 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 3 — Web, touch e PWA: implementação local
+**Etapa atual:** 3 — Web, touch e PWA: publicada e instalada pelo usuário
 
-**Próximo trabalho:** publicar em HTTPS e validar instalação/offline no celular
+**Próximo trabalho:** confirmar reabertura offline pelo ícone no celular
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
-**Marco 2 — Tico PWA:** aguarda validação em celular físico
+**Marco 2 — Tico PWA:** instalação e jogabilidade aprovadas; offline pendente
 
 ## Etapa 0 — Entregas
 
@@ -81,10 +81,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Publicar o pacote Web em `https://projetosdoleo.com/tico/` e executar o roteiro
-de instalação, conforto dos controles e reabertura offline em celular físico.
-Hospedagem informada: HostGator. O roteiro usa upload e extração pelo cPanel;
-o pacote ainda não foi enviado à hospedagem.
+Confirmar reabertura pelo ícone sem conexão em celular físico.
+O usuário confirmou upload na HostGator, acesso, instalação da PWA e
+jogabilidade muito boa em `https://projetosdoleo.com/tico/`.
 
 ## Etapa 2 — Entregas
 
@@ -116,9 +115,12 @@ na etapa 3, sem alterar os parâmetros de movimento aprovados.
 - [x] Layout landscape, áreas seguras, pausa em retrato e tela cheia.
 - [x] Manifesto, ícones, cache versionado e botão de atualização.
 - [x] Scripts de build, servidor local e testes de navegador reproduzíveis.
-- [ ] Publicação no endereço HTTPS informado.
-- [ ] Instalação pelo navegador, abertura pelo ícone e offline no celular físico.
-- [ ] Aprovação de conforto, visibilidade e desempenho no celular.
+- [x] Publicação no endereço HTTPS informado, confirmada pelo usuário.
+- [x] Acesso e instalação da PWA confirmados pelo usuário.
+- [x] Jogabilidade aprovada pelo usuário: “muito boa”.
+- [ ] Fechar e reabrir pelo ícone sem conexão no celular físico.
+
+O retorno aprova a experiência de jogo; não foi fornecida medição de FPS.
 
 Pacote: `builds/web/Tico-etapa-3-web.zip`.
 Detalhes: [testes da etapa 3](../tests/etapa_3.md) e

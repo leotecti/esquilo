@@ -2793,7 +2793,7 @@ da arte final; esses vetores não substituem seu acabamento ilustrado.
 
 **Categoria:** Distribuição / Input
 
-**Status:** IMPLEMENTADA; VALIDAÇÃO EM CELULAR PENDENTE
+**Status:** PUBLICADA; INSTALAÇÃO E JOGABILIDADE APROVADAS; OFFLINE NO APARELHO PENDENTE
 
 **Data:** 2026-09-29
 
@@ -2808,8 +2808,9 @@ do teclado. Manter os parâmetros de movimento aprovados na etapa 2. AÇÃO
 permanece reservada e a troca de personagem será introduzida com Pipo.
 
 Testes automatizados de navegador e multitoque emulado estão em
-`tests/browser/tico.spec.js`. Instalação pelo ícone, conforto e desempenho
-no celular físico precisam ser validados para concluir o marco 2.
+`tests/browser/tico.spec.js`. O usuário confirmou publicação, instalação da
+PWA e jogabilidade muito boa. Falta confirmar reabertura offline pelo ícone
+no aparelho para concluir o marco 2; não foi fornecida medição de FPS.
 
 Referências: [exportação Web](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html)
 e [TouchScreenButton](https://docs.godotengine.org/en/stable/classes/class_touchscreenbutton.html).

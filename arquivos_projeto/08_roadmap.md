@@ -522,8 +522,9 @@ Tico deverá:
 # 29. ETAPA 3 — WEB, TOUCH E PWA
 
 **Execução em 2026-09-29:** exportação Web/PWA e controles touch implementados.
-Destino informado: `https://projetosdoleo.com/tico/`. A conclusão depende da
-publicação e dos testes de instalação, conforto e offline no celular físico.
+Destino: `https://projetosdoleo.com/tico/`. O usuário confirmou publicação,
+acesso, instalação da PWA e jogabilidade muito boa. Falta confirmar a
+reabertura pelo ícone sem conexão no celular para concluir o marco 2.
 Resultados e roteiro: `tests/etapa_3.md` e `web/deployment.md`.
 
 ## OBJETIVO

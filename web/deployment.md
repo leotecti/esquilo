@@ -2,7 +2,8 @@
 
 Destino informado: **https://projetosdoleo.com/tico/**.
 Hospedagem informada: **HostGator**. As instruções abaixo usam o cPanel.
-O pacote foi preparado localmente; ainda não foi enviado à hospedagem.
+O usuário confirmou upload, acesso e instalação da PWA, com boa jogabilidade.
+Ainda falta confirmar a reabertura pelo ícone sem conexão.
 
 ## Pacote
 

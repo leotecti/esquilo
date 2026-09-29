@@ -6,8 +6,9 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 ## Estado atual
 
 Etapa 2 aprovada pelo usuário após jogar. A etapa 3 adiciona Web/PWA e controles
-de toque ao playground. A publicação e a validação em celular físico ainda
-são necessárias para concluir o marco 2.
+de toque ao playground. O usuário confirmou publicação, acesso, instalação da
+PWA e boa jogabilidade. Falta confirmar a reabertura offline pelo ícone para
+concluir o marco 2.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
