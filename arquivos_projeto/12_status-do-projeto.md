@@ -83,7 +83,8 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 Publicar o pacote Web em `https://projetosdoleo.com/tico/` e executar o roteiro
 de instalação, conforto dos controles e reabertura offline em celular físico.
-O endereço foi informado; o serviço e o método de envio ainda não foram informados.
+Hospedagem informada: HostGator. O roteiro usa upload e extração pelo cPanel;
+o pacote ainda não foi enviado à hospedagem.
 
 ## Etapa 2 — Entregas
 

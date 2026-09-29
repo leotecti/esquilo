@@ -1,6 +1,7 @@
 # Publicar Tico Web/PWA
 
 Destino informado: **https://projetosdoleo.com/tico/**.
+Hospedagem informada: **HostGator**. As instruções abaixo usam o cPanel.
 O pacote foi preparado localmente; ainda não foi enviado à hospedagem.
 
 ## Pacote
@@ -11,10 +12,19 @@ na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 Não coloque outra pasta `etapa_3` entre `/tico/` e os arquivos.
 
 1. Guarde uma cópia do conteúdo existente em `/tico/` antes da substituição.
-2. Envie e extraia o ZIP pelo gerenciador de arquivos da hospedagem ou pelo
-   método de publicação que ela oferece. O serviço ainda não foi informado.
-3. Abra `https://projetosdoleo.com/tico/` e pressione **Jogar**.
-4. Verifique no celular os passos da próxima seção.
+2. No cPanel da HostGator, abra **Gerenciador de arquivos** e localize a raiz
+   de `projetosdoleo.com`. Se for o domínio principal, normalmente é `public_html`;
+   se for adicional, confira a raiz configurada para ele em **Domínios**.
+3. Dentro dessa raiz, crie ou abra `tico`. Use **Carregar/Upload** para enviar
+   o ZIP e depois **Extrair** nessa mesma pasta. O resultado deve ser
+   `public_html/tico/index.html` quando a raiz for `public_html`.
+   Inclua o `.htaccess` do pacote; habilite a exibição de arquivos ocultos
+   nas configurações do gerenciador para conferir sua presença.
+4. Abra `https://projetosdoleo.com/tico/` e pressione **Jogar**.
+5. Verifique no celular os passos da próxima seção.
+
+Ajuda oficial da HostGator: [enviar arquivos pelo cPanel](https://suporte.hostgator.com.br/hc/pt-br/articles/30813145737235-Como-enviar-um-arquivo-para-o-cPanel)
+e [extrair arquivos no gerenciador](https://suporte.hostgator.com.br/hc/pt-br/articles/30808065412371-Quais-as-funcionalidades-do-Gerenciador-de-arquivos-do-cPanel).
 
 São arquivos estáticos: o servidor de produção não precisa executar Node.js.
 O endereço `/tico` deve redirecionar para `/tico/`, com a barra final.
