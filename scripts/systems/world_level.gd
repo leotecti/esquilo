@@ -232,6 +232,23 @@ func new_adventure() -> void:
 func _save_progress() -> void:
 	if world_ready and is_instance_valid(campaign): campaign.save_progress()
 
+func _on_defeat() -> void:
+	if respawning: return
+	super._on_defeat()
+	if is_instance_valid(campaign) and campaign.has_method("lose_life"):
+		campaign.lose_life()
+
+func _respawn() -> void:
+	if is_instance_valid(campaign) and campaign.has_method("awaiting_return") and campaign.awaiting_return():
+		respawning = false
+		campaign.show_return()
+		return
+	super._respawn()
+
+func set_paused(value: bool) -> void:
+	if is_instance_valid(campaign) and campaign.has_method("awaiting_return") and campaign.awaiting_return(): return
+	super.set_paused(value)
+
 func world_snapshot() -> Dictionary:
 	var items: Array = []
 	var blocks: Array = []
@@ -296,6 +313,7 @@ func _test_details() -> Dictionary:
 		if campaign.scene_paths.size()>4: data["stage"] = 9
 		data["campaign_stage"] = campaign.data.stage
 		data["save_state"] = campaign.store.state
+		if campaign.has_method("survival_details"): data.merge(campaign.survival_details())
 	if is_instance_valid(guardian):
 		data["boss_health"] = guardian.health
 		data["boss_phase"] = guardian.phase

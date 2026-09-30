@@ -186,7 +186,7 @@ func take_damage(source: Vector2) -> bool:
 
 
 func recover(amount: int = 1) -> bool:
-	if health <= 0 or health >= max_health:
+	if amount <= 0 or health <= 0 or health >= max_health or not controls_enabled:
 		return false
 	health = mini(max_health, health + amount)
 	health_changed.emit(health)

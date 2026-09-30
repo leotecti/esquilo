@@ -281,6 +281,7 @@ func _test_details() -> Dictionary:
 	if _art_ready:
 		data["pose"] = tico.get_node("Illustration").pose
 		data["push_frame"] = tico.get_node("Illustration").push_frame
+		data["run_frame"] = tico.get_node("Illustration").run_frame
 		data["music_playing"] = sounds.music.playing
 		data["audio_paused"] = sounds.music.stream_paused
 		for entry in [["music_rect",music_button],["effects_rect",effects_button]]:

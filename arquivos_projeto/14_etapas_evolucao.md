@@ -105,6 +105,10 @@ A evolução usa identificadores **E00–E30**, distintos das etapas do roadmap 
 
 # 4. EVOLUÇÃO E00 — PREPARAÇÃO E DIAGNÓSTICO
 
+**Status:** concluída. [Diagnóstico](15_diagnostico_e00.md) e
+[verificação da base](../tests/evolucao_e00.md): 182 verificações na Godot,
+cinco cenários Web e amostra de desempenho local. Gameplay preservado.
+
 Antes de modificar o jogo, analisar a versão atual.
 
 Objetivos:
@@ -140,6 +144,10 @@ Conhecimento claro do estado atual do projeto antes das alterações.
 ---
 
 # 5. EVOLUÇÃO E01 — SAÚDE, DANO E MORTE
+
+**Status:** implementada e verificada sobre o sistema existente. Correções na
+coleta contínua de coração e na validação da recuperação; três corações, dano,
+proteção e retorno preservados. [Registro E01](../tests/evolucao_e01.md).
 
 Revisar e manter o sistema de saúde existente, completando apenas as lacunas necessárias à evolução.
 
@@ -187,6 +195,12 @@ O personagem pode receber dano, recuperar saúde e morrer corretamente.
 ---
 
 # 6. EVOLUÇÃO E02 — VIDAS E GAME OVER
+
+**Implementada em 2026-09-30 (0.10.0); playtest do usuário pendente.**
+Três vidas compartilhadas, medalhão de vida extra e retorno persistente ao mundo
+anterior. A tela transitória permite escolher entre as fases já liberadas, com
+a primeira fase do mundo de retorno selecionada. Pipo resgatado permanece disponível.
+O mapa visual continua reservado à E06. [Execução e testes](../tests/evolucao_e02.md).
 
 Com a morte funcionando, implementar o sistema de vidas.
 
@@ -294,7 +308,7 @@ As dicas deverão:
 - aparecer no momento adequado;
 - ser curtas;
 - utilizar linguagem infantil;
-- desaparecer automaticamente ou após interação;
+- desaparecer após interação;
 - não bloquear excessivamente o jogo;
 - aparecer apenas quando necessárias.
 

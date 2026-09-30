@@ -1,9 +1,21 @@
 # Status do projeto
 
 **Data:** 2026-09-30
-**Etapa atual:** 9 — Mundos 2, 3 e 4: implementada; aguardando playtest do usuário
+**Etapa atual:** evolução E02 — vidas e Game Over implementados; playtest do usuário pendente.
 
-**Próximo trabalho previsto:** evolução E00 — diagnóstico sobre a base da etapa 9, conforme documentos 13/14. O playtest da etapa 9 permanece pendente; Mundo 5 continua planejado no roadmap original.
+**Próximo trabalho previsto:** validar a E02 e seguir para a evolução E03. Mundo 5 continua planejado no roadmap original.
+
+## Evolução E02 — Entrega atual
+
+- Três vidas compartilhadas e medalhões de vida extra, com coleta persistente.
+- Derrota com vidas restantes usa o checkpoint existente. Game Over renova as vidas
+  e oferece retorno à primeira fase do mundo anterior, preservando todas as fases liberadas.
+- Tela transitória de seleção até o mapa da E06; Pipo resgatado acompanha os replays.
+- Save compatível com campanhas anteriores; retorno pendente também funciona offline.
+- Corrida, empurrão, saúde, controles e conteúdo existentes mantidos.
+
+Versão 0.10.0. [Testes, pacotes e roteiro de validação](../tests/evolucao_e02.md).
+Sem commit ou publicação automática; aguarda teste do usuário no celular.
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -275,3 +287,35 @@ na versão 1.0 continuam sujeitos aos protótipos e testes previstos.
 Revisão aprovada pelo usuário: E00–E30, preservação dos sistemas existentes, Coruja mentora, Gavião como chefe aéreo, Pipo global após o resgate, Game Over no mapa do mundo anterior com desbloqueios preservados, duração a validar e verificações contínuas de PWA/desempenho/save.
 
 Documentação alinhada; alterações no código ainda pendentes. O build da etapa 9 ainda tem a antiga chefe Coruja e não possui mapa, vidas limitadas ou replay global com Pipo. Não considerar essas funcionalidades implementadas por esta revisão. Ver DEC-115.
+
+## Evolução E00 — Concluída
+
+- [x] Inventário dos sistemas, componentes reutilizáveis e dependências.
+- [x] Inspeção de controles, colisões, inimigos, HUD, fases, progresso e PWA.
+- [x] Classificação manter/alterar/remover/criar e identificação dos textos fixos.
+- [x] Pontos de migração para Pipo global, replay, vidas e mapa registrados.
+- [x] 182 verificações Godot e cinco cenários Web aprovados nesta execução.
+- [x] Medição local: medianas de 16,59–16,74 ms; p95 de 17,50–18,19 ms.
+
+Entregas: [diagnóstico E00](15_diagnostico_e00.md) e
+[registro de validação](../tests/evolucao_e00.md).
+Gameplay preservado; nenhum commit ou push realizado.
+
+## Evolução E01 — Entregas
+
+- [x] Saúde, dano, recuperação, HUD, invulnerabilidade e derrota existentes revisados.
+- [x] Três corações, controles, habilidades, proteção e retorno à bandeira preservados.
+- [x] Coração pode recuperar saúde sem exigir sair e reentrar na área após dano.
+- [x] Recuperação rejeita valores inválidos e personagem inativo/derrotado.
+- [x] 195 verificações Godot aprovadas, incluindo 20 verificações específicas.
+- [x] Cinco cenários Web aprovados; Windows executado e pacotes conferidos.
+- [x] Amostra gráfica local e compatibilidade do save verificadas.
+- [ ] Playtest desta versão no aparelho do usuário.
+
+Registro, validação Web e pacotes: [evolução E01](../tests/evolucao_e01.md).
+Vidas limitadas, Game Over e mapa não foram antecipados. Sem commit ou push.
+
+**Correção após teste do usuário (0.9.2):** corrida de Tico e Pipo recebe quatro
+poses com movimento visível das pernas e ciclo proporcional ao deslocamento.
+Animações de empurrar e regras físicas mantidas. Pacotes E01 atualizados;
+detalhes em [evolução E01](../tests/evolucao_e01.md).

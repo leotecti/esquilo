@@ -1,5 +1,6 @@
 extends "res://scripts/systems/save_manager.gd"
 var max_stage := 3
+var global_companion := false
 ## Slot separado: mantém intacta a aventura do protótipo.
 func _init() -> void:
 	path = "user://world1.json"
@@ -35,7 +36,7 @@ func valid(data: Variant) -> bool:
 			if not state.get(key) is bool: return false
 		if state.get("character") not in ["Tico","Pipo"]: return false
 		if state.character == "Pipo" and not state.rescued: return false
-		if id in ["0","1"] and state.rescued: return false
+		if not global_companion and id in ["0","1"] and state.rescued: return false
 		if int(id)>=3 and not state.rescued: return false
 		if not _number(state.get("stone"),850,1190): return false
 		if state.gate and state.stone < 1110: return false

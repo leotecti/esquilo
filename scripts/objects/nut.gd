@@ -12,6 +12,13 @@ func _process(delta: float) -> void:
 	_time += delta
 	queue_redraw()
 
+func _physics_process(_delta: float) -> void:
+	# Um coração recusado com saúde cheia continua utilizável sem sair da área.
+	if not healing or taken: return
+	for body in get_overlapping_bodies():
+		_collect(body)
+		if taken: break
+
 func _draw() -> void:
 	var offset := Vector2(0, sin(_time * 3.0) * 3.0)
 	if healing:

@@ -36,3 +36,11 @@ Referência: `img/porquinho.png`.
 ## Objetos (`props.png`)
 
 > Use case: stylized-concept. ONE production game prop atlas for a warm painterly 2D cartoon children's forest platformer. Transparent alpha background, evenly spaced strict 4 columns x 3 rows, no text, no labels, no grid. Exactly twelve isolated complete objects all fully contained within cells with 15 percent empty padding. Front/side orthographic platformer view, warm dark outlines and soft hand painted shading, cohesive moss jade greens, warm honey wood, cream and golden accents. Row1 left to right: single shiny acorn with brown cap and little green leaf; friendly small sage-green slug facing right with eyestalks and pale belly, NO shell; sturdy square wooden block made from planks with leaf corner accents; same wooden block with clear large central zigzag crack. Row2 left-right: square honey-gold wood block with a centered acorn emblem; tall rectangular heavy moss-covered stone wall with a prominent central crack and golden arrow pointing RIGHT; squat wide pushable mossy gray boulder with carved paw mark; round leafy forest bush with tiny golden berries. Row3 left-right: low lush tuft of grass and clover; elegant fern fronds with rounded leaves; little cluster of cream and yellow wildflowers; wooden checkpoint pole standing upright with a golden triangular leaf-shaped flag. No floor shadows, no scene, no characters besides the one slug. Each object has its own cell and does not touch other cells. Soft storybook volume, clean silhouettes, recognizable at small gameplay size. Canvas 1536x1536.
+# Correção de corrida — run.png
+
+Referências: `tico.png` e `pipo.png`. Ferramenta: imagegen, asset novo.
+Solicitação: grade de quatro colunas e duas linhas; Tico acima e Pipo abaixo,
+voltados à direita. Preservar identidade, estilo ilustrado, roupa e cores.
+Alternar extensão das pernas e passagem com joelho recolhido, braços em
+contrapeso, mantendo altura e escala consistentes. Fundo magenta para o shader
+de recorte existente, sem texto, cenário ou sombras externas.

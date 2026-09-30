@@ -5,6 +5,11 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
+**Evolução E02:** vidas compartilhadas, vida extra e Game Over com retorno ao
+mundo anterior, preservando as conquistas e Pipo após o resgate.
+Saúde, checkpoints, controles e animações existentes foram aproveitados.
+[Registro e testes](tests/evolucao_e02.md).
+
 Etapa 9 implementada: **Rio das Pedras, Montanha das Corujas e Vila dos Castores**,
 cada um com três fases e um encontro final. A campanha inclui os quatro mundos.
 O Bosque da etapa 8 foi testado e aprovado pelo usuário; os mundos novos aguardam
@@ -135,7 +140,7 @@ As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 ## Web/PWA — etapa 8
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-etapa-9-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-evolucao-E01-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -151,10 +156,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da etapa 9
+## Build Windows da evolução E01
 
-Abra `builds/windows/etapa_9/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-9-windows.zip` contém os dois arquivos.
+Abra `builds/windows/evolucao_e02/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-evolucao-E01-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -164,8 +169,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_9 | Out-Null
-& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/etapa_9/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/evolucao_e02 | Out-Null
+& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e02/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -248,6 +253,11 @@ com `Remove-Item Env:TICO_WEB_STAGE` ao voltar à etapa atual. Feche o servidor 
 antes de alternar a versão servida.
 
 ## Evolução planejada
+
+**E00 concluída:** [diagnóstico da base](arquivos_projeto/15_diagnostico_e00.md)
+e [verificações executadas](tests/evolucao_e00.md).
+**E01 implementada:** [saúde, dano e morte](tests/evolucao_e01.md).
+Próxima etapa: E02 — vidas e Game Over.
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

@@ -2,7 +2,7 @@ extends SceneTree
 ## Calcula recortes sem modificar as imagens de origem.
 func _initialize() -> void:
 	var atlas_data := {}
-	for spec in [["tico",4,[0,512,1024]], ["pipo",4,[0,373,684,1024]], ["props",4,[0,430,817,1254]], ["push",4,[0,512,1024],[0,398,772,1143,1536]]]:
+	for spec in [["tico",4,[0,512,1024]], ["pipo",4,[0,373,684,1024]], ["props",4,[0,430,817,1254]], ["push",4,[0,512,1024],[0,398,772,1143,1536]], ["run",4,[0,512,1024],[0,407,777,1153,1536]]]:
 		var image := Image.load_from_file(ProjectSettings.globalize_path("res://assets/slice/%s.png" % spec[0]))
 		if image == null:
 			push_error("Atlas ausente: " + spec[0])

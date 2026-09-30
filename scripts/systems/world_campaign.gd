@@ -38,15 +38,20 @@ func _load_stage(index: int) -> void:
 	level.music_enabled = data.settings.music
 	level.effects_enabled = data.settings.effects
 	add_child(level)
-	if data.levels.has(str(index)):
-		level.restore_world(data.levels[str(index)])
+	_restore_level(data.levels.get(str(index),{}))
 	level._apply_audio()
 	_changing = false
 	save_progress()
 
+func _restore_level(state: Dictionary) -> void:
+	if not state.is_empty(): level.restore_world(state)
+
+func _capture_level() -> Dictionary:
+	return level.world_snapshot()
+
 func save_progress() -> void:
 	if not is_instance_valid(level) or not level.world_ready: return
-	data.levels[str(data.stage)] = level.world_snapshot()
+	data.levels[str(data.stage)] = _capture_level()
 	data.settings = {"music":level.music_enabled,"effects":level.effects_enabled}
 	if level.completed:
 		data.unlocked = maxi(data.unlocked,mini(data.stage+1,scene_paths.size()-1))

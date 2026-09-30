@@ -30,6 +30,65 @@ async function glide(page,x) {
 async function clickRect(page,name,touch=false){const s=await snapshot(page),r=s[name],v=page.viewportSize();const x=(r[0]+r[2]/2)*v.width/s.width,y=(r[1]+r[3]/2)*v.height/s.height;if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);}
 function errorsFor(page){const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;}
 
+test('E02: derrota real, Game Over, retorno offline e Pipo preservado',async({page,context})=>{
+  const data=fixture(4);
+  data.survival={lives:1,pending_return:false,return_stage:0,replay:false,pipo_unlocked:true,claimed:[]};
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  await page.keyboard.down('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).game_over,{timeout:30000}).toBe(true);
+  await page.keyboard.up('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).return_rect).toBeTruthy();
+  expect((await snapshot(page)).return_stage).toBe(0);
+  expect((await snapshot(page)).lives).toBe(3);
+  await page.screenshot({path:'builds/web/e02-game-over.png'});
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await page.locator('#play').click();
+  await expect.poll(async()=>(await snapshot(page))?.return_rect,{timeout:45000}).toBeTruthy();
+  await clickRect(page,'return_rect');
+  await expect.poll(async()=>(await snapshot(page)).campaign_stage).toBe(0);
+  await page.keyboard.press('q');await expect.poll(async()=>(await snapshot(page)).character).toBe('Pipo');
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
+  expect(saved.unlocked).toBe(4);expect(saved.levels['0'].completed).toBe(true);
+  expect(saved.survival.pending_return).toBe(false);
+  await page.screenshot({path:'builds/web/e02-retorno.png'});
+  expect(errors).toEqual([]);
+});
+
+test('E02: retorno por toque mantém mundos posteriores acessíveis',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
+  const page=await context.newPage();const data=fixture(12);
+  data.survival={lives:3,pending_return:true,return_stage:8,replay:false,pipo_unlocked:true,claimed:[0,4]};
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  await expect.poll(async()=>(await snapshot(page)).return_rect).toBeTruthy();
+  await page.screenshot({path:'builds/web/e02-retorno-touch.png'});
+  await clickRect(page,'return_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).campaign_stage).toBe(8);
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
+  expect(saved.unlocked).toBe(12);expect(saved.survival.claimed).toEqual([0,4]);
+  expect(errors).toEqual([]);await context.close();
+});
+
+test('Corrida: Tico e Pipo alternam quatro passadas e param ao soltar',async({page})=>{
+  await seed(page,fixture(7));const errors=errorsFor(page);await boot(page);await ground(page);
+  for(const name of ['Tico','Pipo']) {
+    if(name==='Pipo'){await page.keyboard.press('q');await expect.poll(async()=>(await snapshot(page)).character).toBe(name);}
+    const seen=new Set();await page.keyboard.down('ArrowRight');
+    const deadline=Date.now()+4000;
+    while(seen.size<4&&Date.now()<deadline){
+      const s=await snapshot(page);
+      if(s.pose==='run'&&!seen.has(s.run_frame)){
+        seen.add(s.run_frame);
+      }
+      await page.waitForTimeout(25);
+    }
+    await page.screenshot({path:`builds/web/corrida-${name}.png`});
+    await page.keyboard.up('ArrowRight');expect(seen.size).toBe(4);
+    await expect.poll(async()=>(await snapshot(page)).pose).toBe('idle');
+    expect((await snapshot(page)).run_frame).toBe(0);
+  }
+  expect(errors).toEqual([]);
+});
+
 test('Bosque migra para Rio; percurso, checkpoint e reabertura offline',async({page,context})=>{
   test.setTimeout(150000);
   const old=fixture(3);old.levels['3'].completed=true;old.levels['3'].boss_done=true;old.finished=true;
@@ -88,6 +147,10 @@ test('Comporta: investida, drenagem e save',async({page})=>{
 test('Save futuro fica intacto até confirmar nova aventura',async({page})=>{
   await seed(page,{save_version:999});await boot(page);expect((await snapshot(page)).save_state).toBe('incompatible');
   await clickRect(page,'restart_rect');await expect.poll(async()=>(await snapshot(page)).restart_confirmation).toBe(true);
-  await clickRect(page,'cancel_rect');expect(await page.evaluate(()=>localStorage.getItem('tico.campaign.v1'))).toBe('{"save_version":999}');
-  await clickRect(page,'restart_rect');await clickRect(page,'confirm_rect');await expect.poll(async()=>(await snapshot(page)).save_state).toBe('saved');expect((await snapshot(page)).campaign_stage).toBe(0);
+  await clickRect(page,'cancel_rect');
+  await expect.poll(async()=>(await snapshot(page)).restart_confirmation).toBe(false);
+  expect(await page.evaluate(()=>localStorage.getItem('tico.campaign.v1'))).toBe('{"save_version":999}');
+  await clickRect(page,'restart_rect');
+  await expect.poll(async()=>(await snapshot(page)).restart_confirmation).toBe(true);
+  await clickRect(page,'confirm_rect');await expect.poll(async()=>(await snapshot(page)).save_state).toBe('saved');expect((await snapshot(page)).campaign_stage).toBe(0);
 });

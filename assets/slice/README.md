@@ -44,3 +44,13 @@ loop mono PCM de 22.050 Hz. Doze efeitos curtos completam a trilha.
 Não foram baixadas músicas nem efeitos de terceiros.
 
 Os prompts finais estão em [prompts.md](prompts.md).
+
+## Correção da corrida — versão 0.9.2
+
+`run.png` acrescenta quatro poses por personagem, com pernas estendidas e
+recolhidas durante a passada. Os dois quadros antigos mantinham silhuetas de
+pernas quase iguais. Os atlas anteriores e as poses de empurrar foram preservados.
+O ciclo avança conforme a velocidade horizontal: um quadro a cada 18 pixels
+para Tico e 20 para Pipo. Repouso, salto e pausa interrompem o ciclo de corrida.
+A geração usou a skill imagegen e os atlas existentes como referência visual.
+Recortes reproduzíveis com `tools/atlas_regions.gd`, sem modificar a imagem.

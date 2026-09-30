@@ -4,8 +4,8 @@ import {stat} from 'node:fs/promises';
 import {resolve, extname, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const stage = ['7','8'].includes(process.env.TICO_WEB_STAGE) ? process.env.TICO_WEB_STAGE : '9';
-const root = resolve(fileURLToPath(new URL(`../builds/web/etapa_${stage}/`, import.meta.url)));
+const folder = ['7','8','9'].includes(process.env.TICO_WEB_STAGE) ? `etapa_${process.env.TICO_WEB_STAGE}` : 'evolucao_e02';
+const root = resolve(fileURLToPath(new URL(`../builds/web/${folder}/`, import.meta.url)));
 const port = Number(process.env.PORT || 8080);
 const host = process.env.HOST || '127.0.0.1';
 const types = {'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.webmanifest':'application/manifest+json','.wasm':'application/wasm','.pck':'application/octet-stream','.png':'image/png','.svg':'image/svg+xml'};
