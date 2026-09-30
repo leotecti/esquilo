@@ -5,11 +5,11 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 4 publicada e aprovada pelo usuário. Etapa 5 implementada:
-**Trilha da Amizade**, com Tico e Pipo, troca, empurrar, investida, faro e
-um desafio que exige a força de Pipo e a passagem estreita de Tico.
-O usuário aprovou acesso, controles, faro e percurso completo. Etapa 5 e
-marco 4 concluídos. Próxima etapa prevista: 6 — Protótipo completo.
+Etapa 5 e marco 4 aprovados pelo usuário. Etapa 6 implementada:
+**protótipo completo da Trilha da Amizade**, com 13 nozes, blocos, lesmas,
+cooperação, segredo, bandeira, plataformas finais e salvamento automático.
+Falta validar esta versão publicada no celular e realizar o playtest estruturado
+com jogadores. A aprovação da etapa 6 depende dessa avaliação.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -52,7 +52,7 @@ A versão do projeto também está registrada em `.godot-version`.
 Na fase, A/D e setas movem Tico. Toque em Espaço para um salto curto;
 segure para subir mais. Durante a queda, manter Espaço abre a cauda e permite
 planar por até 2 segundos. Soltar encerra o planar; aterrissar recarrega a cauda.
-Esc pausa e retoma. O botão **Recomeçar** volta ao início, inclusive durante a pausa.
+Esc pausa e retoma. O botão **Recomeçar** pede confirmação para iniciar outra aventura.
 Perder o foco da janela pausa o jogo. **Q/Trocar** alterna os personagens;
 **E/AÇÃO** inicia a investida de Pipo. A troca acontece no chão, fora da
 investida e onde há espaço para o outro personagem.
@@ -62,25 +62,41 @@ segredos, sem botão extra. Gamepad futuro.
 
 ### Como jogar a Trilha da Amizade
 
-- Colete até nove nozes; uma está escondida e exige o faro de Pipo.
+- Colete até 13 nozes; uma está em um bloco e outra exige o faro de Pipo.
+- Pule sobre a lesma e experimente bater por baixo dos blocos.
 - Chame Pipo e caminhe contra a pedra para empurrá-la até a marca dourada.
 - Troque para Tico, pule a pedra e entre na passagem baixa aberta.
-- Ative a bandeira. Chame Pipo e use E/INVESTIR na parede pesada.
+- Chame Pipo e use E/INVESTIR na parede pesada.
 - Perto dos arbustos, siga as partículas douradas do faro para revelar o segredo.
 - Os amigos compartilham três corações. Trocar não recupera vida. A bandeira
   recupera os corações e marca o retorno.
 - Ao perder a vida, o personagem ativo retorna ao ponto seguro; nozes,
   pedra, passagem aberta e parede quebrada permanecem como estavam.
-- Entre na árvore no fim da trilha para concluir. Coletar todas as nozes é opcional.
-- **Recomeçar** ou **Jogar de novo** reinicia a fase inteira.
+- Ative a bandeira depois do segredo e suba as três plataformas até a árvore.
+  Coletar todas as nozes é opcional.
+- **Recomeçar** ou **Jogar de novo** substitui o progresso após confirmação.
+
+### Salvamento automático
+
+Ao reabrir, a aventura continua automaticamente no início ou na bandeira ativada,
+com três corações. Nozes, blocos usados, pedra, passagem, parede, segredo e personagem
+ficam salvos. Uma fase concluída reabre no resultado. Os inimigos reaparecem.
+O indicador junto ao contador informa se foi possível salvar.
+
+No Web/PWA, o progresso pertence ao navegador e à origem do site (`localStorage`).
+Atualizar os arquivos do jogo preserva o save; limpar dados do site pode apagá-lo.
+Não há sincronização entre aparelhos. No Windows, o arquivo fica em
+`%APPDATA%\Godot\app_userdata\Tico e a Floresta das Nozes\progress.json`.
+Saves danificados ou de versões futuras são preservados até o jogador confirmar
+uma nova aventura. Veja [regras e testes da etapa 6](tests/etapa_6.md).
 
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — etapa 5
+## Web/PWA — etapa 6
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-etapa-5-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
-Os builds anteriores foram preservados. O usuário confirmou acesso e playtest da etapa 5.
+`builds/web/Tico-etapa-6-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+Os builds anteriores foram preservados. A publicação da etapa 6 está pendente.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
 
@@ -95,10 +111,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da etapa 5
+## Build Windows da etapa 6
 
-Abra `builds/windows/etapa_5/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-5-windows.zip` contém os dois arquivos.
+Abra `builds/windows/etapa_6/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-etapa-6-windows.zip` contém os dois arquivos.
 É um build de desenvolvimento com gráficos provisórios em SVG e formas 2D. As pranchas
 em `img/` continuam sendo a referência para a arte final.
 
@@ -108,8 +124,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_5 | Out-Null
-& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_5/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/etapa_6 | Out-Null
+& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_6/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -166,6 +182,7 @@ $godotConsole = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.
 & $godotConsole --headless --path . --script tests/tico_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/minigame_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/coop_test.gd --fixed-fps 60
+& $godotConsole --headless --path . --script tests/prototype_test.gd --fixed-fps 60
 ```
 
 Esses comandos verificam importação, execução, input, colisões, salto, planar,
@@ -174,4 +191,5 @@ câmera e pausa. Resultados em [testes da etapa 1](tests/etapa_1.md) e
 Os testes Web/PWA estão em [testes da etapa 3](tests/etapa_3.md).
 O gameplay e a nova versão Web estão em [testes da etapa 4](tests/etapa_4.md).
 Pipo e a cooperação estão em [testes da etapa 5](tests/etapa_5.md).
+O protótipo e a persistência estão em [testes da etapa 6](tests/etapa_6.md).
 O build Android nativo permanece para uma etapa futura.

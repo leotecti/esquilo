@@ -1312,7 +1312,7 @@ Sistema:
 
 `save_manager.gd`
 
-Dados iniciais:
+Dados previstos para a progressão entre mundos e fases:
 
 ```text
 save_version
@@ -1323,11 +1323,21 @@ special_collectables
 settings
 ```
 
+Na etapa 6, há uma única fase: o formato implementado v1 registra `level`,
+personagem, IDs de itens/blocos, pedra, portão, parede, segredo, checkpoint e
+conclusão. O esquema acima será introduzido conforme esses sistemas existirem,
+com migração explícita. Detalhes: [save do protótipo](../tests/etapa_6.md).
+
 ---
 
 # 63. SAVE NO PWA
 
 Na versão Web/PWA, o save será armazenado localmente através dos mecanismos disponibilizados pelo ambiente Web da engine/navegador.
+
+Implementação da etapa 6: `localStorage` via `JavaScriptBridge`, com escrita
+síncrona e tratamento de erros. No Windows, JSON em `user://progress.json`,
+gravado primeiro em arquivo temporário. O worker de atualização não remove
+o save; a retomada é automática no ponto seguro. Ver DEC-111.
 
 Objetivo:
 

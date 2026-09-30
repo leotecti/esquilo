@@ -2878,4 +2878,29 @@ completo restaura os objetos e seleciona Tico. Sem save persistente nesta etapa.
 
 ---
 
+## DEC-111 — PROTÓTIPO INTEGRADO E SAVE LOCAL
+
+**Categoria:** Fase / Persistência / Testes
+
+**Status:** IMPLEMENTADA; PLAYTEST DA ETAPA 6 PENDENTE
+
+A cena `prototype_trail.tscn` reúne as mecânicas em uma trilha com 13 nozes,
+blocos, cooperação, segredo, bandeira após a cooperação e chegada sobre plataformas.
+As cenas anteriores permanecem disponíveis. Pistas curtas ajudam a observar se
+o jogador entende as regras; a avaliação estruturada ainda será realizada.
+
+O save automático v1 guarda o progresso por objeto e a conclusão. A retomada
+ocorre em um ponto seguro, com três corações, preservando o personagem escolhido.
+No Windows, usar JSON em `user://progress.json` com gravação temporária e renomeação.
+No Web/PWA, usar `localStorage` síncrono, com falhas tratadas e indicador no HUD.
+Essa escolha evita depender da sincronização do sistema de arquivos virtual ao fechar
+o navegador. O cache offline e o save têm ciclos de vida separados.
+
+Atualizações compatíveis preservam chave, IDs e formato. Versões futuras ou saves
+danificados não são sobrescritos automaticamente. Reiniciar exige confirmação.
+Não há backend nem sincronização entre dispositivos. Esquema, regras e testes em
+`tests/etapa_6.md`; a primeira versão não tem saves anteriores para migrar.
+
+---
+
 **FIM DO DOCUMENTO**

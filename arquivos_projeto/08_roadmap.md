@@ -1067,6 +1067,12 @@ Jogador deverá compreender:
 
 # 66. ETAPA 6 — PROTÓTIPO COMPLETO
 
+**Execução em 29/09/2026:** protótipo integrado em `prototype_trail.tscn`,
+com save local, retomada e desafio final. A implementação está disponível para
+publicação; o aceite depende do teste no aparelho e da observação de jogadores
+descrita em [playtest da etapa 6](../tests/playtest_etapa_6.md).
+Resultados técnicos em [testes da etapa 6](../tests/etapa_6.md).
+
 ## OBJETIVO
 
 Construir uma pequena fase que represente os principais conceitos do jogo.

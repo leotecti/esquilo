@@ -1,9 +1,9 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 5 — Pipo: concluída e aprovada pelo usuário
+**Etapa atual:** 6 — Protótipo completo: implementado; aguardando playtest e aprovação
 
-**Próximo trabalho:** etapa 6 — Protótipo completo
+**Próximo trabalho:** publicar e validar a etapa 6, incluindo save no PWA e teste com jogadores
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -87,9 +87,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Etapa 6 — Protótipo completo, conforme o roadmap. O usuário confirmou os
-controles da etapa 5, a descoberta do segredo pelo faro e o percurso até a
-chegada, encerrando a etapa 5 e o marco 4.
+Publicar e validar a etapa 6, já implementada, e realizar o playtest estruturado.
+O usuário confirmou os controles da etapa 5, a descoberta do segredo pelo faro
+e o percurso até a chegada, encerrando a etapa 5 e o marco 4.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
 jogabilidade muito boa em `https://projetosdoleo.com/tico/`. Também confirmou
 o teste offline no aparelho, encerrando a etapa 3 e o marco 2.
@@ -174,6 +174,26 @@ Detalhes: [testes da etapa 4](../tests/etapa_4.md).
 Cena: `scenes/levels/coop_trail.tscn`. Pacotes:
 `builds/web/Tico-etapa-5-web.zip` e `builds/windows/Tico-etapa-5-windows.zip`.
 Detalhes e roteiro: [testes da etapa 5](../tests/etapa_5.md).
+
+## Etapa 6 — Entregas
+
+- [x] Fase integrada: Tico, Pipo, 13 nozes, lesmas, três tipos de bloco e bloco pesado.
+- [x] Pedra, passagem baixa, troca, investida, faro e segredo preservados.
+- [x] Bandeira após a cooperação e três plataformas no desafio final até a árvore.
+- [x] Pistas curtas no cenário; cenas anteriores preservadas.
+- [x] Save automático versionado, retomada segura e conclusão persistente.
+- [x] Reinício com confirmação; save danificado/futuro protegido de sobrescrita automática.
+- [x] 185 verificações de engine (153 anteriores + 32 novas) aprovadas.
+- [x] Dez cenários de Chrome aprovados, incluindo novo processo offline e atualização do worker.
+- [x] Pacotes Web/Windows gerados; conteúdo dos ZIPs e execução Windows conferidos.
+- [ ] Publicação e validação desta versão no aparelho real do usuário.
+- [ ] Playtest estruturado: compreensão, diversão, dificuldade e cooperação.
+- [ ] Aprovação do marco 5 — Protótipo completo.
+
+Cena: `scenes/levels/prototype_trail.tscn`. Pacotes da etapa 6 em `builds/`.
+Registro técnico: [etapa 6](../tests/etapa_6.md).
+Roteiro de observação: [playtest](../tests/playtest_etapa_6.md).
+Alterações deixadas sem commit, conforme preferência do usuário.
 
 ## Decisões ainda abertas
 

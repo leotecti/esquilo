@@ -9,10 +9,11 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-`builds/web/Tico-etapa-5-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-etapa-6-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `etapa_5` entre `/tico/` e os arquivos.
+Não coloque outra pasta `etapa_6` entre `/tico/` e os arquivos.
+Esta versão ainda precisa ser publicada e validada no aparelho real.
 
 1. Guarde uma cópia do conteúdo existente em `/tico/` antes da substituição.
 2. No cPanel da HostGator, abra **Gerenciador de arquivos** e localize a raiz
@@ -55,17 +56,26 @@ O cache offline é administrado pelo service worker dentro de `/tico/`.
 7. Feche novamente, desligue Wi-Fi e dados móveis e reabra pelo ícone.
    Pressione Jogar e confirme movimento, salto e planar sem conexão.
 
-Na etapa 5, teste Trocar, o movimento mais pesado de Pipo, empurrar a pedra,
+Na etapa 6, teste Trocar, o movimento mais pesado de Pipo, empurrar a pedra,
 passar pelo túnel com Tico, investir na parede com Pipo e seguir as partículas
 do faro. Perca a vida após ativar a bandeira e confira personagem, corações e
-progresso do puzzle no retorno. Chegue à árvore e use Jogar de novo.
+progresso do puzzle no retorno. Suba as plataformas, chegue à árvore e use Jogar de novo.
 O botão INVESTIR é o mesmo AÇÃO; o faro é automático. Os gráficos são provisórios.
+
+Para validar o save: colete nozes, abra os obstáculos e ative a bandeira.
+Confira **Progresso salvo**, feche o PWA, desligue a internet e reabra pelo ícone.
+O personagem deve voltar à bandeira com três corações, mantendo nozes, segredo
+e passagens abertas. Conclua e reabra: o resultado deve permanecer.
+Recomeçar exige confirmação; cancelar mantém o progresso. Repita depois de atualizar
+os arquivos, sem limpar os dados do site. O save pertence ao navegador/dispositivo.
+Roteiro completo: [playtest da etapa 6](../tests/playtest_etapa_6.md).
 
 ## Atualizações
 
 Gere cada versão com `npm.cmd run build:web`; o script calcula a versão do cache
 pelos arquivos exportados. Publique o pacote completo. Quando aparecer
-**Atualizar**, o jogador pode carregar a nova versão; a partida volta ao início.
+**Atualizar**, o jogador pode carregar a nova versão; a aventura retoma do ponto
+seguro com o progresso salvo a partir da etapa 6. A etapa 5 não possuía save.
 O worker remove somente caches antigos do Tico na mesma subpasta.
 
 ## Desenvolvimento local
