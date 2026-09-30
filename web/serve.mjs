@@ -4,7 +4,7 @@ import {stat} from 'node:fs/promises';
 import {resolve, extname, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const stage = process.env.TICO_WEB_STAGE === '7' ? '7' : '8';
+const stage = ['7','8'].includes(process.env.TICO_WEB_STAGE) ? process.env.TICO_WEB_STAGE : '9';
 const root = resolve(fileURLToPath(new URL(`../builds/web/etapa_${stage}/`, import.meta.url)));
 const port = Number(process.env.PORT || 8080);
 const host = process.env.HOST || '127.0.0.1';

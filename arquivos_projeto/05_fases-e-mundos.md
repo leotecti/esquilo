@@ -5,6 +5,11 @@
 **Versão:** 1.0  
 **Documento:** 05_fases-e-mundos.md
 
+**Estado implementado em 2026-09-30:** mundos 1 a 4, três fases e um encontro
+final por mundo. O encontro usa uma cena separada ao final da terceira fase.
+O Mundo 1 foi aprovado pelo usuário; mundos 2 a 4 aguardam seu playtest.
+[Conteúdo e validação da etapa 9](../tests/etapa_9.md). Mundo 5 permanece planejado.
+
 ---
 
 # 1. OBJETIVO DO DOCUMENTO

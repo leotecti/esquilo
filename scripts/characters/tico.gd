@@ -41,6 +41,7 @@ var _landing_left: float = 0.0
 var _jump_cut_applied: bool = false
 var _gliding: bool = false
 var _reset_pending: bool = false
+var wind_acceleration := Vector2.ZERO
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
@@ -113,6 +114,8 @@ func _move_character(delta: float) -> void:
 		velocity.y += get_gravity().y * gravity_multiplier * delta
 		velocity.y = minf(velocity.y, glide_fall_speed if _gliding else max_fall_speed)
 	var rising: bool = velocity.y < 0.0
+	if not grounded:
+		velocity += wind_acceleration * delta
 	move_and_slide()
 	if rising:
 		for index in get_slide_collision_count():
@@ -145,6 +148,7 @@ func _update_animation() -> void:
 
 
 func reset_at(point: Vector2) -> void:
+	wind_acceleration = Vector2.ZERO
 	global_position = point
 	force_update_transform()
 	previous_position = point

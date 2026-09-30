@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#a5d6dc"/><stop offset="1" stop-color="#eef0c6"/></linearGradient><linearGradient id="river" x2="0" y2="1"><stop stop-color="#86d9d8"/><stop offset="1" stop-color="#398baf"/></linearGradient></defs>
+<path fill="url(#sky)" d="M0 0h1600v900H0z"/><circle cx="1190" cy="170" r="85" fill="#fff2be" opacity=".65"/>
+<path fill="#94b9af" d="M0 380Q200 130 420 320T850 290T1300 240T1600 330V900H0Z"/><path fill="#5d998f" d="M0 540Q130 330 330 450T770 390T1190 420T1600 340V900H0Z"/>
+<path fill="url(#river)" d="M0 680Q350 530 730 610T1600 550V900H0Z"/>
+<path fill="#81c6c8" d="M1010 365h100l35 365-170-10z"/><path fill="#d5f3e3" opacity=".7" d="M1030 368h36l-8 350h-52zM1080 365h18l27 359h-27z"/>
+<g fill="none" stroke="#d6f1df" stroke-width="8" opacity=".45"><path d="M140 742q150-30 320 0m220 50q200-30 440 0M90 830q230-25 470 0m400 0q170-20 360 0"/></g>
+<g fill="#507c71"><path d="M0 690l70-320 35 290 90-220 50 260zM1450 590l55-285 35 245 60-180v285z"/></g>
+<g fill="#7c8d81" stroke="#657e76" stroke-width="5"><path d="M220 720l30-55 60-15 60 50-5 30zM1190 810l25-65 70-25 70 60-10 35z"/></g>
+</svg>

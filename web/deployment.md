@@ -9,18 +9,18 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-`builds/web/Tico-etapa-8-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-etapa-9-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `etapa_8` entre `/tico/` e os arquivos.
+Não coloque outra pasta `etapa_9` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 
-A etapa 8 abre uma campanha nova em **1-1 — Primeiros Passos**. O save do
-protótipo permanece guardado; as preferências de áudio são aproveitadas.
-Conclua as três fases, liberte Pipo em 1-3 e ajude o Guardião no encontro final.
-Reabra no meio da campanha e após a conclusão para conferir o novo save.
-Roteiro: [etapa 8](../tests/etapa_8.md).
+A etapa 9 importa o progresso do Bosque e mantém o save antigo intacto.
+Quem concluiu a etapa 8 pode usar **Seguir para o Rio** na tela de resultado.
+Sem progresso anterior, a campanha começa em **1-1 — Primeiros Passos**.
+Teste Rio, Montanha e Vila, seus chefes e a retomada dos mecanismos ativados.
+Não limpe os dados do navegador ao atualizar. Roteiro: [etapa 9](../tests/etapa_9.md).
 
 1. Guarde uma cópia do conteúdo existente em `/tico/` antes da substituição.
 2. No cPanel da HostGator, abra **Gerenciador de arquivos** e localize a raiz

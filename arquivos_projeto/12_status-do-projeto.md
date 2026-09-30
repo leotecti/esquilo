@@ -1,9 +1,9 @@
 # Status do projeto
 
 **Data:** 2026-09-30
-**Etapa atual:** 8 — Mundo 1: concluída, testada e aprovada pelo usuário
+**Etapa atual:** 9 — Mundos 2, 3 e 4: implementada; aguardando playtest do usuário
 
-**Próximo trabalho previsto:** etapa 9 — Mundos 2, 3 e 4, começando pelo Rio das Pedras; aguardando solicitação de início
+**Próximo trabalho previsto:** publicar os pacotes da etapa 9 e testar no aparelho. Etapa 10: Mundo 5 — Árvore do Mestre Corvo.
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -87,9 +87,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Publicar e validar o vertical slice da etapa 7 e realizar o playtest estruturado.
-O usuário solicitou avançar para esta etapa; não há registro de aprovação
-do playtest estruturado da etapa 6 nem de medições no aparelho para a etapa 7.
+Publicar e validar os mundos novos da etapa 9. O usuário aprovou o Mundo 1
+e solicitou a expansão. As pendências históricas abaixo registram o aceite
+específico de cada etapa, sem substituir o teste desta versão no aparelho.
 O usuário confirmou os controles da etapa 5, a descoberta do segredo pelo faro
 e o percurso até a chegada, encerrando a etapa 5 e o marco 4.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
@@ -245,6 +245,24 @@ Implementação e validação: [etapa 8](../tests/etapa_8.md).
 Pacotes: `builds/web/Tico-etapa-8-web.zip` e `builds/windows/Tico-etapa-8-windows.zip`.
 Avanço autorizado pelo usuário; as pendências de playtest anteriores permanecem registradas.
 Nenhum commit ou push feito nesta entrega.
+
+## Etapa 9 — Entregas
+
+- [x] Rio das Pedras: três fases, água, troncos, ponte, plataformas móveis e Guardião.
+- [x] Montanha das Corujas: três fases, vento, cavernas, altura, inimigos aéreos e Coruja.
+- [x] Vila dos Castores: três fases, peso, investida, elevadores, comporta e Rei Castor.
+- [x] Primeira fase de cada mundo validada antes da produção das seguintes.
+- [x] Campanha contínua de quatro mundos; save do Bosque importado e preservado.
+- [x] Mecanismos, checkpoints, nozes, segredo e conclusões persistentes.
+- [x] 349 verificações na Godot aprovadas, incluindo regressão do Bosque e dos controles.
+- [x] Exportações Web/PWA e Windows e medição gráfica local.
+- [x] Cinco cenários Web aprovados: migração, Rio offline, Montanha, toque na Vila, comporta e proteção do save.
+- [ ] Publicação e playtest desta versão no aparelho do usuário.
+- [ ] Aceite de dificuldade, visual e fluidez dos mundos novos.
+
+Detalhes, testes Web e roteiro: [etapa 9](../tests/etapa_9.md).
+Pacotes: `builds/web/Tico-etapa-9-web.zip` e `builds/windows/Tico-etapa-9-windows.zip`.
+Nenhum commit ou push realizado. O Mundo 5 permanece para a etapa 10.
 
 ## Decisões ainda abertas
 

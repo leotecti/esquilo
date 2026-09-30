@@ -5,7 +5,7 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const out = resolve(root, 'builds/web/etapa_8');
+const out = resolve(root, 'builds/web/etapa_9');
 const godot = process.env.GODOT_BIN || 'D:\\Godot\\Godot_v4.7.2-stable\\Godot_v4.7.2-stable_win64_console.exe';
 await mkdir(out,{recursive:true});
 await mkdir(resolve(root,'node_modules'),{recursive:true});
@@ -25,7 +25,7 @@ const manifest = JSON.parse(await readFile(manifestPath,'utf8'));
 Object.assign(manifest, {
   id:'./', start_url:'./', scope:'./', lang:'pt-BR',
   name:'Tico e a Floresta das Nozes', short_name:'Tico',
-  description:'Explore o Bosque das Folhas com Tico e Pipo. Uma aventura entre amigos.',
+  description:'Explore o bosque, o rio, a montanha e a vila com Tico e Pipo. Uma aventura entre amigos.',
   display:'standalone', orientation:'landscape', background_color:'#c4e0d9',theme_color:'#244b37',
   icons:[{src:'icon-192.png',sizes:'192x192',type:'image/png',purpose:'any'},
     {src:'icon-512.png',sizes:'512x512',type:'image/png',purpose:'any maskable'}]

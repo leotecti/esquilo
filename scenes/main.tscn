@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/systems/world_campaign.gd" id="1_campaign"]
+[ext_resource type="Script" path="res://scripts/systems/expedition_campaign.gd" id="1_campaign"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_campaign")

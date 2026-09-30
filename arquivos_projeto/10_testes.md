@@ -5,6 +5,11 @@
 **Versão:** 1.0  
 **Documento:** 10_testes.md
 
+**Execução da etapa 9:** 349 verificações na Godot e cinco cenários Web aprovados;
+Windows exportado e executado, com medição gráfica local. Percursos, chefes,
+migração e retomada dos mecanismos foram conferidos. Playtest no aparelho
+permanece pendente. [Relatório e roteiro](../tests/etapa_9.md).
+
 ---
 
 # 1. OBJETIVO

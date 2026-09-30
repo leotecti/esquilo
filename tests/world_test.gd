@@ -3,7 +3,7 @@ const WORLD_SLOT := "user://stage8_test_only.json"
 var campaign: Node
 
 func open_world() -> void:
-	campaign = load("res://scenes/main.tscn").instantiate()
+	campaign = load("res://scenes/world_1_campaign.tscn").instantiate()
 	campaign.store.path = WORLD_SLOT
 	root.add_child(campaign)
 	await frames(35)

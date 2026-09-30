@@ -20,6 +20,8 @@ func _ready() -> void:
 	next_button.pressed.disconnect(restart)
 	next_button.pressed.connect(_continue_world)
 	next_button.text = "Próxima fase" if world_stage<2 else ("Encontrar o Guardião" if world_stage==2 else "Jogar novamente")
+	if world_stage==3 and is_instance_valid(campaign) and campaign.scene_paths.size()>4:
+		next_button.text = "Seguir para o Rio"
 	if world_stage==2:
 		captive = Sprite2D.new()
 		captive.texture = ATLAS.frame("pipo",0)
@@ -182,7 +184,7 @@ func _process(delta: float) -> void:
 		switch_button.hide()
 		if _message_time<=0 and not get_tree().paused:
 			status.text = TITLES[world_stage]+" • Siga as nozes"
-	if world_stage==3 and guardian.health>0:
+	if is_instance_valid(guardian) and guardian.health>0:
 		exit_marker.activated = false
 
 func _on_block(block: Node2D, reward: bool) -> void:
@@ -209,7 +211,7 @@ func _on_guardian_calmed() -> void:
 	_save_progress()
 
 func _on_exit(marker: Node2D) -> void:
-	if (world_stage==2 and not rescued) or (world_stage==3 and guardian.health>0):
+	if (world_stage==2 and not rescued) or (is_instance_valid(guardian) and guardian.health>0):
 		marker.activated = false
 		_say("Ajude o Guardião antes de seguir." if world_stage==3 else "Pipo ainda precisa de ajuda!")
 		return
@@ -219,7 +221,7 @@ func _on_exit(marker: Node2D) -> void:
 
 func _continue_world() -> void:
 	if not is_instance_valid(campaign): return
-	if world_stage==3: restart()
+	if campaign.data.stage>=campaign.scene_paths.size()-1: restart()
 	else: campaign.advance()
 
 func new_adventure() -> void:
@@ -291,6 +293,8 @@ func _test_details() -> Dictionary:
 	data["restart_rect"] = [restart_rect.position.x,restart_rect.position.y,restart_rect.size.x,restart_rect.size.y]
 	if is_instance_valid(campaign):
 		data["world_finished"] = campaign.data.finished
+		if campaign.scene_paths.size()>4: data["stage"] = 9
+		data["campaign_stage"] = campaign.data.stage
 		data["save_state"] = campaign.store.state
 	if is_instance_valid(guardian):
 		data["boss_health"] = guardian.health

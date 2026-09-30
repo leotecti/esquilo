@@ -1,0 +1,23 @@
+extends "res://tests/expedition_test.gd"
+
+func run() -> void:
+	root.size = Vector2i(1280,720)
+	root.content_scale_size = Vector2i(1280,720)
+	await open_stage(4,"1")
+	await walk_to(825)
+	await frames(45)
+	check(not level.mechanisms.Peso.active,"Peso de Tico não aciona mecanismo pesado")
+	check(level.switch_character(),"Pipo assume o botão de peso")
+	await frames(45)
+	check(level.mechanisms.Peso.active,"Peso de Pipo trava mecanismo e abre ponte")
+	check(level.movers[0].enabled,"Mecanismo liga elevador")
+	await walk_to(2110)
+	await frames(30)
+	level.switch_character()
+	await glide_to(2710)
+	await walk_to(3590)
+	await frames(60)
+	check(level.completed,"4-1 concluída por comandos antes de produzir 4-2 e 4-3")
+	await close_level()
+	print("RESULTADO: %d verificações, %d falhas" % [checks,failures])
+	quit(1 if failures else 0)

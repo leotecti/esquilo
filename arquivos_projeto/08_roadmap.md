@@ -1439,6 +1439,10 @@ Se o Mundo 1 funcionar bem, ele servirá como padrão de produção para os dema
 
 # 90. ETAPA 9 — MUNDOS 2, 3 E 4
 
+**Execução em 2026-09-30:** três mundos implementados, com nove fases e três
+encontros finais. 349 verificações na Godot e cinco cenários Web aprovados.
+Pacotes prontos; aguardando playtest do usuário. [Registro da etapa 9](../tests/etapa_9.md).
+
 A partir daqui a arquitetura principal deverá estar estabilizada.
 
 ---

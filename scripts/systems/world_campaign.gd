@@ -2,6 +2,7 @@ extends Node
 const STORE = preload("res://scripts/systems/world_save.gd")
 const SCENES = ["res://scenes/levels/world_1_1.tscn","res://scenes/levels/world_1_2.tscn","res://scenes/levels/world_1_3.tscn","res://scenes/levels/world_1_guardian.tscn"]
 var store = STORE.new()
+var scene_paths: Array = SCENES.duplicate()
 var level: Node2D
 var data: Dictionary
 var save_enabled := true
@@ -12,6 +13,10 @@ func fresh() -> Dictionary:
 	return {"save_version":1,"stage":0,"unlocked":0,"finished":false,"levels":{},"settings":{"music":true,"effects":true}}
 
 func _ready() -> void:
+	data = _read_progress()
+	_load_stage(int(data.stage))
+
+func _read_progress() -> Dictionary:
 	data = store.read_save() if save_enabled else {}
 	if data.is_empty():
 		data = fresh()
@@ -19,7 +24,7 @@ func _ready() -> void:
 		if save_enabled:
 			var previous = preload("res://scripts/systems/save_manager.gd").new().read_save()
 			if previous.has("settings"): data.settings = previous.settings.duplicate()
-	_load_stage(int(data.stage))
+	return data
 
 func _load_stage(index: int) -> void:
 	get_tree().paused = false
@@ -28,7 +33,7 @@ func _load_stage(index: int) -> void:
 		remove_child(level)
 		level.queue_free()
 	data.stage = index
-	level = load(SCENES[index]).instantiate()
+	level = load(scene_paths[index]).instantiate()
 	level.campaign = self
 	level.music_enabled = data.settings.music
 	level.effects_enabled = data.settings.effects
@@ -44,17 +49,17 @@ func save_progress() -> void:
 	data.levels[str(data.stage)] = level.world_snapshot()
 	data.settings = {"music":level.music_enabled,"effects":level.effects_enabled}
 	if level.completed:
-		data.unlocked = maxi(data.unlocked,mini(data.stage+1,3))
-		if data.stage == 3: data.finished = true
+		data.unlocked = maxi(data.unlocked,mini(data.stage+1,scene_paths.size()-1))
+		if data.stage == scene_paths.size()-1: data.finished = true
 	var encoded := JSON.stringify(data)
 	if save_enabled and encoded != _last_save and store.write_save(data): _last_save = encoded
 	if is_instance_valid(level.save_label):
-		level.save_label.text = "Progresso salvo • Mundo 1" if store.state == "saved" else "Mundo 1 • Bosque das Folhas"
+		level.save_label.text = ("Progresso salvo • Mundo %d" % (int(data.stage)/4+1)) if store.state == "saved" else "Aventura • Progresso local"
 		if store.locked: level.save_label.text = "Save não reconhecido • Recomeçar cria outro"
 		elif store.state == "unavailable": level.save_label.text = "Não foi possível salvar neste dispositivo"
 
 func advance() -> void:
-	if _changing or not level.completed or data.stage >= 3: return
+	if _changing or not level.completed or data.stage >= scene_paths.size()-1: return
 	save_progress()
 	_changing = true
 	_load_stage.call_deferred(int(data.stage)+1)

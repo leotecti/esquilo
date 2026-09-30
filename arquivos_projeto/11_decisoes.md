@@ -2963,4 +2963,27 @@ artísticos ou o playtest no aparelho. Registro em `tests/etapa_8.md`.
 
 ---
 
+## DEC-114 — CAMPANHA DOS QUATRO MUNDOS
+
+**Status:** IMPLEMENTADA NA ETAPA 9; PLAYTEST DO USUÁRIO PENDENTE
+
+Rio, Montanha e Vila acrescentam três fases e um encontro final por mundo.
+A primeira fase de cada ambiente foi validada antes das seguintes. Água,
+plataformas móveis, vento, cavernas, peso, elevadores e comportas reaproveitam
+os controles e a cooperação já aprovados. Os chefes têm ataques anunciados,
+três acertos e encerramento amigável. A Árvore permanece para a etapa 10.
+
+A campanha atual usa `campaign.json` / `tico.campaign.v1`. Na primeira abertura,
+importa o progresso válido de `world1.json` / `tico.world1.v1`, mantendo esse
+original intacto. Bosque concluído libera o Rio; progresso parcial continua
+na mesma fase. Mecanismos são restaurados antes de reposicionar o personagem.
+Save danificado/futuro continua protegido até confirmar nova aventura.
+
+Fundos SVG e objetos desenhados por código distinguem os ambientes. A arte
+existente dos personagens, incluindo esforço e passadas, permanece em uso.
+Aceite visual e dificuldade dependem do playtest desta versão. Implementação,
+349 verificações na Godot, cinco cenários Web e entregas em `tests/etapa_9.md`.
+
+---
+
 **FIM DO DOCUMENTO**

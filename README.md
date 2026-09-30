@@ -5,11 +5,11 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 8 concluída, testada e aprovada pelo usuário: **Mundo 1 — Bosque das Folhas**, com três fases,
-resgate de Pipo, cooperação e encontro com o Guardião no fim da fase 1-3.
-A campanha salva a fase atual, nozes, checkpoints, puzzles e conclusão.
-Arte, música, controles e animações de empurrar da etapa 7 foram mantidos.
-Marco 6 aprovado em 2026-09-30. Próxima etapa prevista: Mundos 2, 3 e 4.
+Etapa 9 implementada: **Rio das Pedras, Montanha das Corujas e Vila dos Castores**,
+cada um com três fases e um encontro final. A campanha inclui os quatro mundos.
+O Bosque da etapa 8 foi testado e aprovado pelo usuário; os mundos novos aguardam
+seu playtest. O progresso anterior é importado automaticamente.
+Água, troncos, vento, cavernas, elevadores, peso e comportas ampliam a cooperação.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -75,6 +75,21 @@ segredos, sem botão extra. Gamepad futuro.
 Na tela de resultado, **Próxima fase** continua a campanha. O encontro com o
 Guardião tem sua própria bandeira. Recomeçar inicia o mundo novamente após confirmação.
 
+### Como jogar os mundos novos
+
+- **Rio das Pedras:** espere as plataformas móveis, empurre troncos com Pipo e
+  use sua investida para baixar a ponte. Cair na água retorna à margem com dano.
+- **Montanha das Corujas:** segure PULO para planar nas correntes de vento.
+  Tico atravessa cavernas baixas; Pipo abre a passagem e encontra o segredo.
+- **Vila dos Castores:** Pipo aciona placas de peso e engrenagens. Espere o elevador
+  baixar, suba nele e salte para o patamar. Abra a comporta para revelar o túnel.
+- **Chefes:** espere o ataque anunciado e a abertura dourada. O Guardião do Rio
+  aceita salto ou investida. Coruja e Rei Castor exigem um salto por cima com Tico;
+  comece o salto com distância. Pipo liga o elevador da arena do Rei Castor.
+
+Três acertos acalmam cada chefe. A saída leva ao mundo seguinte. A conclusão da
+Vila aponta para a Árvore; esse quinto mundo pertence à etapa 10.
+
 ### Desafios da dupla na fase 1-3
 
 - Colete até 13 nozes; uma está em um bloco e outra exige o faro de Pipo.
@@ -101,10 +116,12 @@ O indicador junto ao contador informa se foi possível salvar.
 No Web/PWA, o progresso pertence ao navegador e à origem do site (`localStorage`).
 Atualizar os arquivos do jogo preserva o save; limpar dados do site pode apagá-lo.
 Não há sincronização entre aparelhos. No Windows, o arquivo fica em
-`%APPDATA%\Godot\app_userdata\Tico e a Floresta das Nozes\world1.json`.
-O Web usa `tico.world1.v1`. O slot antigo `progress.json` / `tico.progress.v1`
-é preservado; apenas as preferências de áudio são copiadas na primeira abertura.
-A campanha nova começa em 1-1 mesmo para quem concluiu o protótipo.
+`%APPDATA%\Godot\app_userdata\Tico e a Floresta das Nozes\campaign.json`.
+O Web usa `tico.campaign.v1`. Na primeira abertura da etapa 9, o progresso do
+Bosque (`world1.json` / `tico.world1.v1`) é importado e o original permanece intacto.
+Quem terminou o Bosque reabre no resultado e usa **Seguir para o Rio**.
+Sem save do Bosque, a campanha começa em 1-1. O slot do protótipo também é preservado.
+Pontes, comportas e mecanismos ativados ficam salvos por fase.
 Saves danificados ou de versões futuras são preservados até o jogador confirmar
 uma nova aventura. Veja [regras e testes da etapa 6](tests/etapa_6.md).
 
@@ -118,7 +135,7 @@ As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 ## Web/PWA — etapa 8
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-etapa-8-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-etapa-9-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -134,10 +151,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da etapa 8
+## Build Windows da etapa 9
 
-Abra `builds/windows/etapa_8/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-8-windows.zip` contém os dois arquivos.
+Abra `builds/windows/etapa_9/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-etapa-9-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -147,8 +164,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_8 | Out-Null
-& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_8/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/etapa_9 | Out-Null
+& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/etapa_9/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -222,7 +239,9 @@ Arte, áudio, UI e medições estão em [testes da etapa 7](tests/etapa_7.md).
 O build Android nativo permanece para uma etapa futura.
 
 A campanha e seu aceite estão em [testes da etapa 8](tests/etapa_8.md).
-`npm.cmd run test:web` executa os cenários atuais em `world.spec.js`.
+Os mundos novos estão documentados em [testes da etapa 9](tests/etapa_9.md).
+`npm.cmd run test:web` executa os cenários atuais em `expedition.spec.js`.
+Para repetir os testes Web da etapa 8, use `$env:TICO_WEB_STAGE='8'` com seu build preservado.
 Os testes históricos Web da etapa 7 continuam disponíveis contra seu build preservado:
 defina `$env:TICO_WEB_STAGE='7'` antes de executar o Playwright e remova a variável
 com `Remove-Item Env:TICO_WEB_STAGE` ao voltar à etapa atual. Feche o servidor local

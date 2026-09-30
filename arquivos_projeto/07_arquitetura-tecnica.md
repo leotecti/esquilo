@@ -6,6 +6,11 @@
 **Documento:** 07_arquitetura-tecnica.md  
 **Arquitetura principal:** Godot + GDScript + Web/PWA
 
+**Implementação da etapa 9:** `expedition_campaign.gd` coordena 16 cenas dos
+quatro mundos. `expedition_level.gd` estende o Bosque com ambiente e mecanismos.
+`expedition_save.gd` importa o save da etapa 8 para `campaign.json` /
+`tico.campaign.v1`, preservando o original. [Detalhes e testes](../tests/etapa_9.md).
+
 ---
 
 # 1. OBJETIVO
