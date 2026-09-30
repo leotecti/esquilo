@@ -1,0 +1,110 @@
+extends Node2D
+const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
+const CHROMA = preload("res://scripts/presentation/chroma_key.gdshader")
+var character: CharacterBody2D
+var level: Node2D
+var pig := false
+var pose := "idle"
+var _time := 0.0
+var _step_time := 0.0
+var _previous_grounded := true
+var _previous_vy := 0.0
+var push_frame := 0
+var _push_time := 0.0
+var _push_distance := 0.0
+var _last_position := Vector2.ZERO
+
+func _ready() -> void:
+	character = get_parent()
+	character.sprite.hide()
+	pig = character.is_in_group("pipo")
+	material = ShaderMaterial.new()
+	material.shader = CHROMA
+	_last_position = character.global_position
+
+func _process(delta: float) -> void:
+	if not character.visible:
+		pose = "idle"
+		_last_position = character.global_position
+		return
+	_time += delta
+	var previous_pose := pose
+	pose = str(character.state)
+	if _pressing_stone():
+		pose = "push" if pig and character.pushing else "push_attempt"
+	if level.completed: pose = "celebrate"
+	elif character._hurt_left > 0 or level.respawning: pose = "hurt"
+	if pose in ["push", "push_attempt"]:
+		if previous_pose != pose:
+			_push_time = 0
+			_push_distance = 0
+		else:
+			_push_time += delta
+			_push_distance += character.global_position.distance_to(_last_position)
+		# Pipo alterna os pés conforme avança, sem caminhar parado no limite da pedra.
+		push_frame = int(_push_distance / 12.0) % 4 if pose == "push" else (0 if pig else int(_push_time * 5) % 4)
+	else:
+		push_frame = 0
+	_last_position = character.global_position
+	if character.controls_enabled and not level.respawning and not level.completed:
+		if character.velocity.y < -300 and _previous_vy >= -50 and not character.is_on_floor():
+			level.sounds.play_effect("jump")
+		if character.is_on_floor() and not _previous_grounded:
+			level.sounds.play_effect("land")
+		if character.is_on_floor() and (absf(character.velocity.x) > 30 or pose == "push"):
+			_step_time += delta
+			if _step_time > (0.36 if pig else 0.26):
+				_step_time = 0
+				level.sounds.play_effect("step")
+				level.puff(character.position,Color("e2d2a5"),3)
+	_previous_grounded = character.is_on_floor()
+	_previous_vy = character.velocity.y
+	modulate.a = character.sprite.modulate.a
+	queue_redraw()
+
+func _pressing_stone() -> bool:
+	if not character.controls_enabled or not character.is_on_floor():
+		return false
+	if pig and character.ability != "ready":
+		return false
+	var direction := Input.get_axis("move_left", "move_right")
+	if is_zero_approx(direction):
+		return false
+	for i in character.get_slide_collision_count():
+		var hit := character.get_slide_collision(i)
+		var object = hit.get_collider()
+		if absf(hit.get_normal().x) > 0.5 and direction * hit.get_normal().x < 0:
+			if object.has_method("push_by") or object.has_method("receive_charge"):
+				return true
+	return false
+
+func _draw() -> void:
+	if not is_instance_valid(character): return
+	var maps := {"idle":0,"run":1 + int(_time*10)%2,"jump":3,"fall":4,"land":0,
+		"glide":5,"hurt":6,"celebrate":7}
+	if pig:
+		maps.merge({"push":5,"charge":6,"sniff":7,"hurt":8,"celebrate":9,"prepare":10,"recover":11},true)
+	var texture := ATLAS.frame("pipo" if pig else "tico",maps.get(pose,0))
+	if pose in ["push", "push_attempt"]:
+		texture = ATLAS.frame("push",(4 if pig else 0)+push_frame)
+	var height := 82.0 if pig else 76.0
+	if pose == "glide": height = 67
+	if pose == "charge": height = 58
+	if pose == "prepare": height = 65
+	if pose in ["push", "push_attempt"]: height = 72
+	var size := texture.get_size() * (height / texture.get_height())
+	var bob := sin(_time*3)*1.0
+	var angle := 0.0
+	if pose == "run": bob = -absf(sin(_time*10))*2
+	if pose == "push": bob = 0
+	if pose == "push_attempt": bob = -absf(sin(_push_time*5))*0.6
+	if pose == "celebrate": bob = -absf(sin(_time*5))*7
+	if pose == "sniff": angle = sin(_time*6)*0.035
+	if pose == "hurt": angle = -0.12
+	draw_set_transform(Vector2(0,bob),angle,Vector2(character.facing,1))
+	# O rosto acompanha a colisão; a cauda fica atrás do corpo de Tico.
+	var right_edge := size.x * 0.5 if pig else size.x * 0.32
+	if pose in ["push", "push_attempt"]:
+		# As mãos ficam junto à lateral física da pedra, também ao virar à esquerda.
+		right_edge = 26.0 if pig else 18.0
+	draw_texture_rect(texture,Rect2(Vector2(right_edge-size.x,-size.y),size),false)

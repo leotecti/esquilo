@@ -46,7 +46,7 @@ Ao final, perguntar: “Qual parte você mais gostou?”, “Onde ficou difícil
 - [ ] Atualizar uma build compatível sem limpar dados e conferir a retomada.
 - [ ] Repetir multitoque, pausa, troca de aplicativo e rotação.
 
-## Parecer do marco 5
+## Parecer do protótipo completo
 
 | Pergunta do roadmap | Sim / Não / Inconclusivo | Evidência |
 | --- | --- | --- |

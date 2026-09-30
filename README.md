@@ -5,11 +5,11 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 5 e marco 4 aprovados pelo usuário. Etapa 6 implementada:
-**protótipo completo da Trilha da Amizade**, com 13 nozes, blocos, lesmas,
-cooperação, segredo, bandeira, plataformas finais e salvamento automático.
-Falta validar esta versão publicada no celular e realizar o playtest estruturado
-com jogadores. A aprovação da etapa 6 depende dessa avaliação.
+Etapa 7 implementada: **vertical slice do Bosque das Folhas**, com personagens
+e objetos ilustrados, cenário em camadas, animações, música original, efeitos,
+HUD e menu de pausa. Mantém a trilha com 13 nozes e o save da etapa 6.
+O avanço foi solicitado pelo usuário; a avaliação com jogadores e a validação
+de áudio/desempenho no celular real ainda estão pendentes. Marco 5 aguardando aceite.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -17,7 +17,7 @@ Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 1. Use **Godot 4.7.2 stable, edição padrão** (sem .NET).
 2. No gerenciador da Godot, importe o arquivo `project.godot` desta pasta.
 3. Abra o projeto e pressione **F6** para executar a cena aberta ou **F5**
-   para executar o projeto e abrir a Trilha da Amizade.
+   para executar o projeto e abrir o Bosque das Folhas.
 4. Use **F8** para interromper a execução e **Ctrl+S** para salvar a cena.
 
 Nesta máquina, a instalação escolhida fica em
@@ -90,13 +90,18 @@ Não há sincronização entre aparelhos. No Windows, o arquivo fica em
 Saves danificados ou de versões futuras são preservados até o jogador confirmar
 uma nova aventura. Veja [regras e testes da etapa 6](tests/etapa_6.md).
 
+Na etapa 7, **Pausar/Esc** abre o menu com controles de música e efeitos.
+As preferências são salvas; saves da etapa 6 são aceitos com áudio ligado por padrão.
+O jogo suspende música e animações durante a pausa. Arte, animações e áudio estão
+documentados em [testes da etapa 7](tests/etapa_7.md).
+
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — etapa 6
+## Web/PWA — etapa 7
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-etapa-6-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
-Os builds anteriores foram preservados. A publicação da etapa 6 está pendente.
+`builds/web/Tico-etapa-7-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+Os builds anteriores foram preservados. A publicação desta versão está pendente.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
 
@@ -111,12 +116,12 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da etapa 6
+## Build Windows da etapa 7
 
-Abra `builds/windows/etapa_6/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-6-windows.zip` contém os dois arquivos.
-É um build de desenvolvimento com gráficos provisórios em SVG e formas 2D. As pranchas
-em `img/` continuam sendo a referência para a arte final.
+Abra `builds/windows/etapa_7/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-etapa-7-windows.zip` contém os dois arquivos.
+As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
+artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
 Para gerar novamente, instale os templates de exportação **4.7.2 stable**
 pelo gerenciador de templates da Godot. Nesta máquina, os templates Windows
@@ -124,8 +129,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_6 | Out-Null
-& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_6/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/etapa_7 | Out-Null
+& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_7/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -183,6 +188,7 @@ $godotConsole = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.
 & $godotConsole --headless --path . --script tests/minigame_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/coop_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/prototype_test.gd --fixed-fps 60
+& $godotConsole --headless --path . --script tests/slice_test.gd --fixed-fps 60
 ```
 
 Esses comandos verificam importação, execução, input, colisões, salto, planar,
@@ -192,4 +198,5 @@ Os testes Web/PWA estão em [testes da etapa 3](tests/etapa_3.md).
 O gameplay e a nova versão Web estão em [testes da etapa 4](tests/etapa_4.md).
 Pipo e a cooperação estão em [testes da etapa 5](tests/etapa_5.md).
 O protótipo e a persistência estão em [testes da etapa 6](tests/etapa_6.md).
+Arte, áudio, UI e medições estão em [testes da etapa 7](tests/etapa_7.md).
 O build Android nativo permanece para uma etapa futura.

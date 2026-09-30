@@ -1199,6 +1199,11 @@ O protótipo deverá responder positivamente:
 
 # 73. ETAPA 7 — VERTICAL SLICE
 
+**Execução em 29/09/2026:** `vertical_slice.tscn` implementa o Bosque das Folhas
+com arte ilustrada, animações, áudio original, UI e opções persistentes.
+O usuário solicitou o avanço; o aceite do marco 5 exige validar esta versão no
+aparelho e com jogadores. [Resultados e roteiro](../tests/etapa_7.md).
+
 ## OBJETIVO
 
 Produzir uma pequena parte do jogo próxima da qualidade final.

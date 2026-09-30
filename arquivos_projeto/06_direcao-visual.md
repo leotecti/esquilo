@@ -98,6 +98,12 @@ cartoon 2D com acabamento ilustrado, textura suave e volume estilizado.
 Esse acabamento orientará os assets; a legibilidade em tamanho de gameplay
 deverá determinar quais detalhes manter.
 
+**Aplicação na etapa 7:** `assets/slice/` contém os atlas ilustrados de Tico,
+Pipo e objetos, além do fundo do Bosque das Folhas. A apresentação usa contornos
+quentes, planos distantes suaves e bordas claras nas plataformas. A nova UI usa
+creme, verde escuro e dourado; a aprovação artística e a leitura em celular real
+continuam pendentes. [Origem, prompts e integração](../assets/slice/README.md).
+
 O jogo utilizará estilo:
 
 **2D CARTOON ESTILIZADO**

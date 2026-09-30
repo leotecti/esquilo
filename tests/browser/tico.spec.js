@@ -139,7 +139,7 @@ test('dupla: pedra, túnel, investida, faro, chegada e nova partida',async({page
   await expect.poll(async()=>(await snapshot(page)).ability).toBe('ready');
   await page.keyboard.down('ArrowRight');
   await expect.poll(async()=>(await snapshot(page)).secret_revealed,{timeout:10000}).toBe(true);
-  await page.screenshot({path:'builds/web/preview-etapa6-faro.png'});
+  await page.screenshot({path:'builds/web/preview-etapa7-faro.png'});
   await expect.poll(async()=>(await snapshot(page)).checkpoint,{timeout:10000}).toBe(true);
   await page.keyboard.up('ArrowRight');
   await expect.poll(async()=>(await snapshot(page)).grounded).toBe(true);
@@ -159,7 +159,7 @@ test('dupla: pedra, túnel, investida, faro, chegada e nova partida',async({page
   await expect.poll(async()=>(await snapshot(page)).completed).toBe(true);
   await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
   expect((await snapshot(page)).nuts).toBeGreaterThan(0);
-  await page.screenshot({path:'builds/web/preview-etapa6-final.png'});
+  await page.screenshot({path:'builds/web/preview-etapa7-final.png'});
   // Botão Jogar de novo no painel central do canvas.
   await page.mouse.click(640,440);
   await expect.poll(async()=>(await snapshot(page)).restart_confirmation).toBe(true);
@@ -189,7 +189,7 @@ test('Pipo no touch: trocar, investir com direção e cancelar contatos',async({
   await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point('Right',1),point('Action',2)]});
   await expect.poll(async()=>(await snapshot(page)).ability,{intervals:[30,50,100]}).toBe('prepare');
   await expect.poll(async()=>(await snapshot(page)).ability,{intervals:[30,50,100]}).toBe('charge');
-  await page.screenshot({path:'builds/web/preview-etapa6-pipo-touch.png'});
+  await page.screenshot({path:'builds/web/preview-etapa7-pipo-touch.png'});
   await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
   await expect.poll(async()=>(await snapshot(page)).right).toBe(false);
   await expect.poll(async()=>(await snapshot(page)).action).toBe(false);

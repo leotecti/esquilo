@@ -60,6 +60,13 @@ func valid(data: Variant) -> bool:
 		for id in data[key]:
 			if not id is String or id.length() > 80:
 				return false
+	# Campo opcional aditivo: saves da etapa 6 continuam válidos.
+	if data.has("settings"):
+		if not data.settings is Dictionary:
+			return false
+		for key in ["music", "effects"]:
+			if not data.settings.get(key) is bool:
+				return false
 	return true
 
 func write_save(data: Dictionary) -> bool:

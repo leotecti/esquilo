@@ -9,10 +9,10 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-`builds/web/Tico-etapa-6-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-etapa-7-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `etapa_6` entre `/tico/` e os arquivos.
+Não coloque outra pasta `etapa_7` entre `/tico/` e os arquivos.
 Esta versão ainda precisa ser publicada e validada no aparelho real.
 
 1. Guarde uma cópia do conteúdo existente em `/tico/` antes da substituição.
@@ -60,7 +60,14 @@ Na etapa 6, teste Trocar, o movimento mais pesado de Pipo, empurrar a pedra,
 passar pelo túnel com Tico, investir na parede com Pipo e seguir as partículas
 do faro. Perca a vida após ativar a bandeira e confira personagem, corações e
 progresso do puzzle no retorno. Suba as plataformas, chegue à árvore e use Jogar de novo.
-O botão INVESTIR é o mesmo AÇÃO; o faro é automático. Os gráficos são provisórios.
+O botão INVESTIR é o mesmo AÇÃO; o faro é automático.
+
+A etapa 7 apresenta o **Bosque das Folhas** com arte ilustrada e áudio.
+Teste a música, os efeitos, as opções no menu Pausar e a persistência dessas
+preferências. Confirme que o áudio pausa ao mudar de aplicativo e que volta
+corretamente. Confira o visual, a fluidez e o aquecimento durante uma sessão
+de pelo menos dez minutos. [Roteiro da etapa 7](../tests/etapa_7.md).
+Saves da etapa 6 são compatíveis: não limpe os dados do site ao atualizar.
 
 Para validar o save: colete nozes, abra os obstáculos e ative a bandeira.
 Confira **Progresso salvo**, feche o PWA, desligue a internet e reabra pelo ícone.

@@ -46,7 +46,7 @@ test('fechar navegador, abrir offline e retomar save do mesmo perfil',async()=>{
     await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(370);
     await page.keyboard.up('ArrowRight');
     expect((await snapshot(page)).nuts).toBe(nuts);
-    await page.screenshot({path:'builds/web/preview-etapa6-save-offline.png'});
+    await page.screenshot({path:'builds/web/preview-etapa7-save-offline.png'});
   } finally {
     await context?.close();
     await rm(profile,{recursive:true,force:true});
@@ -98,5 +98,5 @@ test('armazenamento indisponível permite jogar e informa falha',async({page})=>
   await page.keyboard.down('ArrowRight');
   await expect.poll(async()=>(await snapshot(page)).nuts).toBeGreaterThan(0);
   await page.keyboard.up('ArrowRight');
-  await page.screenshot({path:'builds/web/preview-etapa6-save-unavailable.png'});
+  await page.screenshot({path:'builds/web/preview-etapa7-save-unavailable.png'});
 });

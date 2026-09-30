@@ -2903,4 +2903,34 @@ Não há backend nem sincronização entre dispositivos. Esquema, regras e teste
 
 ---
 
+## DEC-112 — APRESENTAÇÃO DO VERTICAL SLICE
+
+**Categoria:** Arte / Áudio / UI / Desempenho
+
+**Status:** IMPLEMENTADA; ACEITE DO MARCO 5 PENDENTE
+
+A etapa 7 adiciona `vertical_slice.tscn`, derivada do protótipo por GDScript,
+com cena completa independente para manter os anchors corretos na exportação Web.
+A geometria, os controladores e os IDs do save da etapa 6 são preservados.
+Arte e animação são uma camada de apresentação; o personagem inativo continua
+sem controle ou colisão. As cenas anteriores mantêm a apresentação anterior.
+
+Os atlas ilustrados foram gerados com a ferramenta imagegen integrada, usando
+as referências do projeto. O atlas de objetos possui alpha; os personagens
+usam recorte de fundo magenta no shader. Não remover cores do personagem.
+Regiões são compartilhadas em cache; partículas têm duração e limite de instâncias.
+Fontes, proveniência e prompts ficam em `assets/slice/README.md`.
+
+Música e efeitos são composições/síntese originais reproduzíveis pelo script
+`tools/generate_slice_audio.mjs`. Os WAVs são pré-carregados, sem sintetizar PCM
+a cada coleta. Música e efeitos possuem opções independentes no menu de pausa.
+O campo opcional `settings` é aditivo ao save v1: um save da etapa 6 usa os valores
+padrão, sem perder o progresso. Versões antigas podem ignorar esse campo.
+
+Testes automatizados e medições de quadros ajudam a encontrar regressões, mas
+não substituem avaliação de áudio, identidade visual e desempenho no Android/PWA.
+O marco 5 é **Vertical Slice**; o protótipo da etapa 6 não cria um marco adicional.
+
+---
+
 **FIM DO DOCUMENTO**

@@ -1,9 +1,9 @@
 # Status do projeto
 
 **Data:** 2026-09-29  
-**Etapa atual:** 6 — Protótipo completo: implementado; aguardando playtest e aprovação
+**Etapa atual:** 7 — Vertical slice: implementado; aguardando validação no aparelho e aceite artístico
 
-**Próximo trabalho:** publicar e validar a etapa 6, incluindo save no PWA e teste com jogadores
+**Próximo trabalho:** publicar e avaliar a etapa 7, principalmente áudio, leitura visual e desempenho no PWA
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -87,7 +87,9 @@ Detalhes: [registro da etapa 1](../tests/etapa_1.md).
 
 ## Próximo trabalho previsto
 
-Publicar e validar a etapa 6, já implementada, e realizar o playtest estruturado.
+Publicar e validar o vertical slice da etapa 7 e realizar o playtest estruturado.
+O usuário solicitou avançar para esta etapa; não há registro de aprovação
+do playtest estruturado da etapa 6 nem de medições no aparelho para a etapa 7.
 O usuário confirmou os controles da etapa 5, a descoberta do segredo pelo faro
 e o percurso até a chegada, encerrando a etapa 5 e o marco 4.
 O usuário confirmou upload na HostGator, acesso, instalação da PWA e
@@ -188,12 +190,36 @@ Detalhes e roteiro: [testes da etapa 5](../tests/etapa_5.md).
 - [x] Pacotes Web/Windows gerados; conteúdo dos ZIPs e execução Windows conferidos.
 - [ ] Publicação e validação desta versão no aparelho real do usuário.
 - [ ] Playtest estruturado: compreensão, diversão, dificuldade e cooperação.
-- [ ] Aprovação do marco 5 — Protótipo completo.
+- [ ] Aprovação do protótipo completo; a etapa 6 não acrescenta um marco numerado.
 
 Cena: `scenes/levels/prototype_trail.tscn`. Pacotes da etapa 6 em `builds/`.
 Registro técnico: [etapa 6](../tests/etapa_6.md).
 Roteiro de observação: [playtest](../tests/playtest_etapa_6.md).
 Alterações deixadas sem commit, conforme preferência do usuário.
+
+## Etapa 7 — Entregas
+
+- [x] Cena `vertical_slice.tscn`: Bosque das Folhas com fundo ilustrado e profundidade.
+- [x] Arte de Tico, Pipo, lesma, nozes, blocos, pedra, vegetação e bandeira.
+- [x] Poses de movimento, habilidades, dano e celebração; ciclos com variações e movimento procedural.
+- [x] Música original em loop e efeitos pré-gerados de gameplay e interface.
+- [x] HUD ilustrado, retrato do personagem, pausa, opções de áudio e controles touch.
+- [x] Preferências persistentes e compatibilidade com saves da etapa 6.
+- [x] Efeitos limitados em quantidade e recortes de atlas compartilhados.
+- [x] 208 verificações de engine e 12 cenários de navegador aprovados.
+- [x] Medições locais próximas de 60 FPS: p95 de 17,74 ms no Windows e 17,90 ms no Web desktop.
+- [ ] Validar áudio, desempenho e legibilidade no Android/PWA real.
+- [ ] Aprovar identidade visual, diversão e entendimento com jogadores.
+- [ ] Aprovar marco 5 — Vertical Slice, antes da produção do Mundo 1.
+
+Pacotes: `builds/web/Tico-etapa-7-web.zip` e
+`builds/windows/Tico-etapa-7-windows.zip`. Detalhes: [etapa 7](../tests/etapa_7.md).
+Arte e prompts: [assets do slice](../assets/slice/README.md).
+As alterações desta etapa permanecem sem commit.
+
+**Ajuste após o playtest do usuário:** Tico passa a demonstrar esforço ao tentar
+empurrar a pedra. Pipo recebe um ciclo de passadas ao empurrá-la; os pés param
+quando a pedra atinge o limite. As regras de força e movimento não mudam.
 
 ## Decisões ainda abertas
 

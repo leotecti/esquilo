@@ -16,8 +16,8 @@
     button:focus-visible { outline:3px solid #b66b2c; outline-offset:4px; }
     button:disabled { opacity:.65; cursor:wait; }
     [hidden] { display:none !important; }
-    .overlay { position:fixed; inset:0; z-index:10; display:grid; place-items:center; padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left)); background:#c4e0d9; text-align:center; }
-    .card { max-width:540px; }
+    .overlay { position:fixed; inset:0; z-index:10; display:grid; place-items:center; padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left)); background:linear-gradient(#31543e33,#31543e55),url('forest-cover.png') center/cover,#c4e0d9; text-align:center; }
+    .card { max-width:560px; padding:24px 30px; border:2px solid #afbd86; border-radius:28px; background:#fff2d9f2; box-shadow:0 12px 50px #18332355; }
     .card img { width:112px; height:112px; border-radius:28px; }
     h1 { font-size:clamp(25px,5vw,38px); line-height:1.1; margin:15px 0; }
     p { line-height:1.5; }
@@ -38,7 +38,7 @@
     <div class="card">
       <img src="icon-192.png" alt="Tico, o esquilo">
       <h1>Tico e a Floresta das Nozes</h1>
-      <p>Trilha da Amizade · Alterne entre a agilidade de Tico e a força de Pipo!</p>
+      <p>Bosque das Folhas<br>Uma aventura entre amigos.</p>
       <button id="play" type="button">Jogar</button>
       <progress id="progress" hidden aria-label="Carregando o jogo"></progress>
       <p id="notice" role="status" aria-live="polite"></p>
