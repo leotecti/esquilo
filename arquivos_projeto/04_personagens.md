@@ -5,6 +5,12 @@
 **Versão:** 1.0  
 **Documento:** 04_personagens.md
 
+## Diretriz de evolução aprovada
+
+A Coruja é a mentora aliada, sem papel de chefe. O Gavião da Montanha ocupa o encontro aéreo. Preservar o resgate jogável de Pipo em 1-3; após esse evento, liberar sua seleção em todas as fases acessíveis, inclusive as iniciais. Antes dele, somente Tico. Melhorar a apresentação e manter as habilidades existentes.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO DO DOCUMENTO
@@ -1148,7 +1154,7 @@ A batalha poderá envolver:
 
 ---
 
-# 53. CORUJA DA MONTANHA
+# 53. GAVIÃO DA MONTANHA
 
 Personagem aéreo.
 

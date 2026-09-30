@@ -5,6 +5,12 @@
 **Versão:** 1.0  
 **Documento:** 03_gameplay.md
 
+## Diretriz de evolução aprovada
+
+A dupla compartilha saúde e, na evolução, vidas. Morte com vidas restantes usa o checkpoint. Game Over restaura as vidas e retorna ao mapa do mundo anterior, preservando desbloqueios e conquistas permanentes; no Mundo 1, permanece nele. Pipo fica disponível nas fases iniciais revisitadas somente após seu resgate global. A duração será validada após uma fase completa da evolução.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO DO DOCUMENTO

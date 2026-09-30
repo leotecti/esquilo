@@ -11,6 +11,12 @@ quatro mundos. `expedition_level.gd` estende o Bosque com ambiente e mecanismos.
 `expedition_save.gd` importa o save da etapa 8 para `campaign.json` /
 `tico.campaign.v1`, preservando o original. [Detalhes e testes](../tests/etapa_9.md).
 
+## Diretriz de evolução aprovada
+
+Separar progresso global da campanha de estado local da fase. Salvar personagens desbloqueados (incluindo Pipo), vidas compartilhadas e mundo de retorno após Game Over. Migrar os saves existentes: resgate registrado ou acesso a mundos posteriores libera Pipo; estado antigo de uma fase inicial não pode revogar esse direito. Preservar conquistas e impedir duplicação de recompensas em replay. Integrar mapa e retorno ao mundo anterior conforme DEC-115. Validar save, PWA e desempenho em cada entrega.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO

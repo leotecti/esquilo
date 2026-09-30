@@ -246,3 +246,11 @@ Os testes históricos Web da etapa 7 continuam disponíveis contra seu build pre
 defina `$env:TICO_WEB_STAGE='7'` antes de executar o Playwright e remova a variável
 com `Remove-Item Env:TICO_WEB_STAGE` ao voltar à etapa atual. Feche o servidor local
 antes de alternar a versão servida.
+
+## Evolução planejada
+
+As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
+[14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.
+Decisões registradas na DEC-115: Coruja mentora, Gavião como chefe da Montanha,
+Pipo nas fases iniciais após seu desbloqueio e Game Over no mapa do mundo anterior,
+preservando fases desbloqueadas. Essas mudanças ainda não estão no build da etapa 9.

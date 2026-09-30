@@ -3,7 +3,7 @@
 **Data:** 2026-09-30
 **Etapa atual:** 9 — Mundos 2, 3 e 4: implementada; aguardando playtest do usuário
 
-**Próximo trabalho previsto:** publicar os pacotes da etapa 9 e testar no aparelho. Etapa 10: Mundo 5 — Árvore do Mestre Corvo.
+**Próximo trabalho previsto:** evolução E00 — diagnóstico sobre a base da etapa 9, conforme documentos 13/14. O playtest da etapa 9 permanece pendente; Mundo 5 continua planejado no roadmap original.
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -269,3 +269,9 @@ Nenhum commit ou push realizado. O Mundo 5 permanece para a etapa 10.
 Resolução artística definitiva, parâmetros de movimento, duração do planar,
 corações, layout touch, quantidade de chefes e inclusão de Android nativo
 na versão 1.0 continuam sujeitos aos protótipos e testes previstos.
+
+## Evolução — decisões documentadas
+
+Revisão aprovada pelo usuário: E00–E30, preservação dos sistemas existentes, Coruja mentora, Gavião como chefe aéreo, Pipo global após o resgate, Game Over no mapa do mundo anterior com desbloqueios preservados, duração a validar e verificações contínuas de PWA/desempenho/save.
+
+Documentação alinhada; alterações no código ainda pendentes. O build da etapa 9 ainda tem a antiga chefe Coruja e não possui mapa, vidas limitadas ou replay global com Pipo. Não considerar essas funcionalidades implementadas por esta revisão. Ver DEC-115.

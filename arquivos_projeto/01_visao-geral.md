@@ -1,4 +1,10 @@
 TICO E A FLORESTA DAS NOZES
+## Diretriz de evolução aprovada
+
+A evolução preserva a base implementada. A Coruja assume o papel de mentora; o chefe aéreo será o Gavião da Montanha. Pipo poderá voltar às fases iniciais depois do resgate. Vidas e Game Over serão integrados à campanha conforme a DEC-115.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 
 DOCUMENTO DE VISÃO DO JOGO
 Versão 1.0
@@ -735,7 +741,7 @@ CHEFE 2 — GUARDIÃO DO RIO
 
 Utiliza a água e plataformas móveis.
 
-CHEFE 3 — CORUJA DA MONTANHA
+CHEFE 3 — GAVIÃO DA MONTANHA
 
 Voa pelo cenário e lança objetos.
 

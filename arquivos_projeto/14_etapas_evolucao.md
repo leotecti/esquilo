@@ -2,10 +2,10 @@
 
 # ETAPAS DE EVOLUÇÃO DO JOGO
 
-**Arquivo:** etapas_evolucao.md  
-**Versão:** 1.0  
+**Arquivo:** 14_etapas_evolucao.md
+**Versão:** 1.1
 **Status:** Planejamento de desenvolvimento  
-**Documento relacionado:** evolucao.md
+**Documento relacionado:** [13_evolucao.md](13_evolucao.md)
 
 ---
 
@@ -37,7 +37,9 @@ TESTES
   ↓
 VERSÃO FINAL
 
-Cada etapa deverá produzir uma versão jogável.
+Cada etapa deverá produzir uma versão jogável. Preservar e melhorar o que já funciona: saúde, dano, retorno, checkpoints, save, Pipo, troca, habilidades, mundos, áudio e PWA. “Criar” e “implementar” nas seções abaixo significam completar lacunas ou ampliar os sistemas existentes quando já houver uma base.
+
+A cada etapa, verificar PWA (desktop, toque, offline e atualização conforme o impacto), desempenho e migração/persistência do save. E25, E26 e E27 são auditorias completas adicionais.
 
 ---
 
@@ -65,59 +67,43 @@ Uma nova etapa somente deverá ser considerada concluída quando seus elementos 
 
 # 3. VISÃO GERAL DAS ETAPAS
 
-A evolução será dividida em:
+A evolução usa identificadores **E00–E30**, distintos das etapas do roadmap original. Todos os itens detalhados foram mantidos. Os dois pontos de validação intermediária são checkpoints de projeto; os marcos A–J agrupam entregas e não renumeram as etapas.
 
-ETAPA 0 — Preparação e diagnóstico
-
-ETAPA 1 — Saúde, dano e morte
-
-ETAPA 2 — Vidas e Game Over
-
-ETAPA 3 — Checkpoints e reinício
-
-ETAPA 4 — Limpeza da interface e tutorial contextual
-
-ETAPA 5 — Sistema de progresso e salvamento
-
-ETAPA 6 — Mapa do mundo
-
-ETAPA 7 — Resultados e desbloqueio de fases
-
-ETAPA 8 — Áreas opcionais e exploração
-
-ETAPA 9 — Recompensas e coletáveis
-
-ETAPA 10 — Estrutura narrativa
-
-ETAPA 11 — Coruja e progressão da história
-
-ETAPA 12 — Introdução de Pipo
-
-ETAPA 13 — Mecânicas de Tico e Pipo
-
-ETAPA 14 — Progressão de dificuldade
-
-ETAPA 15 — Novos inimigos
-
-ETAPA 16 — Chefes
-
-ETAPA 17 — Evolução do vilarejo
-
-ETAPA 18 — Expansão das fases e mundos
-
-ETAPA 19 — Áudio, animações e feedback
-
-ETAPA 20 — Balanceamento
-
-ETAPA 21 — Testes com público
-
-ETAPA 22 — Performance, PWA e dispositivos
-
-ETAPA 23 — Polimento e versão final
+- **E00 — PREPARAÇÃO E DIAGNÓSTICO**
+- **E01 — SAÚDE, DANO E MORTE**
+- **E02 — VIDAS E GAME OVER**
+- **E03 — CHECKPOINTS E REINÍCIO**
+- **E04 — LIMPEZA DA INTERFACE E TUTORIAL CONTEXTUAL**
+- **E05 — SISTEMA DE PROGRESSO E SALVAMENTO**
+- **E06 — MAPA DO MUNDO**
+- **E07 — RESULTADO E DESBLOQUEIO DE FASES**
+- **E08 — ÁREAS OPCIONAIS E EXPLORAÇÃO**
+- **E09 — RECOMPENSAS E COLETÁVEIS**
+- **E10 — ESTRUTURA NARRATIVA**
+- **E11 — ABERTURA DO JOGO**
+- **E12 — CORUJA E PROGRESSÃO DA HISTÓRIA**
+- **E13 — INTRODUÇÃO DE PIPO**
+- **E14 — MECÂNICAS DE TICO E PIPO**
+- **E15 — BACKTRACKING CONTROLADO**
+- **E16 — PROGRESSÃO DE DIFICULDADE**
+- **E17 — NOVOS INIMIGOS**
+- **E18 — CHEFES**
+- **E19 — VILAREJO EVOLUTIVO**
+- **E20 — EXPANSÃO DAS FASES E MUNDOS**
+- **E21 — ÁUDIO, ANIMAÇÕES E FEEDBACK**
+- **E22 — BALANCEAMENTO**
+- **E23 — TESTES COM CRIANÇAS**
+- **E24 — AJUDA ADAPTATIVA**
+- **E25 — PERFORMANCE**
+- **E26 — PWA**
+- **E27 — TESTES DE SAVE**
+- **E28 — POLIMENTO FINAL**
+- **E29 — TESTE COMPLETO DA CAMPANHA**
+- **E30 — VERSÃO CANDIDATA**
 
 ---
 
-# 4. ETAPA 0 — PREPARAÇÃO E DIAGNÓSTICO
+# 4. EVOLUÇÃO E00 — PREPARAÇÃO E DIAGNÓSTICO
 
 Antes de modificar o jogo, analisar a versão atual.
 
@@ -153,11 +139,11 @@ Conhecimento claro do estado atual do projeto antes das alterações.
 
 ---
 
-# 5. ETAPA 1 — SAÚDE, DANO E MORTE
+# 5. EVOLUÇÃO E01 — SAÚDE, DANO E MORTE
 
-O primeiro novo sistema deverá ser a saúde.
+Revisar e manter o sistema de saúde existente, completando apenas as lacunas necessárias à evolução.
 
-Antes de criar vidas, Game Over ou checkpoints, é necessário existir uma regra consistente de morte.
+Antes de integrar vidas e Game Over, verificar a regra existente de morte e sua ligação com os checkpoints.
 
 Implementar:
 
@@ -200,7 +186,7 @@ O personagem pode receber dano, recuperar saúde e morrer corretamente.
 
 ---
 
-# 6. ETAPA 2 — VIDAS E GAME OVER
+# 6. EVOLUÇÃO E02 — VIDAS E GAME OVER
 
 Com a morte funcionando, implementar o sistema de vidas.
 
@@ -225,9 +211,13 @@ VIDAS RESTANTES?
    │
    └── NÃO → GAME OVER
 
-Neste momento, o Game Over poderá utilizar uma regra provisória.
+Ao esgotar as vidas compartilhadas pela dupla, apresentar Game Over e retornar ao mapa do mundo anterior ao da fase em que ocorreu a derrota. No Mundo 1, permanecer no mapa do Mundo 1. Restaurar as vidas ao valor inicial configurado.
 
-A consequência definitiva será definida depois dos testes de balanceamento.
+Preservar fases desbloqueadas e concluídas, personagens liberados e conquistas permanentes. O retorno muda a localização no mapa; não bloqueia novamente os mundos já acessíveis nem apaga a campanha. A seleção inicial aponta para a primeira fase do mundo de retorno. Morte com vidas restantes continua usando o checkpoint da fase.
+
+Salvar o estado resultante antes de permitir nova seleção; fechar e reabrir deve manter esse resultado. Quantidade inicial de vidas e frequência das recompensas serão balanceadas em testes.
+
+Em E02, preparar e testar o estado de retorno; E06 integra esse estado ao mapa visual. Até lá, usar uma tela transitória de retorno que identifique o mundo de destino.
 
 ## Resultado esperado
 
@@ -235,9 +225,9 @@ O jogador possui saúde, pode morrer, perder vidas e chegar ao Game Over.
 
 ---
 
-# 7. ETAPA 3 — CHECKPOINTS E REINÍCIO
+# 7. EVOLUÇÃO E03 — CHECKPOINTS E REINÍCIO
 
-Agora definir de onde o jogador retorna depois da morte.
+Manter o retorno ao checkpoint para morte com vidas restantes. Integrar a regra aprovada de Game Over ao mundo anterior, descrita em E02.
 
 Criar:
 
@@ -273,7 +263,7 @@ A morte passa a integrar corretamente o fluxo da fase.
 
 ---
 
-# 8. ETAPA 4 — LIMPEZA DA INTERFACE E TUTORIAL CONTEXTUAL
+# 8. EVOLUÇÃO E04 — LIMPEZA DA INTERFACE E TUTORIAL CONTEXTUAL
 
 Remover textos fixos que ocupam permanentemente a tela.
 
@@ -326,7 +316,7 @@ A primeira fase passa a ensinar o jogo sem depender de textos permanentes.
 
 ---
 
-# 9. ETAPA 5 — SISTEMA DE PROGRESSO E SALVAMENTO
+# 9. EVOLUÇÃO E05 — SISTEMA DE PROGRESSO E SALVAMENTO
 
 Antes de criar o mapa, criar a estrutura de dados que representará o progresso.
 
@@ -365,7 +355,7 @@ O progresso pode ser salvo, fechado e recuperado corretamente.
 
 ---
 
-# 10. ETAPA 6 — MAPA DO MUNDO
+# 10. EVOLUÇÃO E06 — MAPA DO MUNDO
 
 Somente depois do progresso estar funcionando deverá ser criado o mapa.
 
@@ -407,7 +397,7 @@ O jogador inicia pelo mapa e consegue visualizar sua jornada.
 
 ---
 
-# 11. ETAPA 7 — RESULTADO E DESBLOQUEIO DE FASES
+# 11. EVOLUÇÃO E07 — RESULTADO E DESBLOQUEIO DE FASES
 
 Criar a conclusão completa de uma fase.
 
@@ -446,7 +436,7 @@ está completamente funcional.
 
 ---
 
-# 12. MARCO 1 — LOOP PRINCIPAL FUNCIONAL
+# 12. VALIDAÇÃO INTERMEDIÁRIA 1 — LOOP PRINCIPAL FUNCIONAL
 
 Neste ponto interromper temporariamente a adição de novas funcionalidades.
 
@@ -470,7 +460,7 @@ Este é o primeiro grande marco técnico.
 
 ---
 
-# 13. ETAPA 8 — ÁREAS OPCIONAIS E EXPLORAÇÃO
+# 13. EVOLUÇÃO E08 — ÁREAS OPCIONAIS E EXPLORAÇÃO
 
 Depois do loop principal estabilizado, expandir as fases.
 
@@ -510,7 +500,7 @@ Uma fase possui caminho principal e exploração opcional.
 
 ---
 
-# 14. ETAPA 9 — RECOMPENSAS E COLETÁVEIS
+# 14. EVOLUÇÃO E09 — RECOMPENSAS E COLETÁVEIS
 
 Depois das áreas opcionais, tornar a exploração relevante.
 
@@ -540,7 +530,7 @@ Explorar oferece vantagens reais ao jogador.
 
 ---
 
-# 15. ETAPA 10 — ESTRUTURA NARRATIVA
+# 15. EVOLUÇÃO E10 — ESTRUTURA NARRATIVA
 
 Com o loop de gameplay funcionando, implementar a estrutura necessária para contar a história.
 
@@ -572,7 +562,7 @@ O jogo possui infraestrutura reutilizável para narrativa.
 
 ---
 
-# 16. ETAPA 11 — ABERTURA DO JOGO
+# 16. EVOLUÇÃO E11 — ABERTURA DO JOGO
 
 Implementar a sequência inicial.
 
@@ -610,9 +600,9 @@ A aventura possui uma motivação clara desde o início.
 
 ---
 
-# 17. ETAPA 12 — CORUJA E PROGRESSÃO DA HISTÓRIA
+# 17. EVOLUÇÃO E12 — CORUJA E PROGRESSÃO DA HISTÓRIA
 
-Transformar a Coruja em personagem recorrente.
+Transformar a Coruja em mentora recorrente e aliada. Substituir a chefe coruja pelo Gavião da Montanha; a Coruja não participa de combates como adversária.
 
 Criar encontros após momentos importantes.
 
@@ -645,9 +635,9 @@ As fases passam a fazer parte de uma história contínua.
 
 ---
 
-# 18. ETAPA 13 — INTRODUÇÃO DE PIPO
+# 18. EVOLUÇÃO E13 — INTRODUÇÃO DE PIPO
 
-Não disponibilizar Pipo imediatamente.
+Preservar o resgate jogável de Pipo em 1-3 e melhorar sua apresentação narrativa. Antes do resgate, somente Tico fica disponível. Depois, registrar Pipo como desbloqueado globalmente e permitir sua seleção também nas fases iniciais revisitadas.
 
 Criar sua entrada através da narrativa.
 
@@ -697,9 +687,9 @@ A criança entende quem é Pipo e por que ele entrou na aventura.
 
 ---
 
-# 19. ETAPA 14 — MECÂNICAS DE TICO E PIPO
+# 19. EVOLUÇÃO E14 — MECÂNICAS DE TICO E PIPO
 
-Implementar efetivamente as diferenças.
+Manter as diferenças já implementadas e melhorar os trechos que precisarem de ajuste.
 
 ## Tico
 
@@ -719,7 +709,7 @@ Implementar efetivamente as diferenças.
 - quebra obstáculos;
 - ativa mecanismos de peso.
 
-Implementar troca de personagem.
+Manter a troca de personagem e condicioná-la ao desbloqueio global de Pipo, incluindo fases revisitadas.
 
 Depois criar um pequeno trecho de teste:
 
@@ -737,9 +727,9 @@ Os personagens possuem gameplay realmente diferente.
 
 ---
 
-# 20. ETAPA 15 — BACKTRACKING CONTROLADO
+# 20. EVOLUÇÃO E15 — BACKTRACKING CONTROLADO
 
-Depois de Pipo estar funcional, adicionar pequenos segredos em fases anteriores.
+Após o desbloqueio global de Pipo, permitir revisitar fases iniciais com a dupla e adicionar pequenos segredos. Antes do resgate, Pipo permanece indisponível. Preservar o desbloqueio em morte, Game Over, troca de fase e reabertura.
 
 Exemplo:
 
@@ -763,7 +753,7 @@ Novas habilidades aumentam a utilidade das fases anteriores.
 
 ---
 
-# 21. MARCO 2 — AVENTURA COMPLETA EM MINIATURA
+# 21. VALIDAÇÃO INTERMEDIÁRIA 2 — AVENTURA COMPLETA EM MINIATURA
 
 Neste momento criar uma pequena sequência contendo:
 
@@ -786,7 +776,7 @@ Isso é importante para evitar produzir muito conteúdo antes de validar os sist
 
 ---
 
-# 22. ETAPA 16 — PROGRESSÃO DE DIFICULDADE
+# 22. EVOLUÇÃO E16 — PROGRESSÃO DE DIFICULDADE
 
 Agora definir formalmente uma curva de dificuldade.
 
@@ -822,7 +812,7 @@ Existe uma curva previsível de desafio.
 
 ---
 
-# 23. ETAPA 17 — NOVOS INIMIGOS
+# 23. EVOLUÇÃO E17 — NOVOS INIMIGOS
 
 Criar famílias de inimigos gradualmente.
 
@@ -858,7 +848,7 @@ O desafio aumenta através da variedade.
 
 ---
 
-# 24. ETAPA 18 — CHEFES
+# 24. EVOLUÇÃO E18 — CHEFES
 
 Criar chefes utilizando as mecânicas aprendidas no mundo.
 
@@ -890,7 +880,7 @@ Chefes funcionam como conclusão do aprendizado do mundo.
 
 ---
 
-# 25. ETAPA 19 — VILAREJO EVOLUTIVO
+# 25. EVOLUÇÃO E19 — VILAREJO EVOLUTIVO
 
 Criar estados diferentes do vilarejo.
 
@@ -927,7 +917,7 @@ O mundo responde visualmente às ações do jogador.
 
 ---
 
-# 26. ETAPA 20 — EXPANSÃO DAS FASES E MUNDOS
+# 26. EVOLUÇÃO E20 — EXPANSÃO DAS FASES E MUNDOS
 
 Somente depois dos sistemas principais validados começar a grande produção de conteúdo.
 
@@ -956,7 +946,7 @@ A duração do jogo cresce através de conteúdo significativo.
 
 ---
 
-# 27. ETAPA 21 — ÁUDIO, ANIMAÇÕES E FEEDBACK
+# 27. EVOLUÇÃO E21 — ÁUDIO, ANIMAÇÕES E FEEDBACK
 
 Com os sistemas estáveis, iniciar forte etapa de polimento.
 
@@ -986,7 +976,7 @@ O jogo começa a apresentar sensação de produto final.
 
 ---
 
-# 28. ETAPA 22 — BALANCEAMENTO
+# 28. EVOLUÇÃO E22 — BALANCEAMENTO
 
 Agora ajustar números.
 
@@ -1001,7 +991,7 @@ Testar:
 - dano;
 - saúde dos inimigos;
 - checkpoints;
-- duração;
+- duração, a validar após uma fase completa da evolução estar implementada;
 - dificuldade dos chefes.
 
 Evitar inserir números diretamente em muitos pontos do código.
@@ -1014,38 +1004,13 @@ Isso permitirá experimentar rapidamente.
 
 # 29. DECISÃO SOBRE GAME OVER
 
-Nesta etapa deverá ser tomada a decisão definitiva sobre a consequência do Game Over.
+A consequência foi aprovada pelo usuário: Game Over retorna ao mapa do mundo anterior, mantendo fases desbloqueadas, Pipo e conquistas permanentes. No primeiro mundo, o retorno permanece nele. Ver regra completa em E02.
 
-Testar:
-
-## Modelo A
-
-Reiniciar toda a campanha.
-
-## Modelo B
-
-Reiniciar o mundo.
-
-## Modelo C
-
-Retornar ao mapa.
-
-## Modelo D
-
-Retornar ao último ponto importante.
-
-Observar principalmente:
-
-- frustração;
-- motivação;
-- importância percebida das vidas;
-- disposição para continuar jogando.
-
-O público infantil deverá ter peso decisivo nessa escolha.
+Validar clareza do retorno, restauração de vidas, persistência, frustração e disposição para continuar. Balancear vidas e recompensas; não reabrir os modelos de apagamento de campanha ou bloqueio de fases como decisões pendentes.
 
 ---
 
-# 30. ETAPA 23 — TESTES COM CRIANÇAS
+# 30. EVOLUÇÃO E23 — TESTES COM CRIANÇAS
 
 Os desenvolvedores não deverão ser os únicos responsáveis pela validação.
 
@@ -1095,7 +1060,7 @@ Um desafio considerado fácil por uma criança experiente pode ser uma barreira 
 
 ---
 
-# 32. ETAPA 24 — AJUDA ADAPTATIVA
+# 32. EVOLUÇÃO E24 — AJUDA ADAPTATIVA
 
 Depois de observar dificuldades reais, implementar ajuda adaptativa.
 
@@ -1119,7 +1084,7 @@ As dificuldades reais deverão orientar esse sistema.
 
 ---
 
-# 33. ETAPA 25 — PERFORMANCE
+# 33. EVOLUÇÃO E25 — PERFORMANCE
 
 Com o conteúdo completo, verificar desempenho.
 
@@ -1142,7 +1107,7 @@ O jogo deverá permanecer fluido em celulares compatíveis com o público espera
 
 ---
 
-# 34. ETAPA 26 — PWA
+# 34. EVOLUÇÃO E26 — PWA
 
 Validar especificamente:
 
@@ -1170,7 +1135,7 @@ Diferentes resoluções deverão ser consideradas.
 
 ---
 
-# 35. ETAPA 27 — TESTES DE SAVE
+# 35. EVOLUÇÃO E27 — TESTES DE SAVE
 
 Executar testes específicos de persistência.
 
@@ -1182,7 +1147,9 @@ Cenários:
 - atualizar PWA;
 - reiniciar dispositivo;
 - Game Over;
-- obter Pipo;
+- obter Pipo e usá-lo em fases iniciais após o desbloqueio;
+- impedir Pipo nas fases iniciais antes do resgate;
+- retornar ao mapa do mundo anterior no Game Over sem perder desbloqueios;
 - encontrar Noz Dourada;
 - concluir área secreta.
 
@@ -1190,7 +1157,7 @@ O jogador não deverá perder progresso inesperadamente.
 
 ---
 
-# 36. ETAPA 28 — POLIMENTO FINAL
+# 36. EVOLUÇÃO E28 — POLIMENTO FINAL
 
 Revisar todo o jogo.
 
@@ -1223,7 +1190,7 @@ O foco será qualidade.
 
 ---
 
-# 37. ETAPA 29 — TESTE COMPLETO DA CAMPANHA
+# 37. EVOLUÇÃO E29 — TESTE COMPLETO DA CAMPANHA
 
 Jogar do início ao final sem utilizar atalhos de desenvolvimento.
 
@@ -1262,7 +1229,7 @@ Registrar:
 
 ---
 
-# 38. ETAPA 30 — VERSÃO CANDIDATA
+# 38. EVOLUÇÃO E30 — VERSÃO CANDIDATA
 
 Gerar uma versão candidata à publicação.
 
@@ -1337,7 +1304,7 @@ A sequência recomendada será:
 
 Algumas funcionalidades não deverão ser desenvolvidas fora de ordem.
 
-## Saúde antes de vidas
+## Saúde validada antes de vidas
 
 SAÚDE
    ↓
@@ -1538,7 +1505,7 @@ Mudança de testes
 Decisão definitiva
 → 11_decisoes.md
 
-O arquivo evolucao.md permanece como referência geral da evolução planejada.
+O arquivo 13_evolucao.md permanece como referência geral da evolução planejada.
 
 ---
 

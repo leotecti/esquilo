@@ -5,6 +5,12 @@
 **Versão:** 1.0  
 **Documento:** 06_direcao-visual.md
 
+## Diretriz de evolução aprovada
+
+Distinguir a Coruja mentora, acolhedora e aliada, do Gavião da Montanha, novo chefe aéreo. Revisar arte, retratos e animações do encontro sem reutilizar a identidade da mentora. Manter e melhorar os assets existentes; dicas contextuais substituem textos explicativos permanentes, preservando HUD e controles necessários.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO DO DOCUMENTO

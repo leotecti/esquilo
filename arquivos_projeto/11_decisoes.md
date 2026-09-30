@@ -1865,7 +1865,7 @@ Foram propostos:
 
 - Guardião do Bosque;
 - Guardião do Rio;
-- Coruja da Montanha;
+- Gavião da Montanha;
 - Rei Castor;
 - Mestre Corvo.
 
@@ -2371,7 +2371,7 @@ Ainda deverão ser decididos durante desenvolvimento:
 - altura definitiva do salto;
 - duração definitiva do planar;
 - quantidade de corações;
-- funcionamento definitivo de vidas;
+- quantidade inicial de vidas e frequência de recompensas, mantendo a regra de Game Over da DEC-115;
 - layout final dos controles touch;
 - quantidade de segredos por fase;
 - valores de coletáveis;
@@ -2983,6 +2983,27 @@ Fundos SVG e objetos desenhados por código distinguem os ambientes. A arte
 existente dos personagens, incluindo esforço e passadas, permanece em uso.
 Aceite visual e dificuldade dependem do playtest desta versão. Implementação,
 349 verificações na Godot, cinco cenários Web e entregas em `tests/etapa_9.md`.
+
+---
+
+## DEC-115 — REGRAS APROVADAS PARA A EVOLUÇÃO
+
+**Status:** APROVADA PELO USUÁRIO; IMPLEMENTAÇÃO PENDENTE
+
+1. Usar E00–E30 no documento 14, preservando todos os itens detalhados e o histórico do roadmap original. Os nove grupos do documento 13 são frentes temáticas.
+2. Manter e melhorar os sistemas já implementados.
+3. Coruja exclusivamente mentora; substituir o chefe aéreo pelo Gavião da Montanha, nome adotado nesta revisão documental. O mundo continua Montanha das Corujas.
+4. Preservar o resgate de Pipo em 1-3. Seu desbloqueio passa a ser global: fases iniciais aceitam Pipo somente após o resgate. Migrar saves e preservar essa liberação em replay e Game Over.
+5. Ao esgotar as vidas compartilhadas pela dupla, apresentar Game Over e retornar ao mapa do mundo anterior ao da fase em que ocorreu a derrota. No Mundo 1, permanecer no mapa do Mundo 1. Restaurar as vidas ao valor inicial configurado.
+
+   Preservar fases desbloqueadas e concluídas, personagens liberados e conquistas permanentes. O retorno muda a localização no mapa; não bloqueia novamente os mundos já acessíveis nem apaga a campanha. A seleção inicial aponta para a primeira fase do mundo de retorno. Morte com vidas restantes continua usando o checkpoint da fase.
+
+   Salvar o estado resultante antes de permitir nova seleção; fechar e reabrir deve manter esse resultado. Quantidade inicial de vidas e frequência das recompensas serão balanceadas em testes.
+
+6. Validar duração quando uma fase completa da evolução estiver implementada; 15–25 minutos permanece hipótese.
+7. Verificar PWA, desempenho e save em cada etapa, além das auditorias finais.
+
+Esta decisão atualiza as regras futuras. As DEC-113/114 e registros de testes continuam descrevendo as entregas anteriores. Esta revisão modifica documentação, sem implementar gameplay.
 
 ---
 

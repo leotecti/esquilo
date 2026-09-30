@@ -2,9 +2,15 @@
 
 # EVOLUÇÃO DO PROJETO
 
-**Arquivo:** evolucao.md  
-**Versão:** 1.0  
-**Status:** Planejamento de evolução
+**Arquivo:** 13_evolucao.md
+**Versão:** 1.1
+**Status:** Planejamento de evolução — decisões aprovadas pelo usuário
+
+## Base e identificação
+
+Preservar os sistemas implementados até a etapa 9 do roadmap original e melhorá-los quando necessário. Saúde, dano, checkpoints, save, resgate de Pipo, troca, habilidades, mundos, áudio e PWA são a base existente. As mudanças abaixo ainda exigem implementação.
+
+A sequência executável é **Evolução E00–E30**, em [14_etapas_evolucao.md](14_etapas_evolucao.md). Os nove grupos da seção 56 são frentes temáticas, não outra numeração de etapas. O histórico de [08_roadmap.md](08_roadmap.md) permanece preservado.
 
 ---
 
@@ -654,7 +660,7 @@ O chefe deverá ser desafiador, mas compreensível para crianças.
 
 # 19. CORUJA COMO MENTORA
 
-A Coruja será um personagem recorrente.
+A Coruja será a mentora recorrente, aliada de Tico. Não será chefe. O chefe aéreo da Montanha passa a ser o **Gavião da Montanha**, preservando o tema de vento e verticalidade.
 
 Funções:
 
@@ -811,6 +817,10 @@ Isso reforça o tema central:
 
 # 25. BACKTRACKING CONTROLADO
 
+Depois do resgate, Pipo fica desbloqueado globalmente na campanha e pode ser usado ao revisitar as fases iniciais. Antes desse evento, essas fases permitem apenas Tico. O estado local de uma fase antiga não pode remover o desbloqueio global.
+
+Preservar o resgate jogável existente em 1-3 e melhorar sua apresentação. Ao revisitar a cena após o desbloqueio, não repetir o resgate nem conceder novamente suas recompensas.
+
 Algumas fases anteriores poderão possuir áreas que não eram acessíveis inicialmente.
 
 Exemplo:
@@ -963,39 +973,11 @@ A punição deverá existir, mas não ser excessivamente frustrante para crianç
 
 # 31. GAME OVER
 
-Quando o jogador perder todas as vidas:
+Ao esgotar as vidas compartilhadas pela dupla, apresentar Game Over e retornar ao mapa do mundo anterior ao da fase em que ocorreu a derrota. No Mundo 1, permanecer no mapa do Mundo 1. Restaurar as vidas ao valor inicial configurado.
 
-GAME OVER
+Preservar fases desbloqueadas e concluídas, personagens liberados e conquistas permanentes. O retorno muda a localização no mapa; não bloqueia novamente os mundos já acessíveis nem apaga a campanha. A seleção inicial aponta para a primeira fase do mundo de retorno. Morte com vidas restantes continua usando o checkpoint da fase.
 
-deverá ser apresentado.
-
-Entretanto, existe uma decisão importante a ser validada.
-
-A proposta inicial é que Game Over tenha consequências maiores que uma morte comum.
-
-Fluxo conceitual:
-
-SEM SAÚDE
-   ↓
-PERDE VIDA
-   ↓
-SEM VIDAS
-   ↓
-GAME OVER
-
-O nível exato da punição deverá ser cuidadosamente testado com crianças.
-
-Reiniciar absolutamente toda a campanha poderá tornar-se frustrante, principalmente quando o jogo crescer.
-
-Uma alternativa que deverá ser considerada durante os testes é:
-
-GAME OVER
-   ↓
-RETORNA AO ÚLTIMO MUNDO / PONTO DE PROGRESSO
-   ↓
-VIDAS REINICIADAS
-
-A decisão definitiva deverá ser tomada através de playtests.
+Salvar o estado resultante antes de permitir nova seleção; fechar e reabrir deve manter esse resultado. Quantidade inicial de vidas e frequência das recompensas serão balanceadas em testes.
 
 ---
 
@@ -1171,9 +1153,7 @@ Cada jornada deverá possuir:
 - evolução;
 - conclusão.
 
-Uma fase poderá durar aproximadamente 15–25 minutos na primeira experiência, dependendo de exploração e dificuldade.
-
-A duração definitiva deverá ser validada durante testes.
+A faixa de 15–25 minutos é uma hipótese de planejamento, não um requisito de duração. Validar quando uma fase completa da evolução, com caminho principal e área opcional, estiver implementada. Medir o tempo com e sem exploração antes de estabelecer metas para as demais fases.
 
 ---
 
@@ -1293,43 +1273,7 @@ E não:
 
 # 42. GAME OVER E PÚBLICO INFANTIL
 
-O sistema de Game Over deverá receber atenção especial nos testes.
-
-O conceito é importante porque:
-
-- cria risco;
-- valoriza vidas;
-- valoriza recompensas;
-- aumenta tensão;
-- dá significado à sobrevivência.
-
-Entretanto, perder várias horas de campanha poderá ser excessivamente punitivo para crianças.
-
-Portanto:
-
-**GAME OVER DEVE EXISTIR.**
-
-Mas a consequência definitiva deverá ser validada.
-
-Possíveis modelos:
-
-### Modelo A
-
-Game Over reinicia toda a campanha.
-
-### Modelo B
-
-Game Over reinicia o mundo atual.
-
-### Modelo C
-
-Game Over retorna ao mapa com vidas reiniciadas.
-
-### Modelo D
-
-Game Over oferece continuar a partir de determinado ponto.
-
-Essa decisão deverá fazer parte dos playtests.
+A regra aprovada é retornar ao mapa do mundo anterior, preservando desbloqueios e conquistas, conforme a seção 31. Testar compreensão, frustração e vontade de continuar com crianças. Ajustar quantidades de vidas e recompensas sem substituir silenciosamente a regra de retorno aprovada.
 
 ---
 
@@ -1349,7 +1293,7 @@ Com mapa, fases desbloqueadas, coletáveis e evolução narrativa, o save dever�
 - configurações;
 - tutoriais já apresentados.
 
-O sistema de vidas deverá ser definido considerando também o salvamento.
+Salvar também vidas compartilhadas, desbloqueio global de Pipo e mundo de retorno após Game Over. Migrar os saves existentes sem perder progresso; inferir Pipo desbloqueado a partir do resgate já registrado ou do acesso aos mundos posteriores.
 
 ---
 
@@ -1707,6 +1651,8 @@ A evolução descrita neste documento introduz ou amplia os seguintes sistemas:
 23. progressão narrativa;
 24. backtracking opcional.
 
+Sistemas existentes devem ser mantidos e ampliados, evitando recriá-los. PWA, desempenho e save devem ser verificados em cada etapa; as validações finais ampliam essa cobertura.
+
 Esses sistemas não deverão ser implementados todos simultaneamente.
 
 Deverão entrar no roadmap em etapas.
@@ -1717,7 +1663,7 @@ Deverão entrar no roadmap em etapas.
 
 A evolução deverá ser feita de maneira incremental.
 
-## ETAPA 1 — Base
+## FRENTE 1 — Base
 
 - saúde;
 - vidas;
@@ -1725,20 +1671,20 @@ A evolução deverá ser feita de maneira incremental.
 - Game Over;
 - checkpoints.
 
-## ETAPA 2 — Orientação
+## FRENTE 2 — Orientação
 
 - remover textos fixos;
 - tutorial contextual;
 - feedback visual e sonoro.
 
-## ETAPA 3 — Progressão
+## FRENTE 3 — Progressão
 
 - mapa;
 - desbloqueio;
 - resultado de fase;
 - save de progresso.
 
-## ETAPA 4 — Exploração
+## FRENTE 4 — Exploração
 
 - áreas opcionais;
 - portais;
@@ -1746,7 +1692,7 @@ A evolução deverá ser feita de maneira incremental.
 - Nozes Douradas;
 - segredos.
 
-## ETAPA 5 — Narrativa
+## FRENTE 5 — Narrativa
 
 - abertura;
 - Coruja;
@@ -1754,7 +1700,7 @@ A evolução deverá ser feita de maneira incremental.
 - transições;
 - progressão narrativa.
 
-## ETAPA 6 — Pipo
+## FRENTE 6 — Pipo
 
 - animação de apresentação;
 - gameplay;
@@ -1763,7 +1709,7 @@ A evolução deverá ser feita de maneira incremental.
 - troca;
 - desafios cooperativos.
 
-## ETAPA 7 — Expansão
+## FRENTE 7 — Expansão
 
 - novos inimigos;
 - dificuldade progressiva;
@@ -1771,13 +1717,13 @@ A evolução deverá ser feita de maneira incremental.
 - chefes;
 - backtracking.
 
-## ETAPA 8 — Mundo vivo
+## FRENTE 8 — Mundo vivo
 
 - evolução do vilarejo;
 - efeitos das conquistas;
 - conteúdo narrativo adicional.
 
-## ETAPA 9 — Polimento
+## FRENTE 9 — Polimento
 
 - animações;
 - áudio;

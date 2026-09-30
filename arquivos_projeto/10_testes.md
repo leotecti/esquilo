@@ -10,6 +10,12 @@ Windows exportado e executado, com medição gráfica local. Percursos, chefes,
 migração e retomada dos mecanismos foram conferidos. Playtest no aparelho
 permanece pendente. [Relatório e roteiro](../tests/etapa_9.md).
 
+## Diretriz de evolução aprovada
+
+Em cada E00–E30, executar verificações de regressão adequadas e conferir PWA, desempenho e save conforme o impacto. Cobrir Pipo bloqueado antes do resgate, liberado nas fases iniciais após ele e preservado ao migrar/reabrir. Conferir Game Over no Mundo 1 e nos demais: mapa do mundo anterior, vidas restauradas e desbloqueios intactos. Medir duração e exploração após uma fase completa da evolução. Auditorias finais complementam essas verificações.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO

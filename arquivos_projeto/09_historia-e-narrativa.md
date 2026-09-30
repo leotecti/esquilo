@@ -5,6 +5,12 @@
 **Versão:** 1.0  
 **Documento:** 09_historia-e-narrativa.md
 
+## Diretriz de evolução aprovada
+
+A Coruja é a mentora recorrente, salva e ajudada por Tico, responsável por pistas e orientação. Não será chefe. O adversário aéreo passa a ser o Gavião da Montanha. Preservar o resgate de Pipo em 1-3 e melhorar sua apresentação; sua entrada libera a dupla globalmente, inclusive em revisitas. A descoberta do responsável e de sua motivação continua gradual.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO

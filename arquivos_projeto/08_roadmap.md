@@ -5,6 +5,12 @@
 **Versão:** 1.0  
 **Documento:** 08_roadmap.md
 
+## Diretriz de evolução aprovada
+
+O roteiro original e suas etapas concluídas são preservados como histórico. A sequência de evolução usa E00–E30 em 14_etapas_evolucao.md; as frentes do documento 13 não são etapas concorrentes. Sistemas existentes serão mantidos e melhorados. PWA, desempenho e save acompanham cada etapa. Duração será validada após uma fase completa da evolução.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO
@@ -1499,7 +1505,7 @@ Fases:
 
 Chefe:
 
-**CORUJA DA MONTANHA**
+**GAVIÃO DA MONTANHA**
 
 ---
 

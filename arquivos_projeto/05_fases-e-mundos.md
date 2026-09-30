@@ -10,6 +10,12 @@ final por mundo. O encontro usa uma cena separada ao final da terceira fase.
 O Mundo 1 foi aprovado pelo usuário; mundos 2 a 4 aguardam seu playtest.
 [Conteúdo e validação da etapa 9](../tests/etapa_9.md). Mundo 5 permanece planejado.
 
+## Diretriz de evolução aprovada
+
+Manter os mundos existentes e ampliar o conteúdo gradualmente. O nome Montanha das Corujas permanece; seu chefe passa a ser o Gavião da Montanha. Permitir replay das fases iniciais com Pipo após o desbloqueio global. Validar duração somente após uma fase completa da evolução; 15–25 minutos é hipótese, não requisito.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO DO DOCUMENTO
@@ -874,15 +880,15 @@ Combinação de:
 - inimigos aéreos;
 - exploração vertical.
 
-A fase termina com a Coruja da Montanha.
+A fase termina com a Gavião da Montanha.
 
 ---
 
-# 39. CHEFE DO MUNDO 3 — CORUJA DA MONTANHA
+# 39. CHEFE DO MUNDO 3 — GAVIÃO DA MONTANHA
 
 A batalha deverá explorar movimentação vertical.
 
-A Coruja poderá:
+O Gavião poderá:
 
 - voar;
 - pousar;

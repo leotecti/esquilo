@@ -5,6 +5,12 @@
 **Versão:** 1.0  
 **Documento:** 02_requisitos.md
 
+## Diretriz de evolução aprovada
+
+Preservar e melhorar os sistemas existentes. Acrescentar desbloqueio global de Pipo, replay das fases iniciais com a dupla após o resgate e Game Over com retorno ao mapa do mundo anterior, preservando desbloqueios. No Mundo 1, retornar ao próprio mundo. Verificar PWA, desempenho e save em cada etapa.
+
+Estas decisões descrevem a evolução a implementar; os builds da etapa 9 registram o comportamento anterior. Referências: [evolução](13_evolucao.md), [etapas E00–E30](14_etapas_evolucao.md) e DEC-115 em [decisões](11_decisoes.md).
+
 ---
 
 # 1. OBJETIVO DO DOCUMENTO
