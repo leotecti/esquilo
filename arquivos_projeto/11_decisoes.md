@@ -2933,4 +2933,34 @@ O marco 5 é **Vertical Slice**; o protótipo da etapa 6 não cria um marco adic
 
 ---
 
+## DEC-113 — CAMPANHA DO MUNDO 1 E GUARDIÃO
+
+**Categoria:** Fases / Narrativa / Persistência
+
+**Status:** IMPLEMENTADA; ETAPA 8 E MARCO 6 APROVADOS PELO USUÁRIO EM 2026-09-30
+
+A etapa 8 produz as fases 1-1, 1-2 e 1-3 do Bosque das Folhas. A campanha
+começa com Tico sozinho; um resgate jogável libera Pipo em 1-3. A troca não
+está disponível antes do resgate. A fase 1-2 apresenta um ouriço com espinhos,
+conforme o documento de fases, além dos blocos e de uma noz escondida.
+
+O Guardião do Bosque permanece no escopo. Seu encontro acontece ao final
+de 1-3, em uma cena separada com bandeira, ataque de raízes anunciado e
+abertura para salto ou investida. Três acertos acalmam o personagem.
+O resultado encerra o Mundo 1 e aponta narrativamente para o rio; o Mundo 2
+será implementado na etapa seguinte.
+
+O slot da campanha é `world1.json` / `tico.world1.v1`, independente do slot
+do protótipo. A primeira abertura aproveita apenas preferências de áudio.
+Isso preserva o progresso antigo e permite ensinar a sequência das fases
+novas desde o início. O save guarda a fase, desbloqueios e objetos por cena;
+dados inválidos continuam protegidos e reiniciar exige confirmação.
+
+Ouriço, Guardião e cipós usam desenhos por código; a arte ilustrada existente,
+incluindo as poses de esforço e passadas, é reaproveitada. O avanço foi
+solicitado pelo usuário. Testes locais não substituem o aceite dos marcos
+artísticos ou o playtest no aparelho. Registro em `tests/etapa_8.md`.
+
+---
+
 **FIM DO DOCUMENTO**

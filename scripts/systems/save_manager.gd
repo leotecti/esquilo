@@ -2,6 +2,7 @@ extends RefCounted
 ## Slot local versionado. Web usa escrita síncrona para sobreviver ao fechamento.
 const VERSION := 1
 const WEB_KEY := "tico.progress.v1"
+var web_key := WEB_KEY
 var path := "user://progress.json"
 var state := "empty"
 var locked := false
@@ -9,7 +10,7 @@ var locked := false
 func read_save() -> Dictionary:
 	var raw := ""
 	if OS.has_feature("web"):
-		var result = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('" + WEB_KEY + "') || '';}catch(e){return null;}})()")
+		var result = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('" + web_key + "') || '';}catch(e){return null;}})()")
 		if result == null:
 			state = "unavailable"
 			return {}
@@ -75,7 +76,7 @@ func write_save(data: Dictionary) -> bool:
 	var raw := JSON.stringify(data)
 	var ok := false
 	if OS.has_feature("web"):
-		ok = bool(JavaScriptBridge.eval("(function(){try{localStorage.setItem('" + WEB_KEY + "'," + JSON.stringify(raw) + ");return true;}catch(e){return false;}})()"))
+		ok = bool(JavaScriptBridge.eval("(function(){try{localStorage.setItem('" + web_key + "'," + JSON.stringify(raw) + ");return true;}catch(e){return false;}})()"))
 	else:
 		var file := FileAccess.open(path + ".tmp", FileAccess.WRITE)
 		if file != null:

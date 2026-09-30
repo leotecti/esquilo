@@ -203,13 +203,15 @@ func _process(delta: float) -> void:
 	if get_tree().paused or completed or respawning:
 		return
 	_switch_left = maxf(0,_switch_left - delta)
-	if not gate_open and stone.position.x >= 1110:
+	if is_instance_valid(stone) and not gate_open and stone.position.x >= 1110:
 		gate_open = true
 		gate.hide()
 		gate.get_node("Collision").set_deferred("disabled",true)
 		_feedback(stone.position,"Caminho aberto!")
 		_say("Troque para Tico, pule a pedra e passe por baixo da árvore.")
 		sounds.play_notes([523,659,784])
+	if not is_instance_valid(secret):
+		return
 	pipo.sniffing = tico == pipo and not secret.taken and pipo.position.distance_to(secret.position) < 300
 	secret.scent_visible = pipo.sniffing
 	secret.scent_from = pipo.position + Vector2(pipo.facing * 25,-55)

@@ -73,7 +73,7 @@ func _skin_objects() -> void:
 		elif actor == exit_marker: kind = "exit"
 		elif actor.has_method("reset_item"): kind = "nut"
 		elif actor.has_method("reset_block"): kind = "block"
-		elif actor.has_method("reset_enemy"): kind = "slug"
+		elif actor is CharacterBody2D and actor.has_method("reset_enemy"): kind = "slug"
 		if not kind.is_empty():
 			var art := OBJECT_ART.new()
 			art.kind = kind

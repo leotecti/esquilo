@@ -82,6 +82,9 @@ movimentasse as pernas enquanto empurra. O projeto recebido ainda usa
   Regressão: `slice_test.gd` e `coop_test.gd` (77 casos).
 - Navegador: `tests/browser/push.spec.js` verifica teclado e multitoque,
   alternância de poses, pedra imóvel com Tico e deslocamento com Pipo.
+- Resultado: 92 verificações na Godot e três cenários no navegador aprovados,
+  incluindo o percurso completo da dupla. Pacotes Web/PWA e Windows atualizados
+  com as animações de esforço e passadas.
 
 ## Roteiro de aceite no aparelho
 

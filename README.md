@@ -5,11 +5,11 @@ entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
 ## Estado atual
 
-Etapa 7 implementada: **vertical slice do Bosque das Folhas**, com personagens
-e objetos ilustrados, cenário em camadas, animações, música original, efeitos,
-HUD e menu de pausa. Mantém a trilha com 13 nozes e o save da etapa 6.
-O avanço foi solicitado pelo usuário; a avaliação com jogadores e a validação
-de áudio/desempenho no celular real ainda estão pendentes. Marco 5 aguardando aceite.
+Etapa 8 concluída, testada e aprovada pelo usuário: **Mundo 1 — Bosque das Folhas**, com três fases,
+resgate de Pipo, cooperação e encontro com o Guardião no fim da fase 1-3.
+A campanha salva a fase atual, nozes, checkpoints, puzzles e conclusão.
+Arte, música, controles e animações de empurrar da etapa 7 foram mantidos.
+Marco 6 aprovado em 2026-09-30. Próxima etapa prevista: Mundos 2, 3 e 4.
 Consulte [o registro de execução](arquivos_projeto/12_status-do-projeto.md).
 
 ## Abrir e executar
@@ -53,14 +53,29 @@ Na fase, A/D e setas movem Tico. Toque em Espaço para um salto curto;
 segure para subir mais. Durante a queda, manter Espaço abre a cauda e permite
 planar por até 2 segundos. Soltar encerra o planar; aterrissar recarrega a cauda.
 Esc pausa e retoma. O botão **Recomeçar** pede confirmação para iniciar outra aventura.
-Perder o foco da janela pausa o jogo. **Q/Trocar** alterna os personagens;
+Perder o foco da janela pausa o jogo. Após resgatar Pipo, **Q/Trocar** alterna os personagens;
 **E/AÇÃO** inicia a investida de Pipo. A troca acontece no chão, fora da
 investida e onde há espaço para o outro personagem.
 No celular, use ◀/▶ e PULO; manter PULO durante a queda permite planar.
 Com Pipo, AÇÃO passa a mostrar **INVESTIR**. Seu faro é automático perto de
 segredos, sem botão extra. Gamepad futuro.
 
-### Como jogar a Trilha da Amizade
+### Como jogar o Mundo 1
+
+1. **1-1 — Primeiros Passos:** siga as nozes, salte pelas plataformas,
+   passe pelas lesmas e alcance a árvore no alto.
+2. **1-2 — Blocos e Segredos:** bata por baixo dos blocos, explore a passagem
+   escondida e salte sobre o ouriço. Os espinhos machucam mesmo por cima.
+3. **1-3 — Um Novo Amigo:** quebre o bloco rachado que prende os cipós de Pipo.
+   A troca fica disponível após o resgate. Complete os desafios da dupla abaixo.
+4. **Final de 1-3 — Guardião:** salte quando as raízes douradas se erguerem.
+   Quando ele ficar cansado, use um salto por cima ou a investida de Pipo.
+   Três acertos acalmam o Guardião e liberam a saída do mundo.
+
+Na tela de resultado, **Próxima fase** continua a campanha. O encontro com o
+Guardião tem sua própria bandeira. Recomeçar inicia o mundo novamente após confirmação.
+
+### Desafios da dupla na fase 1-3
 
 - Colete até 13 nozes; uma está em um bloco e outra exige o faro de Pipo.
 - Pule sobre a lesma e experimente bater por baixo dos blocos.
@@ -86,7 +101,10 @@ O indicador junto ao contador informa se foi possível salvar.
 No Web/PWA, o progresso pertence ao navegador e à origem do site (`localStorage`).
 Atualizar os arquivos do jogo preserva o save; limpar dados do site pode apagá-lo.
 Não há sincronização entre aparelhos. No Windows, o arquivo fica em
-`%APPDATA%\Godot\app_userdata\Tico e a Floresta das Nozes\progress.json`.
+`%APPDATA%\Godot\app_userdata\Tico e a Floresta das Nozes\world1.json`.
+O Web usa `tico.world1.v1`. O slot antigo `progress.json` / `tico.progress.v1`
+é preservado; apenas as preferências de áudio são copiadas na primeira abertura.
+A campanha nova começa em 1-1 mesmo para quem concluiu o protótipo.
 Saves danificados ou de versões futuras são preservados até o jogador confirmar
 uma nova aventura. Veja [regras e testes da etapa 6](tests/etapa_6.md).
 
@@ -97,11 +115,11 @@ documentados em [testes da etapa 7](tests/etapa_7.md).
 
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — etapa 7
+## Web/PWA — etapa 8
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-etapa-7-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
-Os builds anteriores foram preservados. A publicação desta versão está pendente.
+`builds/web/Tico-etapa-8-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
 
@@ -116,10 +134,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da etapa 7
+## Build Windows da etapa 8
 
-Abra `builds/windows/etapa_7/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-etapa-7-windows.zip` contém os dois arquivos.
+Abra `builds/windows/etapa_8/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-etapa-8-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -129,8 +147,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/etapa_7 | Out-Null
-& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_7/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/etapa_8 | Out-Null
+& $engine --headless --path . --export-debug 'Windows Desktop' 'builds/windows/etapa_8/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -189,6 +207,8 @@ $godotConsole = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.
 & $godotConsole --headless --path . --script tests/coop_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/prototype_test.gd --fixed-fps 60
 & $godotConsole --headless --path . --script tests/slice_test.gd --fixed-fps 60
+& $godotConsole --headless --path . --script tests/world_test.gd --fixed-fps 60
+& $godotConsole --headless --path . --script tests/world_rules_test.gd --fixed-fps 60
 ```
 
 Esses comandos verificam importação, execução, input, colisões, salto, planar,
@@ -200,3 +220,10 @@ Pipo e a cooperação estão em [testes da etapa 5](tests/etapa_5.md).
 O protótipo e a persistência estão em [testes da etapa 6](tests/etapa_6.md).
 Arte, áudio, UI e medições estão em [testes da etapa 7](tests/etapa_7.md).
 O build Android nativo permanece para uma etapa futura.
+
+A campanha e seu aceite estão em [testes da etapa 8](tests/etapa_8.md).
+`npm.cmd run test:web` executa os cenários atuais em `world.spec.js`.
+Os testes históricos Web da etapa 7 continuam disponíveis contra seu build preservado:
+defina `$env:TICO_WEB_STAGE='7'` antes de executar o Playwright e remova a variável
+com `Remove-Item Env:TICO_WEB_STAGE` ao voltar à etapa atual. Feche o servidor local
+antes de alternar a versão servida.

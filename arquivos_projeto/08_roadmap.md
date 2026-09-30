@@ -1347,6 +1347,10 @@ Validar:
 
 # 83. ETAPA 8 — MUNDO 1
 
+**Execução em 2026-09-30:** três fases e encontro final com o Guardião
+implementados. Registro e roteiro de aceite em [etapa 8](../tests/etapa_8.md).
+**Aceite em 2026-09-30:** etapa testada e aprovada pelo usuário; marco 6 concluído.
+
 ## BOSQUE DAS FOLHAS
 
 O Mundo 1 será a primeira produção real.

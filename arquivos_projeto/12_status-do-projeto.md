@@ -1,9 +1,9 @@
 # Status do projeto
 
-**Data:** 2026-09-29  
-**Etapa atual:** 7 — Vertical slice: implementado; aguardando validação no aparelho e aceite artístico
+**Data:** 2026-09-30
+**Etapa atual:** 8 — Mundo 1: concluída, testada e aprovada pelo usuário
 
-**Próximo trabalho:** publicar e avaliar a etapa 7, principalmente áudio, leitura visual e desempenho no PWA
+**Próximo trabalho previsto:** etapa 9 — Mundos 2, 3 e 4, começando pelo Rio das Pedras; aguardando solicitação de início
 
 **Marco 1 — Tico Playground:** aprovado pelo usuário após playtest
 
@@ -220,6 +220,31 @@ As alterações desta etapa permanecem sem commit.
 **Ajuste após o playtest do usuário:** Tico passa a demonstrar esforço ao tentar
 empurrar a pedra. Pipo recebe um ciclo de passadas ao empurrá-la; os pés param
 quando a pedra atinge o limite. As regras de força e movimento não mudam.
+
+## Etapa 8 — Entregas
+
+- [x] Fase 1-1 — Primeiros Passos: nozes, plataformas, lesmas, bandeira e chegada.
+- [x] Fase 1-2 — Blocos e Segredos: três tipos de bloco, segredo opcional e ouriço.
+- [x] Fase 1-3 — Um Novo Amigo: resgate jogável, breve diálogo e desbloqueio de Pipo.
+- [x] Cooperação: pedra, passagem baixa, investida, faro e desafio final.
+- [x] Guardião do Bosque mantido no escopo, em encontro ao final da fase 1-3.
+- [x] Ataque anunciado, abertura para salto/investida, três acertos e encerramento amigável.
+- [x] Transição entre fases e conclusão persistente do mundo.
+- [x] Save próprio versionado; slot do protótipo preservado e preferências aproveitadas.
+- [x] Reinício com confirmação; dados danificados ou futuros protegidos.
+- [x] 175 verificações na Godot e quatro cenários Web aprovados, incluindo campanha completa e reabertura offline.
+- [x] Multitoque: percurso de 1-1, resgate, troca, esforço de Tico e passadas de Pipo.
+- [x] Execução gráfica Windows e conteúdo dos ZIPs Web/Windows conferidos.
+- [x] Usuário confirmou: “etapa 8 testada e aprovada. Ficou muito bom.”
+- [x] Marco 6 — Mundo 1 Completo aprovado pelo usuário.
+
+Aceite registrado em 2026-09-30. O retorno confirma a aprovação geral da etapa;
+não detalha aparelho, medição de FPS ou execução individual de cada item do roteiro.
+
+Implementação e validação: [etapa 8](../tests/etapa_8.md).
+Pacotes: `builds/web/Tico-etapa-8-web.zip` e `builds/windows/Tico-etapa-8-windows.zip`.
+Avanço autorizado pelo usuário; as pendências de playtest anteriores permanecem registradas.
+Nenhum commit ou push feito nesta entrega.
 
 ## Decisões ainda abertas
 
