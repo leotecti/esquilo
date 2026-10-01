@@ -260,6 +260,7 @@ func _respawn() -> void:
 	super._respawn()
 
 func set_paused(value: bool) -> void:
+	if is_instance_valid(campaign) and campaign.has_method("map_is_open") and campaign.map_is_open(): return
 	if is_instance_valid(campaign) and campaign.has_method("awaiting_return") and campaign.awaiting_return(): return
 	if is_instance_valid(phase_restart_dialog) and phase_restart_dialog.visible and not value: return
 	super.set_paused(value)

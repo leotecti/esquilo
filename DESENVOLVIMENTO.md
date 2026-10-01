@@ -2,7 +2,7 @@
 
 Este guia cobre o ambiente Windows com PowerShell, usado neste projeto.
 Execute os comandos na raiz do repositório, onde está `project.godot`.
-Os caminhos de saída abaixo correspondem à **Evolução E05, versão 0.13.0**.
+Os caminhos de saída abaixo correspondem à **Evolução E06, versão 0.14.0**.
 
 ## 1. Preparar o ambiente
 
@@ -149,6 +149,7 @@ saúde, vidas, persistência da campanha e as animações dos personagens:
 & $env:GODOT_BIN --headless --path . --script tests/checkpoints_e03_test.gd
 & $env:GODOT_BIN --headless --path . --script tests/tutorial_e04_test.gd
 & $env:GODOT_BIN --headless --path . --script tests/progress_e05_test.gd
+& $env:GODOT_BIN --headless --path . --script tests/map_e06_test.gd
 & $env:GODOT_BIN --headless --path . --script tests/expedition_save_test.gd
 & $env:GODOT_BIN --headless --path . --script tests/run_animation_test.gd
 & $env:GODOT_BIN --headless --path . --script tests/push_animation_test.gd
@@ -180,10 +181,10 @@ e builds:
 
 ```powershell
 New-Item -ItemType Directory -Force builds | Out-Null
-& $env:GODOT_BIN --path . --script tests/progress_e05_performance.gd
+& $env:GODOT_BIN --path . --script tests/map_e06_performance.gd
 ```
 
-O relatório fica em `builds/performance-e05-windows.json`. Essa medição na máquina
+O relatório fica em `builds/performance-e06-windows.json`. Essa medição na máquina
 de desenvolvimento não substitui o teste no celular.
 
 ## 6. Gerar e testar o build Web/PWA
@@ -195,7 +196,7 @@ npm.cmd run build:web
 npm.cmd run serve:web
 ```
 
-Saída atual: `builds/web/evolucao_e05/`.
+Saída atual: `builds/web/evolucao_e06/`.
 Abra **http://127.0.0.1:8080/tico/** e clique em jogar. Ctrl+C encerra o servidor.
 
 Sempre gere a Web com `build:web`: além da exportação da Godot, o script prepara
@@ -211,15 +212,15 @@ Para instalação e validação da PWA no celular, use a hospedagem HTTPS descri
 
 ```powershell
 & $env:GODOT_BIN --headless --path . --editor --import --quit
-New-Item -ItemType Directory -Force builds/windows/evolucao_e05 | Out-Null
-& $env:GODOT_BIN --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e05/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/evolucao_e06 | Out-Null
+& $env:GODOT_BIN --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e06/Tico.exe'
 ```
 
 Confira o console e `$LASTEXITCODE`. A pasta deve conter `Tico.exe` e `Tico.pck`.
 Mantenha os dois juntos ao executar ou distribuir. Para abrir:
 
 ```powershell
-& '.\builds\windows\evolucao_e05\Tico.exe'
+& '.\builds\windows\evolucao_e06\Tico.exe'
 ```
 
 Os presets ficam em `export_presets.cfg`. Atualmente existem presets para
@@ -235,17 +236,17 @@ use o bloco abaixo para criar pacotes com data e hora, sem substituir os anterio
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $projectRoot = (Get-Location).Path
 $buildStamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$webSource = Join-Path $projectRoot 'builds/web/evolucao_e05'
-$windowsSource = Join-Path $projectRoot 'builds/windows/evolucao_e05'
-$webZip = Join-Path $projectRoot "builds/web/Tico-E05-web-$buildStamp.zip"
-$windowsZip = Join-Path $projectRoot "builds/windows/Tico-E05-windows-$buildStamp.zip"
+$webSource = Join-Path $projectRoot 'builds/web/evolucao_e06'
+$windowsSource = Join-Path $projectRoot 'builds/windows/evolucao_e06'
+$webZip = Join-Path $projectRoot "builds/web/Tico-E06-web-$buildStamp.zip"
+$windowsZip = Join-Path $projectRoot "builds/windows/Tico-E06-windows-$buildStamp.zip"
 [IO.Compression.ZipFile]::CreateFromDirectory($webSource, $webZip)
 [IO.Compression.ZipFile]::CreateFromDirectory($windowsSource, $windowsZip)
 Get-Item -LiteralPath $webZip, $windowsZip
 ```
 
 O ZIP Web deve conter `index.html`, `.htaccess` e os demais recursos diretamente
-na raiz, sem uma pasta `evolucao_e05` envolvendo os arquivos. Publique seu conteúdo
+na raiz, sem uma pasta `evolucao_e06` envolvendo os arquivos. Publique seu conteúdo
 em `/tico/`, seguindo [o guia da HostGator](web/deployment.md).
 
 Os ZIPs e as pastas de build são ignorados pelo Git. Um push do código não publica
@@ -272,7 +273,7 @@ Ao criar uma nova versão, mantenha coerentes:
 Para atualizar a versão npm sem criar commit ou tag, por exemplo:
 
 ```powershell
-npm.cmd version 0.13.1 --no-git-tag-version
+npm.cmd version 0.14.1 --no-git-tag-version
 ```
 
 Execute esse comando apenas quando estiver preparando uma nova versão. O cache
@@ -292,5 +293,5 @@ da PWA é calculado pelo conteúdo do build; ele é renovado por `build:web`.
 | Alteração não aparece na Web | Refaça `build:web`, confira a pasta servida e feche/reabra as abas/PWA após a atualização |
 | `git status` sem alterações listadas | Confira a pasta atual e se os arquivos foram salvos; `builds/` e caches são ignorados |
 
-Antes de distribuir, faça também o [roteiro manual da E05](tests/evolucao_e05.md),
+Antes de distribuir, faça também o [roteiro manual da E06](tests/evolucao_e06.md),
 incluindo controles por toque, retorno após Game Over, save e retomada offline.

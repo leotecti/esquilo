@@ -3072,4 +3072,27 @@ com escrita síncrona no navegador e arquivo temporário no Windows.
 
 ---
 
+## DEC-119 — MAPA E REVISITA NA E06
+
+**Status:** IMPLEMENTADA; VALIDAÇÃO NA PWA DO CELULAR PENDENTE
+
+A campanha principal inicia no mapa do mundo da fase atual. Quatro páginas
+ilustradas apresentam as 16 fases existentes, com estados derivados da E05.
+Mundos bloqueados podem ser consultados; a entrada valida o desbloqueio.
+
+Consultar o mapa pausa a tentativa. Voltar à fase atual mantém posição e saúde;
+reabrir o jogo usa o checkpoint salvo. Rejogar uma fase concluída mantém conquistas
+e inicia uma tentativa jogável, com Pipo disponível se já foi resgatado.
+
+Game Over abre o mapa do mundo anterior, selecionando sua primeira fase e
+preservando o acesso às demais fases liberadas. O retorno pendente continua
+salvo até entrar em uma fase. O esquema permanece V2.
+
+Os resultados existentes e a opção de próxima fase são mantidos. A E07 amplia
+o ciclo de resultados e a animação de desbloqueio. A E14 inclui a caudada planejada.
+
+[Implementação e testes](../tests/evolucao_e06.md).
+
+---
+
 **FIM DO DOCUMENTO**

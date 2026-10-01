@@ -1,11 +1,23 @@
 # Status do projeto
 
-**Data:** 2026-09-30
-**Etapa atual:** evolução E05 — progresso e salvamento V2 implementados; validação no celular pelo usuário pendente.
+**Data:** 2026-10-01
+**Etapa atual:** evolução E06 — mapa do mundo implementado; validação no celular pelo usuário pendente.
 
-**Próximo trabalho previsto:** validar a E05 no celular e seguir para a E06 — mapa do mundo. Mundo 5 continua planejado no roadmap original.
+**Próximo trabalho previsto:** validar a E06 no celular e seguir para a E07 — resultado e desbloqueio de fases. Mundo 5 continua planejado no roadmap original.
 
-## Evolução E05 — Entrega atual
+## Evolução E06 — Entrega atual
+
+- Entrada pelo mapa ilustrado dos quatro mundos e suas 16 fases.
+- Nós e caminhos com estados de bloqueio, disponibilidade, fase atual e conclusão.
+- Seleção por teclado, mouse e toque; acesso também pela pausa e pelo resultado.
+- Replay de fases concluídas preserva conquistas, vidas e Pipo desbloqueado.
+- Game Over abre o mapa do mundo anterior com os demais desbloqueios mantidos.
+- Save V2 e resultados existentes preservados; ampliação do resultado permanece na E07.
+
+Versão 0.14.0. [Testes, pacotes e roteiro de validação](../tests/evolucao_e06.md).
+Sem commit ou publicação automática; aguarda teste do usuário no celular.
+
+## Evolução E05 — Entrega anterior
 
 - Migração automática V1 → V2 no mesmo slot, preservando campanhas anteriores.
 - Consulta de progresso com fase atual, disponíveis, concluídas, conquistas e personagens.

@@ -6,7 +6,75 @@ const WORLD_NAMES = ["Bosque das Folhas","Rio das Pedras","Montanha das Corujas"
 var lives_label: Label
 var return_layer: CanvasLayer
 var return_button: Button
-var destination: OptionButton
+@export var start_on_map := true
+var world_map: Control
+var map_button: Button
+var _map_after_load := false
+
+func _ready() -> void:
+	super._ready()
+	if start_on_map: show_map()
+
+func map_is_open() -> bool:
+	return is_instance_valid(world_map)
+
+func show_map() -> void:
+	if _changing or map_is_open() or not is_instance_valid(level): return
+	if level.respawning and not awaiting_return(): return
+	save_progress()
+	get_tree().paused = true
+	level._apply_audio()
+	level.touch.release_all()
+	level.touch.set_controls_active(false)
+	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
+	level.get_node("Interface").hide()
+	level.hide()
+	return_layer = CanvasLayer.new()
+	return_layer.layer = 25
+	return_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(return_layer)
+	world_map = preload("res://scripts/ui/world_map.gd").new()
+	world_map.campaign = self
+	return_layer.add_child(world_map)
+	return_button = world_map.primary if awaiting_return() else null
+
+func _remove_map() -> void:
+	if is_instance_valid(return_layer):
+		remove_child(return_layer)
+		return_layer.queue_free()
+	return_layer = null
+	world_map = null
+	return_button = null
+
+func close_map() -> void:
+	if not map_is_open() or awaiting_return() or _map_portrait(): return
+	_remove_map()
+	level.show()
+	level.get_node("Interface").show()
+	level.set_paused(false)
+
+func enter_from_map(index: int) -> void:
+	if not map_is_open() or _changing or index<0 or index>int(data.unlocked) or _map_portrait(): return
+	if awaiting_return():
+		resume_at(index)
+		return
+	if index==int(data.stage) and not level.completed:
+		close_map()
+		return
+	_changing = true
+	data.survival.replay = data.levels.get(str(index),{}).get("completed",false)
+	if data.survival.replay: data.levels[str(index)].checkpoint = false
+	_load_stage.call_deferred(index)
+
+func _map_portrait() -> bool:
+	# O aviso HTML muda antes de a Godot receber o novo tamanho do canvas.
+	if OS.has_feature("web") and level.touch.touch_enabled:
+		return bool(JavaScriptBridge.eval("window.innerHeight > window.innerWidth"))
+	return level.touch.is_portrait()
+
+func new_adventure() -> void:
+	_map_after_load = start_on_map
+	super.new_adventure()
 
 func fresh() -> Dictionary:
 	var result := super.fresh()
@@ -89,8 +157,7 @@ func _capture_level() -> Dictionary:
 	return snapshot
 
 func _load_stage(index: int) -> void:
-	if is_instance_valid(return_layer): return_layer.queue_free()
-	return_layer = null
+	_remove_map()
 	super._load_stage(index)
 	lives_label = Label.new()
 	lives_label.position = Vector2(375,0)
@@ -108,7 +175,15 @@ func _load_stage(index: int) -> void:
 	level.contextual_help = preload("res://scripts/ui/contextual_help.gd").new()
 	level.contextual_help.level = level
 	level.add_child(level.contextual_help)
+	map_button = level._menu_button("Mapa da jornada",level.pause_panel.get_child(0))
+	map_button.pressed.connect(show_map)
+	var result_map: Button = level._menu_button("Mapa da jornada",level.result_panel.get_child(0))
+	result_map.pressed.connect(show_map)
+	level._update_layout()
 	if awaiting_return(): show_return.call_deferred()
+	elif _map_after_load:
+		_map_after_load = false
+		show_map()
 
 func mark_hint_seen(id: String) -> void:
 	if id in preload("res://scripts/ui/contextual_help.gd").KEYS:
@@ -147,49 +222,7 @@ func claim_life(stage_id: int) -> bool:
 	return true
 
 func show_return() -> void:
-	if not awaiting_return() or is_instance_valid(return_layer): return
-	get_tree().paused = true
-	level.touch.set_controls_active(false)
-	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
-	return_layer = CanvasLayer.new()
-	return_layer.layer = 20
-	return_layer.process_mode = Node.PROCESS_MODE_ALWAYS
-	add_child(return_layer)
-	var shade := ColorRect.new()
-	shade.color = Color(0.06,0.13,0.10,0.94)
-	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	return_layer.add_child(shade)
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	return_layer.add_child(center)
-	var column := VBoxContainer.new()
-	column.custom_minimum_size.x = 600
-	column.add_theme_constant_override("separation",22)
-	center.add_child(column)
-	var title := Label.new()
-	title.text = "Fim das vidas — vamos tentar de novo!"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size",30)
-	column.add_child(title)
-	var message := Label.new()
-	message.text = "Retorno ao %s\n%d vidas renovadas • Conquistas e amigos preservados" % [WORLD_NAMES[int(data.survival.return_stage)/4],initial_lives]
-	message.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	column.add_child(message)
-	destination = OptionButton.new()
-	destination.custom_minimum_size.y = 56
-	column.add_child(destination)
-	for index in int(data.unlocked)+1:
-		destination.add_item("Fase %d-%d • %s" % [index/4+1,index%4+1,WORLD_NAMES[index/4]],index)
-	destination.select(int(data.survival.return_stage))
-	return_button = Button.new()
-	return_button.text = "Voltar à aventura"
-	return_button.custom_minimum_size.y = 62
-	column.add_child(return_button)
-	return_button.pressed.connect(_choose_return)
-	return_button.grab_focus()
-
-func _choose_return() -> void:
-	resume_at(destination.get_selected_id())
+	if awaiting_return(): show_map()
 
 func resume_at(index: int) -> void:
 	if _changing or not awaiting_return() or index<0 or index>int(data.unlocked): return
@@ -222,6 +255,11 @@ func _restart_stage() -> void:
 
 func survival_details() -> Dictionary:
 	var details := {"lives":data.survival.lives,"game_over":awaiting_return(),"return_stage":data.survival.return_stage,"pipo_unlocked":data.survival.pipo_unlocked}
+	details.map_open = map_is_open()
+	if map_is_open(): details.merge(world_map.details())
+	if is_instance_valid(map_button):
+		var r := map_button.get_global_rect()
+		details.map_menu_rect = [r.position.x,r.position.y,r.size.x,r.size.y]
 	if is_instance_valid(return_button):
 		var rect := return_button.get_global_rect()
 		details.return_rect = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]

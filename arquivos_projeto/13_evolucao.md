@@ -174,6 +174,11 @@ Assim, a criança possui também uma motivação narrativa para continuar jogand
 
 # 5. MAPA DO MUNDO
 
+**E06 implementada:** mapa ilustrado em quatro páginas para as 16 fases atuais,
+com entrada da campanha, seleção de fases liberadas, replay e retorno após Game Over.
+A ampliação dos resultados e animações de desbloqueio permanece na E07.
+[Execução e validação](../tests/evolucao_e06.md).
+
 Depois da animação inicial, o jogador deverá chegar ao mapa.
 
 O mapa deverá ser ilustrado e fazer parte da experiência do jogo.

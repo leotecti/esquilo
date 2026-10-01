@@ -403,6 +403,11 @@ O progresso pode ser salvo, fechado e recuperado corretamente.
 
 # 10. EVOLUÇÃO E06 — MAPA DO MUNDO
 
+**Status: implementada na versão 0.14.0; validação na PWA do celular pendente.**
+Mapa em quatro páginas ilustradas, com 16 nós, consulta dos estados da E05,
+revisita de fases e retorno ao mundo anterior após Game Over.
+[Execução e testes](../tests/evolucao_e06.md).
+
 Somente depois do progresso estar funcionando deverá ser criado o mapa.
 
 Implementar:
@@ -737,6 +742,10 @@ A criança entende quem é Pipo e por que ele entrou na aventura.
 
 Manter as diferenças já implementadas e melhorar os trechos que precisarem de ajuste.
 
+**Planejamento atualizado:** incluir o golpe de cauda de Tico nesta evolução.
+A habilidade está prevista para implementação futura; este registro não indica
+que ela já esteja disponível no jogo.
+
 ## Tico
 
 - menor;
@@ -745,6 +754,78 @@ Manter as diferenças já implementadas e melhorar os trechos que precisarem de 
 - salto;
 - planar;
 - espaços menores.
+
+### Golpe de cauda — primeira implementação
+
+Tico gira o corpo e usa a cauda para atingir um adversário à sua frente.
+O golpe amplia suas opções de combate, preservando a diferença entre a agilidade
+de Tico e a força de Pipo.
+
+- Usar **E / botão AÇÃO**, com legenda **CAUDADA** quando Tico estiver ativo.
+- Disponível desde o início, sem desbloqueio adicional nesta primeira versão.
+- Executar somente no chão. Ataques no ar e durante a planagem ficam para uma
+  avaliação posterior ao playtest, sem alterar o salto e a planagem existentes.
+- Alcance frontal curto, sem deslocamento de investida nem ataque em todas as direções.
+- Um golpe por acionamento: segurar o botão não deve repetir ataques automaticamente.
+- Ter preparação breve, intervalo ativo de acerto e recuperação. Ajustar duração,
+  alcance e intervalo entre golpes no playtest, com valores configuráveis.
+- Cada adversário pode receber no máximo um acerto por golpe.
+- Não conceder invulnerabilidade durante toda a animação. Preservar as regras
+  existentes de dano e proteção temporária após ser atingido.
+
+### Interação com adversários e cenário
+
+| Alvo | Comportamento inicial |
+| --- | --- |
+| Inimigos comuns, como lesmas | Podem ser derrotados pela caudada; o salto continua válido. |
+| Inimigos voadores | Podem ser atingidos quando estiverem dentro do alcance, com Tico no chão. |
+| Porcos-espinhos | Continuam sendo obstáculos a evitar; a caudada não os derrota nem neutraliza os espinhos. |
+| Chefes e guardiões | Mantêm as regras atuais. Participação da caudada será avaliada depois do playtest. |
+| Pedras, paredes resistentes e mecanismos de força ou peso | Continuam dependendo de Pipo; a caudada não os empurra, quebra ou ativa. |
+
+O golpe não atravessa paredes ou outros obstáculos sólidos. Inimigos derrotados
+devem manter os efeitos, recompensas e regras de reaparecimento já existentes.
+
+### Implementação e apresentação
+
+- Substituir a mensagem atual de AÇÃO com Tico, que orienta chamar Pipo, pelo
+  acionamento da caudada. Preservar **INVESTIR** e o comportamento do botão com Pipo.
+- Isolar a habilidade: Pipo herda o controlador de Tico e não deve executar a
+  caudada nem ter sua investida alterada por essa herança.
+- Criar animação própria de preparação, movimento da cauda e recuperação,
+  sincronizada com a área de acerto. Manter tamanho, orientação e identidade visual
+  do personagem, evitando representar o golpe apenas girando o desenho atual.
+- Ativar a área de acerto somente no intervalo apropriado. Integrar os diferentes
+  tipos de inimigo e definir a ordem entre acerto do golpe e dano por contato,
+  evitando resultados diferentes conforme a ordem de processamento.
+- Bloquear troca de personagem durante o golpe, como já ocorre com a investida.
+  Dano recebido, derrota, reposicionamento e reinício devem cancelar a ação e
+  limpar a área de acerto. Pausa deve suspender os tempos e impedir novos acertos.
+  Conclusão de fase e Game Over devem encerrar a ação.
+- Acrescentar som curto e feedback visual de impacto, respeitando as preferências
+  de áudio e o tom infantil do jogo.
+- Adicionar dica contextual de caudada, exibida uma vez e registrada no save.
+  Saves existentes recebem o novo registro sem perder progresso. Não persistir
+  o ataque em andamento nem criar desbloqueio de habilidade nesta primeira versão.
+
+### Validação da caudada
+
+- Testar teclado e toque: um acionamento gera um golpe; manter o botão pressionado
+  não gera repetição; o intervalo de recuperação impede ataques contínuos.
+- Conferir alcance e direção para ambos os lados, ausência de acertos através
+  de paredes e limite de um acerto por adversário em cada golpe.
+- Testar lesmas, voadores, espinhos, chefes e objetos de força conforme a tabela.
+- Validar dano durante a ação, pausa, troca, derrota, checkpoint, reinício,
+  conclusão de fase e Game Over, sem deixar área de acerto ativa indevidamente.
+- Revalidar corrida, salto, planagem, empurrão, investida e mecanismos cooperativos.
+- Conferir animação e sincronização do impacto no desktop e no celular.
+- Verificar migração do tutorial, reabertura do save, atualização da PWA e uso
+  offline. Medir desempenho e tamanho do pacote após adicionar a animação.
+- No playtest, observar se a criança entende o golpe e se Tico fica forte demais.
+  Ajustar alcance e recuperação preservando o desafio e a utilidade de Pipo.
+
+Ataques aéreos, combos, melhorias e dano em chefes ficam fora da primeira versão;
+qualquer ampliação depende da avaliação dessa implementação inicial.
 
 ## Pipo
 
@@ -769,7 +850,9 @@ CAMINHO PARA PIPO
 
 ## Resultado esperado
 
-Os personagens possuem gameplay realmente diferente.
+Os personagens possuem gameplay realmente diferente. Tico dispõe de uma caudada
+curta e legível contra inimigos comuns, enquanto os desafios de força continuam
+exigindo Pipo. As habilidades e os percursos existentes permanecem funcionais.
 
 ---
 

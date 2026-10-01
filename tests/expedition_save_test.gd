@@ -22,6 +22,7 @@ func write_raw(path: String, raw: String) -> void:
 
 func open_campaign() -> void:
 	campaign = load("res://scenes/main.tscn").instantiate()
+	campaign.start_on_map = false
 	campaign.store.path = CAMPAIGN_SLOT
 	campaign.legacy_path = LEGACY
 	root.add_child(campaign)

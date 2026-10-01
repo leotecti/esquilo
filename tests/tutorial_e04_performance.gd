@@ -4,6 +4,7 @@ func run() -> void:
 	root.size = Vector2i(1280,720)
 	root.content_scale_size = Vector2i(1280,720)
 	var campaign = load("res://scenes/main.tscn").instantiate()
+	campaign.start_on_map = false
 	campaign.save_enabled = false
 	root.add_child(campaign)
 	level = campaign.level

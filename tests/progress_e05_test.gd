@@ -4,6 +4,7 @@ const E05_LEGACY := "user://e05_legacy_test_only.json"
 
 func open_campaign() -> void:
 	campaign = load("res://scenes/main.tscn").instantiate()
+	campaign.start_on_map = false
 	campaign.store.path = E05_SLOT
 	campaign.legacy_path = E05_LEGACY
 	root.add_child(campaign)
