@@ -1,0 +1,56 @@
+extends "res://tests/map_e06_test.gd"
+
+func run() -> void:
+	root.size = Vector2i(1280,720)
+	root.content_scale_size = Vector2i(1280,720)
+	DirAccess.remove_absolute(MAP_LEGACY)
+	for index in [0,3,7,11,15]:
+		write_raw(MAP_SLOT,JSON.stringify(fixture(index)))
+		await open_campaign()
+		campaign.close_map()
+		if is_instance_valid(level.guardian): level.guardian.health = 0
+		level._on_exit(level.exit_marker)
+		await frames(3)
+		check(level.completed,"Saída conclui fase %d" % index)
+		check(level.result_text.text.contains("Vidas:") and level.result_text.text.contains("Nozes Douradas:"),"Resultado apresenta conquistas %d" % index)
+		check(campaign.store.read_save().levels[str(index)].completed,"Conclusão salva antes de sair do resultado %d" % index)
+		level.next_button.pressed.emit()
+		check(campaign.map_is_open(),"Resultado volta ao mapa %d" % index)
+		var target := mini(index+1,15)
+		check(campaign.world_map.selected==target and campaign.world_map.world==target/4,"Mapa seleciona próximo caminho %d" % index)
+		check(campaign.data.stage==index,"Mapa não inicia fase automaticamente %d" % index)
+		if index<15: check(campaign.world_map.notice.visible,"Novo desbloqueio é anunciado %d" % index)
+		else: check(campaign.data.finished,"Última fase conclui campanha sem índice inexistente")
+		await close_world()
+		await open_campaign()
+		check(campaign.world_map.selected==target and campaign.data.levels[str(index)].completed,"Reabertura recupera conclusão e destino %d" % index)
+		campaign.enter_from_map(target)
+		await frames(5)
+		level = campaign.level
+		check(campaign.data.stage==target and not level.completed,"Entrada explícita inicia fase ou replay %d" % index)
+		await close_world()
+	write_raw(MAP_SLOT,JSON.stringify(fixture(1)))
+	await open_campaign()
+	campaign.enter_from_map(0)
+	await frames(5)
+	level = campaign.level
+	level._on_exit(level.exit_marker)
+	await frames(3)
+	campaign.advance()
+	check(campaign.data.unlocked==1,"Replay não avança desbloqueios já obtidos")
+	check(not campaign.world_map.notice.visible,"Replay não repete celebração de desbloqueio")
+	campaign.close_map()
+	var original := FileAccess.get_file_as_string(MAP_SLOT)
+	campaign.store.path = "user://e07_missing_directory/blocked.json"
+	campaign._last_save = ""
+	campaign.save_progress()
+	await frames(3)
+	check(level.result_text.text.contains("Salvamento indisponível"),"Resultado informa falha de armazenamento")
+	check(FileAccess.get_file_as_string(MAP_SLOT)==original,"Falha preserva save anterior")
+	campaign.store.path = MAP_SLOT
+	campaign.advance()
+	check(campaign.store.state=="saved","Voltar ao mapa tenta salvar novamente")
+	await close_world()
+	DirAccess.remove_absolute(MAP_SLOT)
+	print("RESULTADO: %d verificações, %d falhas" % [checks,failures])
+	quit(1 if failures else 0)

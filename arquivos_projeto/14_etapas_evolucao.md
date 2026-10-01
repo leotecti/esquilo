@@ -403,7 +403,8 @@ O progresso pode ser salvo, fechado e recuperado corretamente.
 
 # 10. EVOLUÇÃO E06 — MAPA DO MUNDO
 
-**Status: implementada na versão 0.14.0; validação na PWA do celular pendente.**
+**Status: funcionamento aprovado pelo usuário; renovação visual concluída na
+versão 0.14.1, com conferência da nova aparência na PWA do celular pendente.**
 Mapa em quatro páginas ilustradas, com 16 nós, consulta dos estados da E05,
 revisita de fases e retorno ao mundo anterior após Game Over.
 [Execução e testes](../tests/evolucao_e06.md).
@@ -449,6 +450,13 @@ O jogador inicia pelo mapa e consegue visualizar sua jornada.
 ---
 
 # 11. EVOLUÇÃO E07 — RESULTADO E DESBLOQUEIO DE FASES
+
+**Status: implementada na versão 0.15.0; validação da entrega no celular pendente.**
+Resultado mostra nozes, Nozes Douradas registradas, vidas e segredo. O botão
+**Voltar ao mapa** seleciona a próxima trilha, inclusive na troca de mundo.
+Novos desbloqueios recebem uma animação; revisitas mantêm conquistas.
+A conclusão é salva imediatamente para resistir ao fechamento da aplicação.
+[Execução e testes](../tests/evolucao_e07.md).
 
 Criar a conclusão completa de uma fase.
 

@@ -1,5 +1,12 @@
 extends "res://tests/world_test.gd"
 
+func advance() -> void:
+	level.next_button.pressed.emit()
+	await frames(3)
+	if campaign.map_is_open(): campaign.enter_from_map(campaign.world_map.selected)
+	await frames(35)
+	level = campaign.level
+
 func open_stage(world: int, section_id: String) -> void:
 	level = load("res://scenes/levels/world_%d_%s.tscn" % [world,section_id]).instantiate()
 	root.add_child(level)

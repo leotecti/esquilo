@@ -9,14 +9,14 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E06 — Mapa do mundo (0.14.0)**. Inicia no mapa ilustrado,
-permite revisitar fases liberadas e preserva o progresso no save V2.
-[Alterações e roteiro](../tests/evolucao_e06.md).
+Versão atual: **Evolução E07 — Resultado e desbloqueio (0.15.0)**. Completa o ciclo
+mapa → fase → resultado → mapa e preserva o progresso no save V2.
+[Alterações e roteiro](../tests/evolucao_e07.md).
 
-`builds/web/Tico-evolucao-E06-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-evolucao-E07-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e06` entre `/tico/` e os arquivos.
+Não coloque outra pasta `evolucao_e07` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

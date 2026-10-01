@@ -1,11 +1,23 @@
 # Status do projeto
 
 **Data:** 2026-10-01
-**Etapa atual:** evolução E06 — mapa do mundo implementado; validação no celular pelo usuário pendente.
+**Etapa atual:** evolução E07 — resultado e desbloqueio implementados na versão 0.15.0.
 
-**Próximo trabalho previsto:** validar a E06 no celular e seguir para a E07 — resultado e desbloqueio de fases. Mundo 5 continua planejado no roadmap original.
+**Próximo trabalho previsto:** conferir a E07 no celular e concluir a validação intermediária do loop principal antes da E08. Mundo 5 continua planejado no roadmap original.
 
-## Evolução E06 — Entrega atual
+## Evolução E07 — Entrega atual
+
+- Resultado com nozes, Nozes Douradas registradas, vidas e segredo.
+- Retorno ao mapa com seleção da próxima fase, inclusive entre mundos.
+- Destaque animado de novos desbloqueios; entrada depende da seleção do jogador.
+- Conclusão salva imediatamente e recuperada na reabertura offline.
+- Última fase permite voltar ao mapa e rejogar sem perder conquistas.
+- Mantidos os saves V2, os personagens e a arte da E06.
+
+[Testes, pacotes e roteiro de validação](../tests/evolucao_e07.md).
+Sem commit, push ou publicação automática.
+
+## Evolução E06 — Entrega anterior
 
 - Entrada pelo mapa ilustrado dos quatro mundos e suas 16 fases.
 - Nós e caminhos com estados de bloqueio, disponibilidade, fase atual e conclusão.
@@ -14,8 +26,11 @@
 - Game Over abre o mapa do mundo anterior com os demais desbloqueios mantidos.
 - Save V2 e resultados existentes preservados; ampliação do resultado permanece na E07.
 
-Versão 0.14.0. [Testes, pacotes e roteiro de validação](../tests/evolucao_e06.md).
-Sem commit ou publicação automática; aguarda teste do usuário no celular.
+Versão 0.14.1: quatro fundos ilustrados, trilhas curvas, medalhões com cadeados
+e bandeiras, Tico e Pipo junto da fase atual e navegação compacta por setas.
+48 verificações Godot e oito cenários de navegador passaram nesta revisão.
+[Testes, pacotes e roteiro de validação](../tests/evolucao_e06.md).
+Sem commit ou publicação automática; aparência e desempenho no celular aguardam conferência.
 
 ## Evolução E05 — Entrega anterior
 

@@ -3088,10 +3088,29 @@ Game Over abre o mapa do mundo anterior, selecionando sua primeira fase e
 preservando o acesso às demais fases liberadas. O retorno pendente continua
 salvo até entrar em uma fase. O esquema permanece V2.
 
-Os resultados existentes e a opção de próxima fase são mantidos. A E07 amplia
-o ciclo de resultados e a animação de desbloqueio. A E14 inclui a caudada planejada.
+Na entrega E06, os resultados existentes e a opção de próxima fase foram mantidos.
+A E07 substitui a passagem direta pela volta ao mapa, conforme DEC-120.
+A E14 inclui a caudada planejada.
 
 [Implementação e testes](../tests/evolucao_e06.md).
+
+---
+
+## DEC-120 — CONCLUSÃO E RETORNO AO MAPA NA E07
+
+**Status:** IMPLEMENTADA NA VERSÃO 0.15.0; VALIDAÇÃO NO CELULAR PENDENTE
+
+Reutilizar o painel de resultado para mostrar conquistas sem notas negativas.
+O botão principal volta ao mapa e seleciona a próxima fase. Entre mundos,
+a página muda para o destino; na última fase, permanece no último nó.
+
+Preservar o salvamento imediato da conclusão e do desbloqueio, antes de o
+jogador deixar o resultado, para resistir ao fechamento da aplicação.
+Uma falha de escrita aparece no resultado; retornar ao mapa tenta salvar novamente.
+O formato permanece V2. A animação é uma apresentação temporária e não bloqueia
+o acesso à fase; revisitas não criam outro desbloqueio.
+
+[Implementação e testes](../tests/evolucao_e07.md).
 
 ---
 

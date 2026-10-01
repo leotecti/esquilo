@@ -41,6 +41,35 @@ async function clickRect(page,name,touch=false){const s=await snapshot(page),r=s
 function errorsFor(page){const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;}
 
 async function clickMapRect(page,r,touch=false){const s=await snapshot(page),v=page.viewportSize();const x=(r[0]+r[2]/2)*v.width/s.width,y=(r[1]+r[3]/2)*v.height/s.height;if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);}
+async function mapWorld(page,target,touch=false){
+  for(let i=0;i<4;i++){
+    const current=(await snapshot(page)).map_world;if(current===target)return;
+    const next=(current+1)%4;await clickRect(page,'map_next_rect',touch);
+    await expect.poll(async()=>(await snapshot(page)).map_world).toBe(next);
+  }
+  expect((await snapshot(page)).map_world).toBe(target);
+}
+
+test('E07: resultado final por toque, mapa e campanha preservada offline',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
+  const page=await context.newPage();const data=fixture(15);
+  data.levels['15'].completed=true;data.levels['15'].boss_done=true;
+  data.levels['15'].mechanisms.Arena=true;data.finished=true;
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
+  await page.screenshot({path:'builds/web/e07-resultado-touch.png'});
+  await clickRect(page,'next_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).map_open).toBe(true);
+  expect((await snapshot(page)).map_selected).toBe(15);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await startGame(page,false);
+  expect((await snapshot(page)).map_selected).toBe(15);
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).finished)).toBe(true);
+  await clickRect(page,'map_enter_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).map_open).toBe(false);
+  expect((await snapshot(page)).completed).toBe(false);expect(errors).toEqual([]);
+  await context.close();
+});
 
 test('E06: mapa inicial, caminhos bloqueados e entrada por teclado',async({page})=>{
   const errors=errorsFor(page);await page.goto('./?test=1');await startGame(page,false);
@@ -50,10 +79,14 @@ test('E06: mapa inicial, caminhos bloqueados e entrada por teclado',async({page}
   await clickMapRect(page,s.map_nodes['1']);expect((await snapshot(page)).map_selected).toBe(0);
   await page.keyboard.press('Escape');await page.keyboard.down('ArrowRight');await page.waitForTimeout(250);await page.keyboard.up('ArrowRight');
   expect((await snapshot(page)).x).toBe(s.x);expect((await snapshot(page)).map_open).toBe(true);
-  await clickMapRect(page,s.map_tabs[3]);await expect.poll(async()=>(await snapshot(page)).map_world).toBe(3);
+  for(const world of [1,2,3]){
+    await mapWorld(page,world);
+    expect((await snapshot(page)).map_tico_visible).toBe(false);
+    await page.screenshot({path:`builds/web/e06-mapa-arte-${world}.png`});
+  }
   expect(Object.values((await snapshot(page)).map_states)).toEqual(['LOCKED','LOCKED','LOCKED','LOCKED']);
   await clickRect(page,'map_enter_rect');expect((await snapshot(page)).campaign_stage).toBe(0);
-  await clickMapRect(page,s.map_tabs[0]);await clickMapRect(page,s.map_nodes['0']);await page.keyboard.press('Enter');
+  await mapWorld(page,0);await clickMapRect(page,(await snapshot(page)).map_nodes['0']);await page.keyboard.press('Enter');
   await expect.poll(async()=>(await snapshot(page)).map_open).toBe(false);
   await walk(page,270);expect((await snapshot(page)).pipo_unlocked).toBe(false);expect(errors).toEqual([]);
 });
@@ -69,7 +102,7 @@ test('E06: mapa por toque, revisita com Pipo e reabertura offline',async({browse
   await page.keyboard.press('Enter');await page.waitForTimeout(200);expect((await snapshot(page)).map_open).toBe(true);
   await page.setViewportSize({width:844,height:390});await expect(page.locator('#rotate')).toBeHidden();
   await expect.poll(async()=>{const s=await snapshot(page);return s.width>s.height;}).toBe(true);
-  await clickMapRect(page,(await snapshot(page)).map_tabs[0],true);
+  await mapWorld(page,0,true);
   await expect.poll(async()=>(await snapshot(page)).map_world).toBe(0);
   expect((await snapshot(page)).map_states['0']).toBe('COMPLETED');
   await clickMapRect(page,(await snapshot(page)).map_nodes['0'],true);await clickRect(page,'map_enter_rect',true);
@@ -309,12 +342,21 @@ test('Bosque migra para Rio; percurso, checkpoint e reabertura offline',async({p
   const old=fixture(3);old.levels['3'].completed=true;old.levels['3'].boss_done=true;old.finished=true;
   await seed(page,old,'tico.world1.v1');const errors=errorsFor(page);await boot(page);
   await expect.poll(async()=>(await snapshot(page)).result).toBe(true);await clickRect(page,'next_rect');
+  await expect.poll(async()=>(await snapshot(page)).map_open).toBe(true);
+  expect((await snapshot(page)).map_selected).toBe(4);
+  await clickRect(page,'map_enter_rect');
   await expect.poll(async()=>(await snapshot(page)).campaign_stage).toBe(4);
   await walk(page,565);await glide(page,1230);await walk(page,1510);await glide(page,2180);
   expect((await snapshot(page)).checkpoint).toBe(true);
   await page.screenshot({path:'builds/web/etapa9-rio.png'});
   await walk(page,2460);await glide(page,2940);await glide(page,3350);await walk(page,3590);
   await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
+  await page.screenshot({path:'builds/web/e07-resultado-rio.png'});
+  await clickRect(page,'next_rect');
+  await expect.poll(async()=>(await snapshot(page)).map_open).toBe(true);
+  expect((await snapshot(page)).map_selected).toBe(5);
+  expect((await snapshot(page)).map_states['5']).toBe('AVAILABLE');
+  await page.screenshot({path:'builds/web/e07-desbloqueio.png'});
   expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.world1.v1')))).toEqual(old);
   await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
   await context.setOffline(true);await page.reload();await startGame(page);

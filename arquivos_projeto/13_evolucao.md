@@ -176,7 +176,8 @@ Assim, a criança possui também uma motivação narrativa para continuar jogand
 
 **E06 implementada:** mapa ilustrado em quatro páginas para as 16 fases atuais,
 com entrada da campanha, seleção de fases liberadas, replay e retorno após Game Over.
-A ampliação dos resultados e animações de desbloqueio permanece na E07.
+A E07 completa o retorno pelo resultado, a seleção da próxima trilha e o
+destaque animado de novos desbloqueios. [Entrega E07](../tests/evolucao_e07.md).
 [Execução e validação](../tests/evolucao_e06.md).
 
 Depois da animação inicial, o jogador deverá chegar ao mapa.

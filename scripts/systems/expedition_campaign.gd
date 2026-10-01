@@ -10,6 +10,29 @@ var return_button: Button
 var world_map: Control
 var map_button: Button
 var _map_after_load := false
+var _unlocked_stage := -1
+
+func save_progress() -> void:
+	var previous := int(data.get("unlocked",0))
+	super.save_progress()
+	if int(data.get("unlocked",0))>previous:
+		_unlocked_stage = int(data.unlocked)
+	if is_instance_valid(level) and level.completed:
+		_present_result.call_deferred()
+
+func _present_result() -> void:
+	if not is_instance_valid(level) or not level.completed: return
+	var snapshot: Dictionary = data.levels.get(str(int(data.stage)),{})
+	var golden: Array = data.collectibles.golden_nuts.get(str(int(data.stage)),[])
+	var title: String = preload("res://scripts/ui/world_map.gd").NAMES[int(data.stage)]
+	var message := "Trilha concluída!"
+	if data.finished and int(data.stage)==scene_paths.size()-1: message = "Todas as trilhas desta aventura concluídas!"
+	level.result_text.add_theme_font_size_override("font_size",25)
+	level.result_text.text = "%s\n%s\n\nNozes: %d / %d   •   Vidas: %d\nNozes Douradas: %d\n%s" % [title,message,level.nuts,level.total_nuts,int(data.survival.lives),golden.size(),"Segredo encontrado!" if snapshot.get("secret",false) else "Você pode voltar para explorar mais."]
+	level.result_panel.custom_minimum_size = Vector2(700,360)
+	level.next_button.text = "Voltar ao mapa"
+	if save_enabled and store.state!="saved":
+		level.result_text.text += "\nProgresso nesta sessão • Salvamento indisponível"
 
 func _ready() -> void:
 	super._ready()
@@ -36,6 +59,12 @@ func show_map() -> void:
 	world_map = preload("res://scripts/ui/world_map.gd").new()
 	world_map.campaign = self
 	return_layer.add_child(world_map)
+	if level.completed and not awaiting_return():
+		var target := mini(int(data.stage)+1,scene_paths.size()-1)
+		world_map.focus_stage(target)
+		if _unlocked_stage>=0:
+			world_map.celebrate_unlock(_unlocked_stage)
+			_unlocked_stage = -1
 	return_button = world_map.primary if awaiting_return() else null
 
 func _remove_map() -> void:
@@ -73,6 +102,7 @@ func _map_portrait() -> bool:
 	return level.touch.is_portrait()
 
 func new_adventure() -> void:
+	_unlocked_stage = -1
 	_map_after_load = start_on_map
 	super.new_adventure()
 
@@ -177,8 +207,9 @@ func _load_stage(index: int) -> void:
 	level.add_child(level.contextual_help)
 	map_button = level._menu_button("Mapa da jornada",level.pause_panel.get_child(0))
 	map_button.pressed.connect(show_map)
-	var result_map: Button = level._menu_button("Mapa da jornada",level.result_panel.get_child(0))
-	result_map.pressed.connect(show_map)
+	level.next_button.pressed.disconnect(level._continue_world)
+	level.next_button.pressed.connect(advance)
+	level.next_button.text = "Voltar ao mapa"
 	level._update_layout()
 	if awaiting_return(): show_return.call_deferred()
 	elif _map_after_load:
@@ -235,11 +266,8 @@ func resume_at(index: int) -> void:
 	_load_stage.call_deferred(index)
 
 func advance() -> void:
-	if _changing or not level.completed or data.stage>=scene_paths.size()-1: return
-	save_progress()
-	data.survival.replay = data.levels.get(str(int(data.stage)+1),{}).get("completed",false)
-	_changing = true
-	_load_stage.call_deferred(int(data.stage)+1)
+	if _changing or not level.completed: return
+	show_map()
 
 func restart_stage() -> void:
 	if _changing or awaiting_return() or level.respawning: return

@@ -1,6 +1,7 @@
 # Evolução E06 — Mapa do mundo
 
-Versão **0.14.0**. Implementada; validação na PWA do celular pelo usuário pendente.
+Versão **0.14.1**. Funcionamento do mapa aprovado pelo usuário. Renovação visual
+implementada e testada; aparência e desempenho no celular aguardam nova conferência.
 
 ## Entrega
 
@@ -28,10 +29,16 @@ será ampliado na E07. A caudada do Tico continua planejada para a E14.
 
 ## Preservação do projeto
 
-O mapa usa desenho vetorial em código, seguindo as cores e formas dos biomas,
-sem adicionar atlas ou texturas grandes. Gameplay e áudio ficam pausados
-durante sua exibição, e comandos de movimento são liberados ao entrar no mapa.
+O mapa combina quatro ilustrações com caminhos curvos e medalhões desenhados em
+código. Apenas o fundo do mundo exibido é carregado; as imagens usam compressão
+com qualidade 0,8 na importação. Tico e Pipo reutilizam os atlas existentes.
+O cabeçalho compacto traz setas para trocar de mundo; cadeados, bandeiras e
+seleção animada indicam o estado das fases. Partículas discretas e som de seleção
+respeitam a apresentação e a configuração de efeitos. Gameplay e áudio da fase
+ficam pausados, e comandos de movimento são liberados ao entrar no mapa.
 O aviso de orientação vertical também impede entrada na fase por teclado.
+
+Artes, prompts e ferramenta: [assets/map/PROMPTS.md](../assets/map/PROMPTS.md).
 
 O formato continua sendo **save V2**, no mesmo slot. Nenhuma nova migração ou
 lista duplicada de desbloqueios foi criada. Consultar outra página do mapa não
@@ -42,10 +49,14 @@ na campanha. A cena principal distribuída inicia com essa opção ativada.
 
 ## Validação automatizada
 
-380 verificações Godot passaram: 48 de mapa, 47 de vidas, 79 de progresso,
+Na entrega 0.14.0, 380 verificações Godot passaram: 48 de mapa, 47 de vidas, 79 de progresso,
 133 de checkpoints e 73 de persistência. Os 19 cenários de navegador foram
 validados; os quatro de mapa e Game Over foram repetidos após os ajustes finais
 de orientação, áudio e apresentação, todos aprovados.
+
+Na revisão visual 0.14.1, foram executadas novamente as 48 verificações de mapa
+e oito cenários de navegador E06/E05/E02: todos passaram. Incluem navegação pelos
+quatro fundos, teclado, toque, replay com Pipo, save, Game Over e uso offline.
 
 - `tests/map_e06_test.gd`: entrada, 16 estados iniciais, bloqueios, conclusão,
   checkpoint, revisão de fases, Pipo, migração, Game Over nos quatro mundos,
@@ -56,13 +67,13 @@ de orientação, áudio e apresentação, todos aprovados.
 - `tests/map_e06_performance.gd`: mapa do Bosque, mapa da Montanha e gameplay
   após sair do mapa. Relatório em `builds/performance-e06-windows.json`.
 
-Intel Iris Xe, Compatibility, 1280×720, 181 amostras por cenário:
+Revisão 0.14.1: Intel Iris Xe, Compatibility, 1280×720, 180–181 amostras por cenário:
 
 | Cenário | Mediana | p95 | Chamadas de desenho p95 |
 | --- | ---: | ---: | ---: |
-| Mapa do Bosque | 16,69 ms | 17,83 ms | 66 |
-| Mapa da Montanha | 16,66 ms | 17,87 ms | 55 |
-| Fase após o mapa | 16,65 ms | 17,16 ms | 66 |
+| Mapa do Bosque | 16,64 ms | 18,42 ms | 185 |
+| Mapa da Montanha | 16,63 ms | 17,94 ms | 199 |
+| Fase após o mapa | 16,69 ms | 18,59 ms | 66 |
 
 A medição no computador não substitui a validação de desempenho no celular.
 
