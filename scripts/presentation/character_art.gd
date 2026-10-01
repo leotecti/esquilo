@@ -100,13 +100,17 @@ func _draw() -> void:
 	if pose in ["push", "push_attempt"]:
 		texture = ATLAS.frame("push",(4 if pig else 0)+push_frame)
 	var height := 82.0 if pig else 76.0
-	if pose == "glide": height = 67
+	# Compensa a cauda erguida do recorte sem encolher o corpo ao abrir a planagem.
+	if pose == "glide": height = 82
 	if pose == "charge": height = 58
 	if pose == "prepare": height = 65
 	if pose in ["push", "push_attempt"]: height = 72
 	var size := texture.get_size() * (height / texture.get_height())
 	var bob := sin(_time*3)*1.0
 	var angle := 0.0
+	if pose == "glide":
+		bob = sin(_time*2.5)*0.8
+		angle = sin(_time*2.5)*0.015
 	if pose == "run": bob = -absf(sin(_run_distance / (20.0 if pig else 18.0) * PI/2))*2
 	if pose == "push": bob = 0
 	if pose == "push_attempt": bob = -absf(sin(_push_time*5))*0.6

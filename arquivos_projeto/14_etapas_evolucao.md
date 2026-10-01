@@ -241,6 +241,13 @@ O jogador possui saúde, pode morrer, perder vidas e chegar ao Game Over.
 
 # 7. EVOLUÇÃO E03 — CHECKPOINTS E REINÍCIO
 
+**Implementada em 2026-09-30 (0.11.0); playtest do usuário pendente.**
+As bandeiras existentes foram mantidas e verificadas nas 16 fases. O menu de
+pausa oferece **Reiniciar fase**, com confirmação, sem gastar vidas. A tentativa
+volta ao início e desativa a bandeira; conquistas e progresso coletado permanecem.
+O mapa e o Game Over continuam seguindo a E02.
+[Regras detalhadas e testes](../tests/evolucao_e03.md).
+
 Manter o retorno ao checkpoint para morte com vidas restantes. Integrar a regra aprovada de Game Over ao mundo anterior, descrita em E02.
 
 Criar:
@@ -271,6 +278,21 @@ Deverão existir regras claras sobre:
 - coletáveis permanentes;
 - estado de áreas opcionais.
 
+### Regras implementadas
+
+- Morte com vidas restantes retorna à bandeira ativa ou ao início da fase.
+- O mesmo personagem retorna com saúde completa e proteção temporária. Movimento,
+  vento, investida e comandos mantidos são encerrados durante a retomada.
+- Inimigos comuns reaparecem. Chefes ainda não vencidos reiniciam com saúde completa;
+  chefes vencidos continuam calmos.
+- Nozes, corações consumidos, blocos usados e medalhões coletados permanecem registrados,
+  sem nova recompensa ao morrer, reiniciar a fase ou reabrir o jogo.
+- Segredos revelados, resgate de Pipo, paredes abertas, puzzles e mecanismos concluídos
+  permanecem; plataformas móveis retomam seu ciclo quando a cena é recarregada.
+- Reiniciar fase mantém vidas, personagem, desbloqueios e conclusões. Desativa apenas
+  a bandeira da tentativa atual e salva a retomada no início.
+- Nova aventura continua sendo a ação separada que substitui a campanha após confirmação.
+
 ## Resultado esperado
 
 A morte passa a integrar corretamente o fluxo da fase.
@@ -278,6 +300,12 @@ A morte passa a integrar corretamente o fluxo da fase.
 ---
 
 # 8. EVOLUÇÃO E04 — LIMPEZA DA INTERFACE E TUTORIAL CONTEXTUAL
+
+**Implementada em 2026-09-30 (0.12.0); playtest do usuário pendente.**
+HUD compacto, informações da fase e do save na pausa e placas convertidas em
+dicas temporárias. Os cinco registros abaixo persistem na campanha, junto às
+dicas de percurso já visualizadas. O conteúdo e os controles existentes foram
+preservados. [Execução e testes](../tests/evolucao_e04.md).
 
 Remover textos fixos que ocupam permanentemente a tela.
 
@@ -331,6 +359,10 @@ A primeira fase passa a ensinar o jogo sem depender de textos permanentes.
 ---
 
 # 9. EVOLUÇÃO E05 — SISTEMA DE PROGRESSO E SALVAMENTO
+
+**Status: implementada na versão 0.13.0; validação no celular pelo usuário pendente.**
+Save V2 com migração, consulta de progresso e registros de Nozes Douradas,
+narrativa e vilarejo. Dados existentes preservados. [Execução e testes](../tests/evolucao_e05.md).
 
 Antes de criar o mapa, criar a estrutura de dados que representará o progresso.
 

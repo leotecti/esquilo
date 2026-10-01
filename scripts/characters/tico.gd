@@ -102,7 +102,8 @@ func _move_character(delta: float) -> void:
 		velocity.y *= jump_cut
 		_jump_cut_applied = true
 
-	_gliding = (not grounded and velocity.y > 0.0
+	# A corrente de ar pode elevar Tico sem interromper a planagem já iniciada.
+	_gliding = (not grounded and (velocity.y > 0.0 or _gliding)
 		and Input.is_action_pressed("jump") and glide_remaining > 0.0)
 	if not grounded or jumped:
 		var gravity_multiplier := 1.0
@@ -173,6 +174,7 @@ func take_damage(source: Vector2) -> bool:
 	if health <= 0 or invulnerability_left > 0.0 or not controls_enabled:
 		return false
 	health -= 1
+	_gliding = false
 	invulnerability_left = invulnerability_duration
 	_hurt_left = 0.2
 	velocity = Vector2(-240.0 if source.x >= global_position.x else 240.0, -240.0)
@@ -199,6 +201,7 @@ func restore_health() -> void:
 
 
 func bounce() -> void:
+	_gliding = false
 	velocity.y = -360.0
 	_jump_cut_applied = true
 	_coyote_left = 0.0

@@ -6,6 +6,10 @@ var web_key := WEB_KEY
 var path := "user://progress.json"
 var state := "empty"
 var locked := false
+var current_version := VERSION
+
+func migrate(data: Dictionary) -> Dictionary:
+	return data
 
 func read_save() -> Dictionary:
 	var raw := ""
@@ -13,6 +17,7 @@ func read_save() -> Dictionary:
 		var result = JavaScriptBridge.eval("(function(){try{return localStorage.getItem('" + web_key + "') || '';}catch(e){return null;}})()")
 		if result == null:
 			state = "unavailable"
+			locked = true
 			return {}
 		raw = str(result)
 	elif FileAccess.file_exists(path):
@@ -29,11 +34,12 @@ func read_save() -> Dictionary:
 	var decoded: Variant = json.data if json.parse(raw) == OK else null
 	if not valid(decoded):
 		var version: Variant = decoded.get("save_version", 0) if decoded is Dictionary else 0
-		state = "incompatible" if (version is int or version is float) and version > VERSION else "damaged"
+		state = "incompatible" if (version is int or version is float) and version > current_version else "damaged"
 		locked = true
 		return {}
 	state = "loaded"
-	return decoded
+	locked = false
+	return migrate(decoded)
 
 func valid(data: Variant) -> bool:
 	if not data is Dictionary:

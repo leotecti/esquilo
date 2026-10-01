@@ -3007,4 +3007,69 @@ Esta decisão atualiza as regras futuras. As DEC-113/114 e registros de testes c
 
 ---
 
+## DEC-116 — RETORNO E REINÍCIO DE FASE NA E03
+
+**Status:** IMPLEMENTADA; PLAYTEST DO USUÁRIO PENDENTE
+
+A E03 mantém uma bandeira por fase, com posição de retorno derivada da cena.
+Morte com vidas restantes mantém o personagem ativo e restaura a saúde completa
+com proteção temporária. Inimigos comuns e encontros ainda não vencidos reiniciam;
+chefes vencidos permanecem calmos. Nozes, corações consumidos, blocos usados,
+medalhões, segredos revelados e mecanismos abertos permanecem registrados.
+
+O menu de pausa oferece **Reiniciar fase**, com confirmação. Essa ação não gasta
+vidas: volta ao início com saúde completa e desativa a bandeira da tentativa,
+preservando personagem, recompensas, caminhos, conclusões e fases desbloqueadas.
+**Nova aventura** continua separada e substitui o progresso mediante confirmação.
+
+O save da E02 é reaproveitado, incluindo o estado de replay. A morte que esgota
+as vidas continua seguindo o Game Over da DEC-115. Regras e testes em
+[evolucao_e03.md](../tests/evolucao_e03.md).
+
+---
+
+## DEC-117 — INTERFACE E TUTORIAIS NA E04
+
+**Status:** IMPLEMENTADA; PLAYTEST DO USUÁRIO PENDENTE
+
+O HUD mantém saúde, nozes, vidas, retrato do personagem, troca e pausa. O nome
+da fase, o estado do save, reinício e nova aventura ficam no menu de pausa.
+As placas de instrução existentes passam a fornecer dicas temporárias de proximidade.
+
+Uma dica aparece por vez, sem pausar nem interceptar controles. Expira após
+até cinco segundos de jogo, ou antes ao ocorrer a interação ou o afastamento.
+Pausa e Game Over ocultam a dica. Feedbacks e avisos de combate continuam temporários.
+
+O save aceita os campos opcionais `tutorials` e `context_hints_seen`. Os cinco
+registros principais são `tutorial_enemy_seen`, `tutorial_heart_seen`,
+`tutorial_life_seen`, `tutorial_glide_seen` e `tutorial_secret_seen`.
+São gravados ao mostrar a dica e preservados no reinício, replay, Game Over
+e reabertura. Somente uma nova aventura reinicia os registros. Saves anteriores
+recebem registros vazios, sem alteração do progresso existente.
+
+Validação e roteiro em [evolucao_e04.md](../tests/evolucao_e04.md).
+
+---
+
+## DEC-118 — PROGRESSO E SAVE V2 NA E05
+
+**Status:** IMPLEMENTADA; VALIDAÇÃO NO CELULAR PENDENTE
+
+O formato da campanha evolui para V2 no mesmo slot local. Migração preserva
+campos existentes e infere Pipo, conclusões e encontros já resolvidos. A chave
+Web `tico.campaign.v1` mantém o nome histórico; `save_version` define o formato.
+
+Fases disponíveis e concluídas são derivadas dos registros existentes por
+`progress_summary()`, sem duplicação de listas no arquivo. Nozes Douradas usam
+IDs por fase; narrativa usa eventos únicos; o vilarejo usa flags booleanas.
+As estruturas começam vazias onde ainda não há conteúdo implementado.
+
+Save futuro ou inválido não é substituído automaticamente. Nova aventura mantém
+a confirmação existente e as preferências de áudio. Persistência continua local,
+com escrita síncrona no navegador e arquivo temporário no Windows.
+
+[Formato, testes e roteiro](../tests/evolucao_e05.md).
+
+---
+
 **FIM DO DOCUMENTO**

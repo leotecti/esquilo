@@ -1,11 +1,46 @@
 # Status do projeto
 
 **Data:** 2026-09-30
-**Etapa atual:** evolução E02 — vidas e Game Over implementados; playtest do usuário pendente.
+**Etapa atual:** evolução E05 — progresso e salvamento V2 implementados; validação no celular pelo usuário pendente.
 
-**Próximo trabalho previsto:** validar a E02 e seguir para a evolução E03. Mundo 5 continua planejado no roadmap original.
+**Próximo trabalho previsto:** validar a E05 no celular e seguir para a E06 — mapa do mundo. Mundo 5 continua planejado no roadmap original.
 
-## Evolução E02 — Entrega atual
+## Evolução E05 — Entrega atual
+
+- Migração automática V1 → V2 no mesmo slot, preservando campanhas anteriores.
+- Consulta de progresso com fase atual, disponíveis, concluídas, conquistas e personagens.
+- Registros de Nozes Douradas por fase, eventos narrativos e estado do vilarejo.
+- Resgate de Pipo, conclusões e guardiões inferidos a partir dos registros existentes.
+- Saves danificados/futuros protegidos; falhas de armazenamento informadas.
+- Mapa visual e distribuição de Nozes Douradas continuam nas próximas etapas.
+
+Versão 0.13.0. [Testes, pacotes e roteiro de validação](../tests/evolucao_e05.md).
+Sem commit ou publicação automática; aguarda teste do usuário no celular.
+
+## Evolução E04 — Entrega anterior
+
+- HUD mantém saúde, nozes, vidas, personagem e controles. Fase, save e nova aventura ficam na pausa.
+- Placas existentes convertidas em dicas temporárias de proximidade, sem texto permanente no cenário.
+- Cinco tutoriais principais: inimigo, coração, vida extra, planar e segredo.
+- Dicas expiram, desaparecem após interação e não pausam nem capturam os controles.
+- Dicas visualizadas persistem em save, replay e Game Over; nova aventura reinicia o tutorial.
+
+Versão 0.12.0. [Testes, pacotes e roteiro de validação](../tests/evolucao_e04.md).
+Sem commit ou publicação automática; aguarda teste do usuário no celular.
+
+## Evolução E03 — Entrega anterior
+
+- Bandeiras existentes preservadas, com retorno validado nas 16 fases.
+- Personagem ativo retorna com saúde completa, proteção temporária e comandos liberados.
+- Margem segura do Rio passa a acompanhar o checkpoint após uma derrota.
+- **Reiniciar fase** no menu de pausa, com confirmação e cancelamento. Desativa a
+  bandeira e mantém vidas, conquistas, Pipo, itens consumidos e caminhos abertos.
+- Regras de inimigos, chefes, itens e áreas opcionais documentadas; saves anteriores mantidos.
+
+Versão 0.11.0. [Testes, pacotes e roteiro de validação](../tests/evolucao_e03.md).
+Sem commit ou publicação automática; aguarda teste do usuário no celular.
+
+## Evolução E02 — Entrega anterior
 
 - Três vidas compartilhadas e medalhões de vida extra, com coleta persistente.
 - Derrota com vidas restantes usa o checkpoint existente. Game Over renova as vidas

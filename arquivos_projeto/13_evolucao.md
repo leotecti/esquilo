@@ -256,6 +256,11 @@ O objetivo é fazer a criança perceber claramente:
 
 # 7. TUTORIAL CONTEXTUAL
 
+**Base implementada na E04 (0.12.0):** HUD compacto, placas substituídas por
+dicas temporárias e cinco registros de tutorial persistentes. As fases atuais
+foram aproveitadas; a expansão de seu conteúdo continua nas etapas seguintes.
+[Regras e validação](../tests/evolucao_e04.md).
+
 A primeira fase será responsável por ensinar os principais conceitos do jogo.
 
 Entretanto, deverão ser removidos os textos fixos permanentemente exibidos durante o gameplay.
@@ -1278,6 +1283,10 @@ A regra aprovada é retornar ao mapa do mundo anterior, preservando desbloqueios
 ---
 
 # 43. SALVAMENTO DO PROGRESSO
+
+**E05 implementada:** formato V2 com migração dos saves existentes, consulta
+de progresso e registros por fase de Nozes Douradas, eventos e vilarejo.
+Conteúdo futuro começa sem conquistas artificiais. [Formato e validação](../tests/evolucao_e05.md).
 
 Com mapa, fases desbloqueadas, coletáveis e evolução narrativa, o save deverá armazenar pelo menos:
 

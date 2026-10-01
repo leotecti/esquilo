@@ -316,6 +316,7 @@ func _update_layout() -> void:
 	super._update_layout()
 	if world_ready:
 		$Interface/HUD/TopBar/Title.text = NAMES[biome][section]+"\n"+("Pipo • Força" if tico==pipo else "Tico • Agilidade")
+		if is_instance_valid(contextual_help): contextual_help.layout()
 
 func _on_exit(marker: Node2D) -> void:
 	for device in mechanisms.values():
@@ -345,6 +346,12 @@ func restore_world(state: Dictionary) -> void:
 		if mechanisms.has(id) and state.mechanisms[id]: _apply_device(id,false)
 	super.restore_world(state)
 	safe_spot = checkpoint_position
+
+func _respawn() -> void:
+	super._respawn()
+	if tico.health>0:
+		safe_spot = checkpoint_position
+		hazard_delay = 0
 
 func _on_guardian_calmed() -> void:
 	_say(["Guardião: A correnteza está calma. Sigam as penas até a montanha!","Coruja: Vi as nozes na vila. Os castores vão ajudar vocês!","Rei Castor: Obrigado! Os alimentos foram levados para a grande árvore."][biome-2])

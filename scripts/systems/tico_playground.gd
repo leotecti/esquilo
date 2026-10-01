@@ -33,6 +33,8 @@ func _notification(what: int) -> void:
 
 
 func set_paused(value: bool) -> void:
+	# Uma tecla enfileirada durante a rotação não pode retomar atrás do aviso vertical.
+	if not value and is_instance_valid(touch) and touch.is_portrait(): value = true
 	get_tree().paused = value
 	pause_button.text = "Continuar" if value else "Pausar"
 	touch.set_controls_active(not value)

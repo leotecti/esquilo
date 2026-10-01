@@ -9,14 +9,14 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E02 — Vidas e Game Over (0.10.0)**. Acrescenta vidas
-compartilhadas e retorno ao mundo anterior, preservando o progresso existente.
-[Alterações e roteiro](../tests/evolucao_e02.md).
+Versão atual: **Evolução E05 — Progresso e salvamento (0.13.0)**. Migra campanhas
+para o formato V2, preservando progresso e preparando os dados para o mapa.
+[Alterações e roteiro](../tests/evolucao_e05.md).
 
-`builds/web/Tico-evolucao-E02-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-evolucao-E05-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e02` entre `/tico/` e os arquivos.
+Não coloque outra pasta `evolucao_e05` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

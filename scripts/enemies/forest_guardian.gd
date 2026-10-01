@@ -65,6 +65,7 @@ func receive_hit() -> bool:
 func reset_enemy() -> void:
 	if health == 0: return
 	health = 3
+	elapsed = 0
 	phase = "waiting"
 	remaining = 1.2
 	invulnerable = 0

@@ -241,6 +241,7 @@ func _on_exit(marker: Node2D) -> void:
 	result_text.text = "Muito bem, Tico e Pipo!\nJuntos até a chegada\nNozes: %d de %d" % [nuts,total_nuts]
 
 func _respawn() -> void:
+	_switch_left = 0
 	if tico == pipo:
 		pipo.cancel_ability()
 	super._respawn()

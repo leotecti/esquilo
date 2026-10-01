@@ -3,12 +3,15 @@
 Jogo de plataforma 2D para crianças, sobre exploração, amizade e cooperação
 entre Tico, um esquilo ágil, e Pipo, um porquinho forte de camisa verde.
 
+Para configurar outra máquina após clonar o repositório, consulte o
+[guia de desenvolvimento e builds](DESENVOLVIMENTO.md).
+
 ## Estado atual
 
-**Evolução E02:** vidas compartilhadas, vida extra e Game Over com retorno ao
-mundo anterior, preservando as conquistas e Pipo após o resgate.
-Saúde, checkpoints, controles e animações existentes foram aproveitados.
-[Registro e testes](tests/evolucao_e02.md).
+**Evolução E05:** save V2 com migração automática das campanhas existentes,
+consulta de progresso para o mapa e registros de Nozes Douradas, narrativa e vilarejo.
+Vidas, checkpoints, Pipo, coletáveis, segredos e tutoriais foram preservados.
+[Registro e testes](tests/evolucao_e05.md).
 
 Etapa 9 implementada: **Rio das Pedras, Montanha das Corujas e Vila dos Castores**,
 cada um com três fases e um encontro final. A campanha inclui os quatro mundos.
@@ -57,7 +60,10 @@ A versão do projeto também está registrada em `.godot-version`.
 Na fase, A/D e setas movem Tico. Toque em Espaço para um salto curto;
 segure para subir mais. Durante a queda, manter Espaço abre a cauda e permite
 planar por até 2 segundos. Soltar encerra o planar; aterrissar recarrega a cauda.
-Esc pausa e retoma. O botão **Recomeçar** pede confirmação para iniciar outra aventura.
+Esc pausa e retoma. No menu de pausa, **Reiniciar fase** volta ao início da fase
+atual e desativa sua bandeira, com saúde completa e sem gastar vidas. Itens e
+caminhos liberados permanecem salvos. **Nova aventura**, no menu de pausa,
+pede confirmação para substituir o progresso da campanha.
 Perder o foco da janela pausa o jogo. Após resgatar Pipo, **Q/Trocar** alterna os personagens;
 **E/AÇÃO** inicia a investida de Pipo. A troca acontece no chão, fora da
 investida e onde há espaço para o outro personagem.
@@ -115,8 +121,10 @@ Vila aponta para a Árvore; esse quinto mundo pertence à etapa 10.
 
 Ao reabrir, a aventura continua automaticamente no início ou na bandeira ativada,
 com três corações. Nozes, blocos usados, pedra, passagem, parede, segredo e personagem
-ficam salvos. Uma fase concluída reabre no resultado. Os inimigos reaparecem.
-O indicador junto ao contador informa se foi possível salvar.
+ficam salvos. Uma fase concluída reabre no resultado, exceto quando uma tentativa
+de replay está em andamento. Inimigos comuns reaparecem; chefes já vencidos
+permanecem calmos. Corações consumidos e nozes coletadas não reaparecem.
+O indicador no menu de pausa informa se foi possível salvar.
 
 No Web/PWA, o progresso pertence ao navegador e à origem do site (`localStorage`).
 Atualizar os arquivos do jogo preserva o save; limpar dados do site pode apagá-lo.
@@ -137,10 +145,10 @@ documentados em [testes da etapa 7](tests/etapa_7.md).
 
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — etapa 8
+## Web/PWA — evolução E05
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-evolucao-E01-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-evolucao-E05-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -156,10 +164,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da evolução E01
+## Build Windows da evolução E05
 
-Abra `builds/windows/evolucao_e02/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-evolucao-E01-windows.zip` contém os dois arquivos.
+Abra `builds/windows/evolucao_e05/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-evolucao-E05-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -169,8 +177,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/evolucao_e02 | Out-Null
-& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e02/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/evolucao_e05 | Out-Null
+& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e05/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -257,7 +265,10 @@ antes de alternar a versão servida.
 **E00 concluída:** [diagnóstico da base](arquivos_projeto/15_diagnostico_e00.md)
 e [verificações executadas](tests/evolucao_e00.md).
 **E01 implementada:** [saúde, dano e morte](tests/evolucao_e01.md).
-Próxima etapa: E02 — vidas e Game Over.
+**E02 implementada:** [vidas e Game Over](tests/evolucao_e02.md).
+**E03 implementada:** [checkpoints e reinício](tests/evolucao_e03.md).
+**E05 implementada:** [progresso e salvamento](tests/evolucao_e05.md).
+Próximo passo: validar a E05 no celular e seguir para a E06 — mapa do mundo.
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

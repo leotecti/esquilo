@@ -11,6 +11,10 @@ var captive: Sprite2D
 var secret_block: StaticBody2D
 var guardian: Node2D
 var next_button: Button
+var contextual_help: Node
+var phase_restart_button: Button
+var phase_restart_dialog: ConfirmationDialog
+var _phase_was_paused := false
 
 func _ready() -> void:
 	save_enabled = false
@@ -34,6 +38,8 @@ func _ready() -> void:
 		vines.level = self
 		actors.add_child(vines)
 	world_ready = true
+	if is_instance_valid(campaign) and campaign.has_method("restart_stage"):
+		_build_phase_restart()
 	_update_layout()
 	var messages := ["As nozes sumiram! Siga a trilha e descubra o que aconteceu.","Uma pista entre os blocos… Explore os caminhos do bosque.","Pipo está preso! Pule sob o bloco rachado para soltá-lo.","O Guardião está assustado. Espere a abertura entre seus ataques."]
 	_say(messages[world_stage])
@@ -156,6 +162,9 @@ func _sign(point: Vector2, text: String) -> void:
 	label.text = text
 	label.add_theme_font_size_override("font_size",22)
 	actors.add_child(label)
+	if is_instance_valid(campaign) and campaign.has_method("mark_hint_seen"):
+		label.set_meta("context_hint",text)
+		label.hide()
 
 func _build_forest() -> void:
 	super._build_forest()
@@ -176,6 +185,11 @@ func _update_layout() -> void:
 	if not world_ready: return
 	switch_button.visible = rescued
 	$Interface/HUD/TopBar/Title.text = TITLES[world_stage]+"\n"+("Pipo • Força" if tico==pipo else "Tico • Agilidade")
+	if is_instance_valid(contextual_help): contextual_help.layout()
+
+func _say(message: String) -> void:
+	super._say(message)
+	if is_instance_valid(contextual_help): contextual_help.notify(message)
 
 func _process(delta: float) -> void:
 	super._process(delta)
@@ -247,7 +261,40 @@ func _respawn() -> void:
 
 func set_paused(value: bool) -> void:
 	if is_instance_valid(campaign) and campaign.has_method("awaiting_return") and campaign.awaiting_return(): return
+	if is_instance_valid(phase_restart_dialog) and phase_restart_dialog.visible and not value: return
 	super.set_paused(value)
+	if is_instance_valid(phase_restart_button): phase_restart_button.disabled = respawning
+
+func _build_phase_restart() -> void:
+	var column := pause_panel.get_child(0)
+	var adventure := column.get_child(column.get_child_count()-1)
+	column.remove_child(adventure)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation",12)
+	column.add_child(row)
+	phase_restart_button = _menu_button("Reiniciar fase",row)
+	phase_restart_button.pressed.connect(request_phase_restart)
+	adventure.text = "Nova aventura"
+	row.add_child(adventure)
+	phase_restart_dialog = ConfirmationDialog.new()
+	phase_restart_dialog.title = "Reiniciar esta fase?"
+	phase_restart_dialog.dialog_text = "Voltar ao início da fase com a saúde completa?\nA bandeira será desativada. Vidas, itens coletados\ne caminhos liberados serão mantidos."
+	phase_restart_dialog.ok_button_text = "Reiniciar fase"
+	phase_restart_dialog.cancel_button_text = "Cancelar"
+	for button in [phase_restart_dialog.get_ok_button(),phase_restart_dialog.get_cancel_button()]:
+		button.custom_minimum_size = Vector2(220,88)
+		_button_style(button)
+	phase_restart_dialog.confirmed.connect(func():
+		phase_restart_dialog.hide()
+		campaign.restart_stage())
+	phase_restart_dialog.canceled.connect(func(): set_paused(_phase_was_paused))
+	add_child(phase_restart_dialog)
+
+func request_phase_restart() -> void:
+	if respawning or not is_instance_valid(phase_restart_dialog) or campaign.awaiting_return(): return
+	_phase_was_paused = get_tree().paused
+	set_paused(true)
+	phase_restart_dialog.popup_centered(Vector2i(620,260))
 
 func world_snapshot() -> Dictionary:
 	var items: Array = []
@@ -265,6 +312,7 @@ func restore_world(data: Dictionary) -> void:
 	rescued = data.rescued
 	checkpoint_active = data.checkpoint
 	checkpoint.activated = checkpoint_active
+	checkpoint.queue_redraw()
 	checkpoint_position = checkpoint.position+Vector2(0,-5) if checkpoint_active else $PlayerSpawn.position
 	if world_stage==2:
 		if rescued: _release_pipo()
@@ -296,6 +344,7 @@ func restore_world(data: Dictionary) -> void:
 				actor.get_node("Collision").set_deferred("disabled",true)
 			else: nuts += 1
 	_activate(pipo if data.character=="Pipo" and rescued else squirrel,checkpoint_position)
+	_restore_returning_player()
 	resumed = true
 	if data.completed:
 		tico.reset_at(exit_marker.position)
@@ -305,6 +354,15 @@ func restore_world(data: Dictionary) -> void:
 
 func _test_details() -> Dictionary:
 	var data := super._test_details()
+	data["phase_restart_confirmation"] = is_instance_valid(phase_restart_dialog) and phase_restart_dialog.visible
+	if is_instance_valid(phase_restart_button):
+		var phase_rect := phase_restart_button.get_global_rect()
+		data["phase_restart_rect"] = [phase_rect.position.x,phase_rect.position.y,phase_rect.size.x,phase_rect.size.y]
+	if is_instance_valid(phase_restart_dialog) and phase_restart_dialog.visible:
+		for entry in [["phase_confirm_rect",phase_restart_dialog.get_ok_button()],["phase_cancel_rect",phase_restart_dialog.get_cancel_button()]]:
+			var rect: Rect2 = entry[1].get_global_rect()
+			var point := rect.position+Vector2(phase_restart_dialog.position)
+			data[entry[0]] = [point.x,point.y,rect.size.x,rect.size.y]
 	data.merge({"stage":8,"world_stage":world_stage,"rescued":rescued,"world_title":TITLES[world_stage]},true)
 	var restart_rect: Rect2 = $Interface/HUD/TopBar/Restart.get_global_rect()
 	data["restart_rect"] = [restart_rect.position.x,restart_rect.position.y,restart_rect.size.x,restart_rect.size.y]
@@ -320,4 +378,5 @@ func _test_details() -> Dictionary:
 	if is_instance_valid(next_button):
 		var rect := next_button.get_global_rect()
 		data["next_rect"] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
+	if is_instance_valid(contextual_help): data.merge(contextual_help.details(),true)
 	return data

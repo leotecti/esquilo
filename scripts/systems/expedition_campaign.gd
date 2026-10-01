@@ -11,12 +11,65 @@ var destination: OptionButton
 func fresh() -> Dictionary:
 	var result := super.fresh()
 	result.survival = _new_survival()
-	return result
+	result.tutorials = {}
+	result.context_hints_seen = []
+	for key in preload("res://scripts/ui/contextual_help.gd").KEYS: result.tutorials[key] = false
+	return store.migrate(result)
 
 func _new_survival() -> Dictionary:
 	return {"lives":initial_lives,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
 
+func _prepare_save() -> void:
+	store.sync_story(data)
+
+## Consulta derivada: evita cópias divergentes de desbloqueios e conclusões no save.
+func progress_summary() -> Dictionary:
+	var unlocked: Array = []
+	var completed: Array = []
+	var stages := {}
+	for index in scene_paths.size():
+		var id := str(index)
+		var snapshot: Dictionary = data.levels.get(id,{})
+		var done: bool = snapshot.get("completed",false)
+		if index<=int(data.unlocked): unlocked.append(index)
+		if done: completed.append(index)
+		stages[id] = {"available":index<=int(data.unlocked),"current":index==int(data.stage),"completed":done,
+			"items":snapshot.get("items",[]).duplicate(),"blocks":snapshot.get("blocks",[]).duplicate(),
+			"secret":snapshot.get("secret",false),"golden_nuts":data.collectibles.golden_nuts.get(id,[]).duplicate()}
+	return {"current":int(data.stage),"unlocked":unlocked,"completed":completed,"levels":stages,
+		"characters":["Tico","Pipo"] if data.survival.pipo_unlocked else ["Tico"],
+		"story":data.story.duplicate(true),"tutorials":data.tutorials.duplicate(true),"settings":data.settings.duplicate(true)}
+
+## IDs estáveis por fase. A criação dos objetos e das recompensas pertence às etapas de conteúdo.
+func record_golden_nut(id: String) -> bool:
+	if not store.valid_id(id): return false
+	var stage_id := str(int(data.stage))
+	var collected: Array = data.collectibles.golden_nuts.get(stage_id,[])
+	if id in collected or collected.size()>=64: return false
+	collected.append(id)
+	data.collectibles.golden_nuts[stage_id] = collected
+	save_progress()
+	return true
+
+func record_story_event(id: String) -> bool:
+	if not store.valid_id(id) or id in data.story.events or data.story.events.size()>=200: return false
+	data.story.events.append(id)
+	save_progress()
+	return true
+
+func set_village_flag(id: String, value: bool) -> bool:
+	if not store.valid_id(id): return false
+	if not data.story.village.has(id) and data.story.village.size()>=64: return false
+	if data.story.village.get(id)==value: return false
+	data.story.village[id] = value
+	save_progress()
+	return true
+
 func _restore_level(state: Dictionary) -> void:
+	if not data.has("tutorials"): data.tutorials = {}
+	if not data.has("context_hints_seen"): data.context_hints_seen = []
+	for key in preload("res://scripts/ui/contextual_help.gd").KEYS:
+		if not data.tutorials.has(key): data.tutorials[key] = false
 	if not data.has("survival"):
 		data.survival = _new_survival()
 		for previous in data.levels.values():
@@ -52,7 +105,17 @@ func _load_stage(index: int) -> void:
 		pickup.stage_id = index
 		pickup.position = Vector2(450,660)
 		level.actors.add_child(pickup)
+	level.contextual_help = preload("res://scripts/ui/contextual_help.gd").new()
+	level.contextual_help.level = level
+	level.add_child(level.contextual_help)
 	if awaiting_return(): show_return.call_deferred()
+
+func mark_hint_seen(id: String) -> void:
+	if id in preload("res://scripts/ui/contextual_help.gd").KEYS:
+		data.tutorials[id] = true
+	elif id not in data.context_hints_seen:
+		data.context_hints_seen.append(id)
+	save_progress()
 
 func _refresh_lives() -> void:
 	if is_instance_valid(lives_label): lives_label.text = "Vidas: %02d" % int(data.survival.lives)
@@ -145,6 +208,18 @@ func advance() -> void:
 	_changing = true
 	_load_stage.call_deferred(int(data.stage)+1)
 
+func restart_stage() -> void:
+	if _changing or awaiting_return() or level.respawning: return
+	_changing = true
+	_restart_stage.call_deferred()
+
+func _restart_stage() -> void:
+	save_progress()
+	# Recomeça a tentativa, mantendo o registro permanente da fase.
+	data.levels[str(int(data.stage))].checkpoint = false
+	data.survival.replay = true
+	_load_stage(int(data.stage))
+
 func survival_details() -> Dictionary:
 	var details := {"lives":data.survival.lives,"game_over":awaiting_return(),"return_stage":data.survival.return_stage,"pipo_unlocked":data.survival.pipo_unlocked}
 	if is_instance_valid(return_button):
@@ -169,7 +244,7 @@ func _read_progress() -> Dictionary:
 			previous = previous.duplicate(true)
 			if previous.finished: previous.unlocked = 4
 			previous.finished = false
-			return previous
+			return store.migrate(previous)
 	# Não substitui campanha danificada por uma cópia antiga.
 	var result := fresh()
 	if save_enabled and store.state=="empty":

@@ -20,6 +20,9 @@ async function glide(page,x) {
   await page.keyboard.down('ArrowRight');let held=0;const deadline=Date.now()+25000;
   while(Date.now()<deadline) {
     const s=await snapshot(page);if(s.x>=x||s.completed)break;
+    if(s.pose==='glide'&&!page.ticoGlideCaptured){
+      await page.screenshot({path:'builds/web/e04-planagem.png'});page.ticoGlideCaptured=true;
+    }
     if(held&&((Date.now()-held>200&&s.grounded)||Date.now()-held>2500)){await page.keyboard.up('Space');held=0;}
     else if(!held&&s.grounded){await page.keyboard.down('Space');held=Date.now();}
     await page.waitForTimeout(30);
@@ -29,6 +32,163 @@ async function glide(page,x) {
 }
 async function clickRect(page,name,touch=false){const s=await snapshot(page),r=s[name],v=page.viewportSize();const x=(r[0]+r[2]/2)*v.width/s.width,y=(r[1]+r[3]/2)*v.height/s.height;if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);}
 function errorsFor(page){const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;}
+
+test('E05: migra V1, coleta e recupera após fechar a página offline',async({page,context})=>{
+  await seed(page,fixture(0));const errors=errorsFor(page);await boot(page);
+  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).save_version)).toBe(2);
+  await walk(page,270);
+  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).levels['0'].items.length)).toBeGreaterThan(0);
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await page.close();await context.setOffline(true);
+  const reopened=await context.newPage();const reopenedErrors=errorsFor(reopened);await boot(reopened);
+  const restored=await reopened.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
+  expect(restored.levels['0'].items).toEqual(saved.levels['0'].items);
+  expect(restored.tutorials).toEqual(saved.tutorials);
+  expect(restored.settings).toEqual(saved.settings);
+  expect((await snapshot(reopened)).nuts).toBeGreaterThan(0);
+  expect(errors.concat(reopenedErrors)).toEqual([]);
+});
+
+test('E05: V2 preserva conquistas, narrativa, vilarejo e Pipo offline',async({page,context})=>{
+  const data=fixture(9);data.save_version=2;
+  Object.assign(data.levels['9'],{character:'Pipo',checkpoint:true,secret:true,items:['1580:718'],mechanisms:{Rocha:true}});
+  data.survival={lives:7,pending_return:false,return_stage:4,replay:false,pipo_unlocked:true,claimed:[0,4]};
+  data.tutorials={tutorial_glide_seen:true};data.context_hints_seen=['walk'];
+  data.collectibles={golden_nuts:{'9':['caverna_01']}};
+  data.story={events:['mentor_clue_01'],village:{bridge_repaired:true}};
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  expect((await snapshot(page)).character).toBe('Pipo');expect((await snapshot(page)).lives).toBe(7);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await page.locator('#play').click();
+  await expect.poll(async()=>(await snapshot(page))?.checkpoint,{timeout:45000}).toBe(true);
+  const restored=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
+  expect(restored.collectibles).toEqual(data.collectibles);
+  expect(restored.story.events).toContain('mentor_clue_01');expect(restored.story.events).toContain('pipo_rescued');
+  expect(restored.story.village).toEqual(data.story.village);
+  expect(restored.levels['9'].items).toContain('1580:718');expect(restored.survival.lives).toBe(7);
+  expect(errors).toEqual([]);
+});
+
+test('E05: falha de armazenamento mantém save anterior e permite tentar novamente',async({page})=>{
+  await page.addInitScript(data=>{
+    localStorage.setItem('tico.campaign.v1',JSON.stringify(data));
+    const original=Storage.prototype.setItem;
+    Storage.prototype.setItem=function(key,value){if(key==='tico.campaign.v1')throw new DOMException('Quota','QuotaExceededError');return original.call(this,key,value);};
+    window.restoreStorage=()=>{Storage.prototype.setItem=original;};
+  },fixture(0));
+  await boot(page);expect((await snapshot(page)).save_state).toBe('unavailable');
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).save_version)).toBe(1);
+  await page.evaluate(()=>window.restoreStorage());await walk(page,270);
+  await expect.poll(async()=>(await snapshot(page)).save_state).toBe('saved');
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).save_version)).toBe(2);
+});
+
+test('E05: leitura indisponível não sobrescreve campanha',async({page})=>{
+  const data=fixture(4);
+  await page.addInitScript(data=>{
+    localStorage.setItem('tico.campaign.v1',JSON.stringify(data));
+    const original=Storage.prototype.getItem;
+    window.readOriginalCampaign=()=>original.call(localStorage,'tico.campaign.v1');
+    Storage.prototype.getItem=function(key){if(key==='tico.campaign.v1')throw new DOMException('Blocked','SecurityError');return original.call(this,key);};
+  },data);
+  await boot(page);await walk(page,270);
+  expect((await snapshot(page)).save_state).toBe('unavailable');
+  expect(await page.evaluate(()=>JSON.parse(window.readOriginalCampaign()))).toEqual(data);
+});
+
+test('E04: dica contextual, HUD compacto e tutorial persistente offline',async({page,context})=>{
+  await seed(page,fixture(0));const errors=errorsFor(page);await boot(page);
+  await walk(page,270);
+  await expect.poll(async()=>(await snapshot(page)).hint_id).toBe('tutorial_life_seen');
+  expect((await snapshot(page)).compact_hud_height).toBeLessThan(120);
+  expect((await snapshot(page)).hint_size[1]).toBeLessThanOrEqual(92);
+  expect((await snapshot(page)).hud_controls_clear).toBe(true);
+  expect((await snapshot(page)).paused).toBe(false);
+  await page.screenshot({path:'builds/web/e04-hud-desktop.png'});
+  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).tutorials.tutorial_life_seen)).toBe(true);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await page.locator('#play').click();
+  await expect.poll(async()=>(await snapshot(page))?.tutorials?.tutorial_life_seen,{timeout:45000}).toBe(true);
+  await walk(page,270);expect((await snapshot(page)).hint_id).not.toBe('tutorial_life_seen');
+  expect(errors).toEqual([]);
+});
+
+test('E04: dica do ninho mantém painel compacto',async({page})=>{
+  const data=fixture(10);data.context_hints_seen=['walk'];
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  await expect.poll(async()=>(await snapshot(page)).hint_text).toContain('Suba até o ninho');
+  expect((await snapshot(page)).hint_size[1]).toBeLessThanOrEqual(92);
+  await page.screenshot({path:'builds/web/e04-ninho-corrigido.png'});
+  expect(errors).toEqual([]);
+});
+
+test('E04: interface e dicas por toque sem bloquear os controles',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
+  const page=await context.newPage();await seed(page,fixture(0));const errors=errorsFor(page);await boot(page);
+  await expect.poll(async()=>(await snapshot(page)).hint_text).toContain('PULO');
+  const cdp=await context.newCDPSession(page);const s=await snapshot(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:(s.buttons.Right[0]+64)*844/s.width,y:(s.buttons.Right[1]+64)*390/s.height}]});
+  await expect.poll(async()=>(await snapshot(page)).x).toBeGreaterThan(260);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await expect.poll(async()=>(await snapshot(page)).tutorials.tutorial_life_seen).toBe(true);
+  expect((await snapshot(page)).compact_hud_height).toBeLessThan(120);
+  await page.screenshot({path:'builds/web/e04-hud-touch.png'});
+  expect((await snapshot(page)).hud_controls_clear).toBe(true);
+  await page.keyboard.press('Escape');await expect.poll(async()=>(await snapshot(page)).paused).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).hint_visible).toBe(false);
+  await page.screenshot({path:'builds/web/e04-pausa-touch.png'});
+  expect(errors).toEqual([]);await context.close();
+});
+
+test('E03: derrota retorna à bandeira com Pipo e persiste offline',async({page,context})=>{
+  const data=fixture(4);data.levels['4'].checkpoint=true;data.levels['4'].character='Pipo';
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  expect((await snapshot(page)).checkpoint).toBe(true);
+  await page.keyboard.down('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).respawning,{timeout:30000}).toBe(true);
+  await page.keyboard.up('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).respawning).toBe(false);
+  const returned=await snapshot(page);
+  expect(returned.lives).toBe(2);expect(returned.health).toBe(3);expect(returned.character).toBe('Pipo');
+  expect(Math.abs(returned.x-returned.return_position[0])).toBeLessThan(10);
+  await page.screenshot({path:'builds/web/e03-checkpoint.png'});
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await page.locator('#play').click();
+  await expect.poll(async()=>(await snapshot(page))?.character,{timeout:45000}).toBe('Pipo');
+  const reopened=await snapshot(page);
+  expect(reopened.checkpoint).toBe(true);expect(reopened.lives).toBe(2);expect(reopened.health).toBe(3);
+  expect(Math.abs(reopened.x-reopened.return_position[0])).toBeLessThan(10);
+  expect(errors).toEqual([]);
+});
+
+test('E03: reiniciar fase por toque, cancelar e preservar comporta e save',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
+  const page=await context.newPage();const data=fixture(13);
+  Object.assign(data.levels['13'],{checkpoint:true,character:'Pipo',mechanisms:{Comporta:true}});
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  await page.keyboard.press('Escape');await expect.poll(async()=>(await snapshot(page)).paused).toBe(true);
+  await page.screenshot({path:'builds/web/e03-pausa-touch.png'});
+  await clickRect(page,'phase_restart_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).phase_restart_confirmation).toBe(true);
+  await page.screenshot({path:'builds/web/e03-confirmacao-touch.png'});
+  await clickRect(page,'phase_cancel_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).phase_restart_confirmation).toBe(false);
+  expect((await snapshot(page)).checkpoint).toBe(true);expect((await snapshot(page)).paused).toBe(true);
+  await clickRect(page,'phase_restart_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).phase_restart_confirmation).toBe(true);
+  await clickRect(page,'phase_confirm_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).checkpoint).toBe(false);
+  const restarted=await snapshot(page);
+  expect(restarted.x).toBeLessThan(200);expect(restarted.health).toBe(3);expect(restarted.lives).toBe(3);
+  expect(restarted.character).toBe('Pipo');expect(restarted.mechanisms.Comporta).toBe(true);
+  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).levels['13'].checkpoint)).toBe(false);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await page.locator('#play').tap();
+  await expect.poll(async()=>(await snapshot(page))?.campaign_stage,{timeout:45000}).toBe(13);
+  expect((await snapshot(page)).checkpoint).toBe(false);expect((await snapshot(page)).mechanisms.Comporta).toBe(true);
+  expect(errors).toEqual([]);await context.close();
+});
 
 test('E02: derrota real, Game Over, retorno offline e Pipo preservado',async({page,context})=>{
   const data=fixture(4);
@@ -46,6 +206,7 @@ test('E02: derrota real, Game Over, retorno offline e Pipo preservado',async({pa
   await expect.poll(async()=>(await snapshot(page))?.return_rect,{timeout:45000}).toBeTruthy();
   await clickRect(page,'return_rect');
   await expect.poll(async()=>(await snapshot(page)).campaign_stage).toBe(0);
+  await ground(page);
   await page.keyboard.press('q');await expect.poll(async()=>(await snapshot(page)).character).toBe('Pipo');
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
   expect(saved.unlocked).toBe(4);expect(saved.levels['0'].completed).toBe(true);
@@ -132,6 +293,8 @@ test('Vila no toque: peso, troca, elevador, multitoque, pausa e rotação',async
   await clickRect(page,'music_rect',true);await page.keyboard.press('Escape');
   await page.setViewportSize({width:390,height:844});await expect(page.locator('#rotate')).toBeVisible();
   await expect.poll(async()=>(await snapshot(page)).paused).toBe(true);
+  await page.keyboard.press('Escape');await page.waitForTimeout(200);
+  expect((await snapshot(page)).paused).toBe(true);
   await page.setViewportSize({width:844,height:390});await page.reload();await page.locator('#play').tap();
   await expect.poll(async()=>(await snapshot(page))?.mechanisms?.Peso,{timeout:45000}).toBe(true);
   expect((await snapshot(page)).music_enabled).toBe(true);expect(errors).toEqual([]);await context.close();
@@ -146,6 +309,7 @@ test('Comporta: investida, drenagem e save',async({page})=>{
 
 test('Save futuro fica intacto até confirmar nova aventura',async({page})=>{
   await seed(page,{save_version:999});await boot(page);expect((await snapshot(page)).save_state).toBe('incompatible');
+  await page.keyboard.press('Escape');await expect.poll(async()=>(await snapshot(page)).paused).toBe(true);
   await clickRect(page,'restart_rect');await expect.poll(async()=>(await snapshot(page)).restart_confirmation).toBe(true);
   await clickRect(page,'cancel_rect');
   await expect.poll(async()=>(await snapshot(page)).restart_confirmation).toBe(false);

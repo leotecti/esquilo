@@ -49,6 +49,9 @@ func _restore_level(state: Dictionary) -> void:
 func _capture_level() -> Dictionary:
 	return level.world_snapshot()
 
+func _prepare_save() -> void:
+	pass
+
 func save_progress() -> void:
 	if not is_instance_valid(level) or not level.world_ready: return
 	data.levels[str(data.stage)] = _capture_level()
@@ -56,12 +59,13 @@ func save_progress() -> void:
 	if level.completed:
 		data.unlocked = maxi(data.unlocked,mini(data.stage+1,scene_paths.size()-1))
 		if data.stage == scene_paths.size()-1: data.finished = true
+	_prepare_save()
 	var encoded := JSON.stringify(data)
 	if save_enabled and encoded != _last_save and store.write_save(data): _last_save = encoded
 	if is_instance_valid(level.save_label):
 		level.save_label.text = ("Progresso salvo • Mundo %d" % (int(data.stage)/4+1)) if store.state == "saved" else "Aventura • Progresso local"
-		if store.locked: level.save_label.text = "Save não reconhecido • Recomeçar cria outro"
-		elif store.state == "unavailable": level.save_label.text = "Não foi possível salvar neste dispositivo"
+		if store.state == "unavailable": level.save_label.text = "Não foi possível salvar neste dispositivo"
+		elif store.locked: level.save_label.text = "Save não reconhecido • Recomeçar cria outro"
 
 func advance() -> void:
 	if _changing or not level.completed or data.stage >= scene_paths.size()-1: return

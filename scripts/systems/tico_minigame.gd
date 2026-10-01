@@ -216,20 +216,26 @@ func _on_defeat() -> void:
 	respawning = true
 	_transition = 0
 	touch.set_controls_active(false)
+	touch.release_all()
+	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
 	_say("Vamos tentar de novo! Voltando ao ponto seguro…")
 
 func _respawn() -> void:
 	respawning = false
-	tico.sprite.rotation = 0
-	tico.reset_at(checkpoint_position)
-	tico.restore_health()
-	tico.invulnerability_left = tico.invulnerability_duration
+	_restore_returning_player()
 	for actor in actors.get_children():
 		if actor.has_method("reset_enemy"):
 			actor.reset_enemy()
 	camera.snap_to_target()
 	touch.set_controls_active(true)
 	_say("De volta à bandeira!" if checkpoint_active else "Vamos de novo! Você consegue.")
+
+func _restore_returning_player() -> void:
+	tico.reset_at(checkpoint_position)
+	tico.sprite.rotation = 0
+	tico.sprite.modulate.a = 1
+	tico.restore_health()
+	tico.invulnerability_left = tico.invulnerability_duration
 
 func _on_checkpoint(marker: Node2D) -> void:
 	checkpoint_active = true
@@ -284,5 +290,6 @@ func restart() -> void:
 func _test_details() -> Dictionary:
 	return {"health": tico.health, "nuts": nuts, "total_nuts": total_nuts,
 		"checkpoint": checkpoint_active, "completed": completed, "respawning": respawning,
+		"return_position": [checkpoint_position.x,checkpoint_position.y],
 		"hud_width": $Interface/HUD.size.x, "bar_width": $Interface/HUD/TopBar.size.x,
 		"result": is_instance_valid(result_panel) and result_panel.visible}
