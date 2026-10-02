@@ -49,6 +49,11 @@ func valid(data: Variant) -> bool:
 			seen.append(int(id))
 	for id in data.levels:
 		var index := int(id)
+		if data.levels[id].has("optional_area"):
+			var area: Variant = data.levels[id].optional_area
+			if index!=0 or not area is Dictionary or area.size()!=2: return false
+			if not area.get("active") is bool or not area.get("checkpoint") is bool: return false
+			if area.active and data.levels[id].completed: return false
 		if index<4: continue
 		var state: Dictionary = data.levels[id]
 		if state.mechanisms.size()!=DEVICES[index].size(): return false

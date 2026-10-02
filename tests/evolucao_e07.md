@@ -2,6 +2,25 @@
 
 Versão **0.15.0**. Ciclo **mapa → fase → resultado → mapa** implementado.
 
+## Correção 0.15.1 — Caminhada no mapa
+
+As setas movem Tico entre as fases liberadas, com caminhada pela trilha.
+Direita/cima avançam; esquerda/baixo voltam. A passagem entre mundos é
+automática nos extremos da página. Pipo acompanha após o resgate.
+Enter confirma a entrada; navegar não muda a fase salva. Seleção por toque
+também move os personagens. Mundos bloqueados continuam apenas consultáveis.
+
+`tests/map_navigation_test.gd`: nove verificações de movimento, passagem entre
+mundos, bloqueio, personagem acompanhante e preservação do save.
+
+## Correção 0.15.2 — Estabilidade da animação
+
+Os quadros de caminhada mantêm altura e apoio dos pés constantes, respeitando
+as proporções de cada recorte. As passadas acompanham a distância percorrida;
+o deslocamento começa na origem e desacelera ao chegar. Alterar a página ou
+redimensionar o mapa interrompe a animação anterior e reposiciona os personagens.
+O teste de navegação também verifica origem, altura, apoio e interrupção.
+
 ## Entrega
 
 - Resultado reaproveita o painel existente e apresenta nozes, vidas,

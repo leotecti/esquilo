@@ -32,6 +32,59 @@ var header := Rect2()
 var footer := Rect2()
 var _time := 0.0
 var _actor_point := Vector2.ZERO
+var _travel: Tween
+var _walking := false
+var _walk_distance := 0.0
+
+func _input(event: InputEvent) -> void:
+	if not event is InputEventKey or not event.pressed or campaign._map_portrait(): return
+	var direction := 0
+	if event.keycode in [KEY_RIGHT,KEY_UP]: direction = 1
+	elif event.keycode in [KEY_LEFT,KEY_DOWN]: direction = -1
+	if direction==0: return
+	get_viewport().set_input_as_handled()
+	if _walking: return
+	var target := selected+direction
+	if target<0 or target>int(campaign.data.unlocked): return
+	move_to_stage(target)
+
+func move_to_stage(index: int) -> void:
+	if index<0 or index>int(campaign.data.unlocked): return
+	var origin := _actor_point
+	var same_world := world==index/4 and squirrel.visible
+	if is_instance_valid(_travel): _travel.kill()
+	focus_stage(index)
+	var destination := _actor_point
+	if same_world and origin.is_equal_approx(destination):
+		_walking = false
+		primary.grab_focus()
+		return
+	if not same_world:
+		origin = destination+Vector2(-160 if index%4==0 else 160,0)
+	var curve := Curve2D.new()
+	var distance := destination.x-origin.x
+	curve.add_point(origin,Vector2.ZERO,Vector2(distance*.48,0))
+	curve.add_point(destination,Vector2(-distance*.48,0),Vector2.ZERO)
+	squirrel.flip_h = distance<0
+	companion.flip_h = distance<0
+	_actor_point = origin
+	_walk_distance = 0.0
+	_walking = true
+	position_characters()
+	_travel = create_tween()
+	_travel.tween_method(func(weight: float):
+		var next_point := curve.sample_baked(curve.get_baked_length()*weight)
+		_walk_distance += _actor_point.distance_to(next_point)
+		_actor_point = next_point
+		position_characters()
+		queue_redraw(),0.0,1.0,clampf(curve.get_baked_length()/420.0,.45,.95)).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_travel.tween_callback(func():
+		_walking = false
+		_actor_point = destination
+		position_characters()
+		queue_redraw())
+	primary.grab_focus()
+	play_selection()
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -165,7 +218,7 @@ func refresh() -> void:
 	notice.visible = campaign.awaiting_return()
 	notice.text = "Vamos tentar de novo! %d vidas • Retorno ao mundo anterior" % campaign.data.survival.lives
 	if campaign.awaiting_return() and int(campaign.data.stage)<4: notice.text = "Vamos tentar de novo! %d vidas • De volta ao Bosque" % campaign.data.survival.lives
-	var actor_stage := int(campaign.data.survival.return_stage) if campaign.awaiting_return() else int(campaign.data.stage)
+	var actor_stage := selected
 	squirrel.visible = actor_stage/4==world
 	companion.visible = squirrel.visible and campaign.data.survival.pipo_unlocked
 	layout()
@@ -199,16 +252,15 @@ func celebrate_unlock(index: int) -> void:
 func select_stage(section: int) -> void:
 	var index := world*4+section
 	if section<0 or section>3 or index>int(campaign.data.unlocked): return
-	selected = index
-	refresh()
-	primary.grab_focus()
-	play_selection()
+	move_to_stage(index)
 
 func play_selection() -> void:
 	if campaign.data.settings.effects: sound.play()
 
 func layout() -> void:
 	if not is_instance_valid(primary): return
+	if is_instance_valid(_travel): _travel.kill()
+	_walking = false
 	var inset: Vector4 = campaign.level.touch.safe_insets()
 	var left := 24.0+inset.x
 	var right := size.x-24-inset.z
@@ -240,7 +292,7 @@ func layout() -> void:
 	for i in 4:
 		nodes[i].position = point(i)-Vector2(56,56)
 		nodes[i].size = Vector2(112,112)
-	var actor_stage := int(campaign.data.survival.return_stage) if campaign.awaiting_return() else int(campaign.data.stage)
+	var actor_stage := selected
 	_actor_point = point(actor_stage%4)
 	position_characters()
 	queue_redraw()
@@ -256,9 +308,17 @@ func _process(delta: float) -> void:
 
 func position_characters() -> void:
 	if not is_instance_valid(squirrel): return
-	var bob := sin(_time*2.2)*1.6
-	squirrel.position = _actor_point+Vector2(-90 if companion.visible else -58,-134+bob)
-	companion.position = _actor_point+Vector2(4,-124-bob)
+	var atlas := preload("res://scripts/presentation/atlas_library.gd")
+	squirrel.texture = atlas.frame("run",int(_walk_distance/28.0)%4) if _walking else atlas.frame("tico",0)
+	companion.texture = atlas.frame("run",4+int(_walk_distance/30.0)%4) if _walking else atlas.frame("pipo",0)
+	# Altura e apoio dos pés constantes: os recortes têm larguras diferentes.
+	place_portrait(squirrel,92,_actor_point+Vector2(-32 if companion.visible else 0,-42))
+	place_portrait(companion,82,_actor_point+Vector2(55,-42))
+
+func place_portrait(item: TextureRect, height: float, feet: Vector2) -> void:
+	item.stretch_mode = TextureRect.STRETCH_SCALE
+	item.size = item.texture.get_size()*(height/item.texture.get_height())
+	item.position = feet-Vector2(item.size.x/2,item.size.y)
 
 func _draw() -> void:
 	if not is_instance_valid(backdrop) or board.size.x<=0: return
@@ -293,7 +353,7 @@ func details() -> Dictionary:
 	for i in 4:
 		states[str(world*4+i)] = stage_state(world*4+i)
 		rects[str(world*4+i)] = rect(nodes[i])
-	return {"map_open":true,"map_world":world,"map_selected":selected,"map_states":states,"map_nodes":rects,
+	return {"map_open":true,"map_world":world,"map_selected":selected,"map_states":states,"map_nodes":rects,"map_walking":_walking,"map_actor_x":_actor_point.x,
 		"map_previous_rect":rect(previous_world),"map_next_rect":rect(next_world),"map_enter_rect":rect(primary),"map_enter_disabled":primary.disabled,"map_back_rect":rect(back),
 		"map_pipo_visible":companion.visible,"map_tico_visible":squirrel.visible,"map_art":BACKGROUNDS[world]}
 

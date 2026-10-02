@@ -521,6 +521,12 @@ Este é o primeiro grande marco técnico.
 
 # 13. EVOLUÇÃO E08 — ÁREAS OPCIONAIS E EXPLORAÇÃO
 
+**Status: implementada na versão 0.16.0; conferência no celular pendente.**
+Primeiros Passos recebeu a Copa dos Segredos: acesso por galhos, transição,
+desafio de salto, quatro nozes, bandeira local e portais de retorno.
+O save V2 preserva área, itens e bandeiras independentes.
+[Execução e testes](../tests/evolucao_e08.md).
+
 Depois do loop principal estabilizado, expandir as fases.
 
 Criar o conceito de área secundária.

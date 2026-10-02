@@ -56,7 +56,8 @@ func run() -> void:
 	enemy.defeated = true
 	await frames(2)
 	check(level.contextual_help.active_id.is_empty(),"Derrotar inimigo encerra dica")
-	await scan_at(Vector2(1320,400))
+	# O espaço antigo agora contém os galhos da área opcional E08.
+	await scan_at(Vector2(2100,350))
 	await frames(24)
 	check(campaign.data.tutorials.tutorial_glide_seen,"Queda com espaço para planar mostra dica de habilidade")
 	key(KEY_SPACE,true)

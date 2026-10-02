@@ -1,11 +1,21 @@
 # Status do projeto
 
 **Data:** 2026-10-01
-**Etapa atual:** evolução E07 — resultado e desbloqueio implementados na versão 0.15.0.
+**Etapa atual:** evolução E08 — Copa dos Segredos implementada na versão 0.16.0.
 
-**Próximo trabalho previsto:** conferir a E07 no celular e concluir a validação intermediária do loop principal antes da E08. Mundo 5 continua planejado no roadmap original.
+**Próximo trabalho previsto:** conferir a área opcional no celular antes da E09 — recompensas e coletáveis. Mundo 5 continua planejado no roadmap original.
 
-## Evolução E07 — Entrega atual
+## Evolução E08 — Entrega atual
+
+- Área opcional em Primeiros Passos, acessível subindo os galhos da árvore.
+- Quatro nozes, bandeira local, transição e dois portais de retorno.
+- Bandeira principal preservada; morte, Game Over e reinício integrados.
+- Save V2 compatível com campanhas anteriores e reabertura offline na copa.
+- Arte e mecânicas existentes reaproveitadas; Pipo depende do resgate.
+
+[Testes e roteiro](../tests/evolucao_e08.md). Sem commit ou publicação automática.
+
+## Evolução E07 — Entrega anterior
 
 - Resultado com nozes, Nozes Douradas registradas, vidas e segredo.
 - Retorno ao mapa com seleção da próxima fase, inclusive entre mundos.

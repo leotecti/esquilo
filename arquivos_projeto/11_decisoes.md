@@ -3114,4 +3114,22 @@ o acesso à fase; revisitas não criam outro desbloqueio.
 
 ---
 
+## DEC-121 — PRIMEIRA ÁREA SECUNDÁRIA NA E08
+
+**Status:** IMPLEMENTADA NA VERSÃO 0.16.0; CONFERÊNCIA NO CELULAR PENDENTE
+
+A Copa dos Segredos pertence à fase Primeiros Passos. Compartilha personagem,
+saúde, vidas e itens com a trilha principal, mas tem bandeira e limites de câmera
+próprios. Portais operados pelo botão de ação fazem a transição e o retorno.
+
+O campo opcional `optional_area` no estado da fase 0 registra presença na copa
+e bandeira local. Saves V2 anteriores continuam válidos. Reinício e replay
+começam no caminho principal; reabertura recupera o ponto seguro da área ativa.
+As quatro nozes reutilizam a persistência de itens existente, sem novas regras
+de recompensa da E09.
+
+[Implementação e testes](../tests/evolucao_e08.md).
+
+---
+
 **FIM DO DOCUMENTO**

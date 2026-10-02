@@ -43,6 +43,7 @@ func map_is_open() -> bool:
 
 func show_map() -> void:
 	if _changing or map_is_open() or not is_instance_valid(level): return
+	if is_instance_valid(level.optional_area) and level.optional_area.transitioning: return
 	if level.respawning and not awaiting_return(): return
 	save_progress()
 	get_tree().paused = true
@@ -175,7 +176,9 @@ func _restore_level(state: Dictionary) -> void:
 	for i in data.survival.claimed.size(): data.survival.claimed[i] = int(data.survival.claimed[i])
 	var restored: Dictionary = (level.world_snapshot() if state.is_empty() else state).duplicate(true)
 	if data.survival.pipo_unlocked: restored.rescued = true
-	if data.survival.replay: restored.completed = false
+	if data.survival.replay:
+		restored.completed = false
+		if restored.has("optional_area"): restored.optional_area = {"active":false,"checkpoint":false}
 	level.restore_world(restored)
 
 func _capture_level() -> Dictionary:

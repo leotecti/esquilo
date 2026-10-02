@@ -8,6 +8,13 @@ Para configurar outra máquina após clonar o repositório, consulte o
 
 ## Estado atual
 
+**Evolução E08 (0.16.0):** Primeiros Passos ganhou a Copa dos Segredos, uma área
+opcional acessível pelos galhos da árvore, com quatro nozes, bandeira local e
+portais de retorno. [Entrega e validação](tests/evolucao_e08.md).
+
+**Correção 0.15.1:** Tico e Pipo caminham pelo mapa com as setas direcionais,
+incluindo a passagem entre mundos desbloqueados. Enter confirma a fase.
+
 **Evolução E07 (0.15.0):** resultado com conquistas, retorno ao mapa, seleção da
 próxima trilha e destaque animado de novos desbloqueios. A conclusão é salva
 antes de sair do resultado. [Entrega e validação](tests/evolucao_e07.md).
@@ -153,10 +160,10 @@ documentados em [testes da etapa 7](tests/etapa_7.md).
 
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — evolução E07
+## Web/PWA — evolução E08
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-evolucao-E07-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-evolucao-E08-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -172,10 +179,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da evolução E07
+## Build Windows da evolução E08
 
-Abra `builds/windows/evolucao_e07/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-evolucao-E07-windows.zip` contém os dois arquivos.
+Abra `builds/windows/evolucao_e08/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-evolucao-E08-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -185,8 +192,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/evolucao_e07 | Out-Null
-& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e07/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/evolucao_e08 | Out-Null
+& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e08/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -277,8 +284,8 @@ e [verificações executadas](tests/evolucao_e00.md).
 **E03 implementada:** [checkpoints e reinício](tests/evolucao_e03.md).
 **E06 implementada:** [mapa do mundo](tests/evolucao_e06.md).
 **E07 implementada:** [resultado e desbloqueio](tests/evolucao_e07.md).
-Próximo passo: validar a entrega no celular e concluir a validação intermediária
-do loop principal antes de iniciar a E08.
+**E08 implementada:** [áreas opcionais e exploração](tests/evolucao_e08.md).
+Próximo passo: conferir a copa no celular antes da E09 — recompensas e coletáveis.
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

@@ -50,6 +50,92 @@ async function mapWorld(page,target,touch=false){
   expect((await snapshot(page)).map_world).toBe(target);
 }
 
+test('E08: subida à copa, recompensa, portal e reabertura offline',async({page,context})=>{
+  test.setTimeout(150000);const errors=errorsFor(page);await seed(page,fixture(0));await boot(page);
+  async function jumpTo(x){
+    const direction=(await snapshot(page)).x<x?'ArrowRight':'ArrowLeft';
+    await page.keyboard.down('Space');await page.waitForTimeout(130);await page.keyboard.down(direction);
+    await expect.poll(async()=>direction==='ArrowRight'?(await snapshot(page)).x>=x:(await snapshot(page)).x<=x,{timeout:8000,intervals:[30]}).toBe(true);
+    await page.keyboard.up(direction);await page.keyboard.up('Space');await ground(page);
+  }
+  await walk(page,565);await jumpTo(800);await jumpTo(1160);
+  await jumpTo(1325);await jumpTo(1510);await jumpTo(1340);
+  await page.screenshot({path:'builds/web/e08-arvore.png'});
+  await page.keyboard.press('e');
+  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
+  await walk(page,6300);await jumpTo(6540);
+  await expect.poll(async()=>(await snapshot(page)).optional_checkpoint).toBe(true);
+  await jumpTo(6810);await jumpTo(7060);await jumpTo(7320);
+  await page.screenshot({path:'builds/web/e08-copa.png'});
+  const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
+  expect(saved.levels['0'].items.filter(id=>Number(id.split(':')[0])>5900).length).toBe(4);
+  await page.keyboard.press('e');
+  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
+  await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
+  await ground(page);await page.keyboard.press('e');
+  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await startGame(page);
+  expect((await snapshot(page)).optional_active).toBe(true);
+  expect((await snapshot(page)).optional_checkpoint).toBe(true);
+  await page.keyboard.down('ArrowLeft');
+  await expect.poll(async()=>(await snapshot(page)).x<6130,{timeout:8000,intervals:[30]}).toBe(true);
+  await page.keyboard.up('ArrowLeft');await ground(page);await page.keyboard.press('e');
+  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
+  expect((await snapshot(page)).campaign_stage).toBe(0);expect(errors).toEqual([]);
+});
+
+test('E08: Pipo usa portal por toque e mantém área offline',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
+  const page=await context.newPage();const data=fixture(0);
+  Object.assign(data.levels['0'],{rescued:true,character:'Pipo',optional_area:{active:true,checkpoint:true}});
+  await seed(page,data);const errors=errorsFor(page);await boot(page);await ground(page);
+  expect((await snapshot(page)).character).toBe('Pipo');
+  const cdp=await context.newCDPSession(page);
+  async function touch(name){const s=await snapshot(page);await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:(s.buttons[name][0]+64)*844/s.width,y:(s.buttons[name][1]+64)*390/s.height}]});}
+  async function releaseTouch(){await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
+  await touch('Left');await expect.poll(async()=>(await snapshot(page)).x<6130,{timeout:8000,intervals:[30]}).toBe(true);await releaseTouch();await ground(page);
+  await touch('Action');await page.waitForTimeout(80);await releaseTouch();
+  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
+  await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);await ground(page);
+  await touch('Action');await page.waitForTimeout(80);await releaseTouch();
+  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
+  await page.screenshot({path:'builds/web/e08-copa-touch.png'});
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await startGame(page);
+  expect((await snapshot(page)).optional_active).toBe(true);expect((await snapshot(page)).character).toBe('Pipo');
+  expect(errors).toEqual([]);await context.close();
+});
+
+test('Mapa: setas movem personagens entre mundos desbloqueados',async({page})=>{
+  await seed(page,fixture(4));const errors=errorsFor(page);
+  await page.goto('./?test=1');await startGame(page,false);
+  await page.keyboard.press('ArrowLeft');
+  await expect.poll(async()=>(await snapshot(page)).map_selected).toBe(3);
+  await expect.poll(async()=>(await snapshot(page)).map_walking).toBe(false);
+  expect((await snapshot(page)).map_world).toBe(0);
+  expect((await snapshot(page)).map_tico_visible).toBe(true);
+  await page.keyboard.press('ArrowDown');
+  await expect.poll(async()=>(await snapshot(page)).map_selected).toBe(2);
+  await expect.poll(async()=>(await snapshot(page)).map_walking).toBe(false);
+  await page.keyboard.press('ArrowUp');
+  await expect.poll(async()=>(await snapshot(page)).map_selected).toBe(3);
+  await expect.poll(async()=>(await snapshot(page)).map_walking).toBe(false);
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(async()=>(await snapshot(page)).map_selected).toBe(4);
+  await expect.poll(async()=>(await snapshot(page)).map_walking).toBe(false);
+  await page.keyboard.press('ArrowRight');await page.waitForTimeout(150);
+  expect((await snapshot(page)).map_selected).toBe(4);
+  expect((await snapshot(page)).map_world).toBe(1);
+  expect((await snapshot(page)).map_pipo_visible).toBe(true);
+  await page.keyboard.press('Enter');
+  await expect.poll(async()=>(await snapshot(page)).map_open).toBe(false);
+  expect((await snapshot(page)).campaign_stage).toBe(4);expect(errors).toEqual([]);
+});
+
 test('E07: resultado final por toque, mapa e campanha preservada offline',async({browser})=>{
   const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
   const page=await context.newPage();const data=fixture(15);

@@ -69,7 +69,7 @@ func _skin_objects() -> void:
 		if actor == secret: kind = "secret"
 		elif actor == stone: kind = "stone"
 		elif actor == heavy: kind = "heavy"
-		elif actor == checkpoint: kind = "checkpoint"
+		elif actor == checkpoint or actor.get_meta("checkpoint_marker",false): kind = "checkpoint"
 		elif actor == exit_marker: kind = "exit"
 		elif actor.has_method("reset_item"): kind = "nut"
 		elif actor.has_method("reset_block"): kind = "block"
@@ -241,7 +241,7 @@ func _process(delta: float) -> void:
 		_frame_samples.append((now-_last_frame_usec)/1000.0)
 		if _frame_samples.size()>600: _frame_samples.pop_front()
 	_last_frame_usec = now
-	background.position.x = -30 - (camera.get_screen_center_position().x/3800)*180
+	background.position.x = -30 - clampf(camera.get_screen_center_position().x/3800,0,1)*180
 	for i in 3:
 		hearts.get_node("Heart%d" % i).modulate = Color.WHITE if i<tico.health else Color("737a6880")
 	if completed and save_store.state == "saved": save_label.text = "Progresso salvo • Aventura concluída"

@@ -9,14 +9,14 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E07 — Resultado e desbloqueio (0.15.0)**. Completa o ciclo
-mapa → fase → resultado → mapa e preserva o progresso no save V2.
-[Alterações e roteiro](../tests/evolucao_e07.md).
+Versão atual: **Evolução E08 — Áreas opcionais e exploração (0.16.0)**. Inclui
+a Copa dos Segredos em Primeiros Passos e preserva o progresso no save V2.
+[Alterações e roteiro](../tests/evolucao_e08.md).
 
-`builds/web/Tico-evolucao-E07-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-evolucao-E08-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e07` entre `/tico/` e os arquivos.
+Não coloque outra pasta `evolucao_e08` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

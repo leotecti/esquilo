@@ -15,6 +15,7 @@ var contextual_help: Node
 var phase_restart_button: Button
 var phase_restart_dialog: ConfirmationDialog
 var _phase_was_paused := false
+var optional_area: Node2D
 
 func _ready() -> void:
 	save_enabled = false
@@ -60,6 +61,12 @@ func _build_gameplay() -> void:
 		_sign(Vector2(375,485),"Pule sob o bloco rachado\npara libertar Pipo")
 	else:
 		_build_solo_or_arena()
+	if world_stage==0 and is_instance_valid(campaign) and campaign.has_method("progress_summary"):
+		optional_area = preload("res://scripts/systems/optional_area.gd").new()
+		optional_area.level = self
+		optional_area.z_index = -2
+		add_child(optional_area)
+		optional_area.build()
 	for actor in actors.get_children():
 		if actor.has_method("reset_item") or actor.has_method("reset_block"):
 			actor.set_meta("save_id","%d:%d" % [actor.position.x,actor.position.y])
@@ -175,6 +182,7 @@ func _build_forest() -> void:
 			child.queue_redraw()
 
 func switch_character() -> bool:
+	if is_instance_valid(optional_area) and optional_area.transitioning: return false
 	if not rescued:
 		_say("Encontre e liberte Pipo na fase 1-3.")
 		return false
@@ -258,6 +266,7 @@ func _respawn() -> void:
 		campaign.show_return()
 		return
 	super._respawn()
+	if is_instance_valid(optional_area): optional_area.restore_player()
 
 func set_paused(value: bool) -> void:
 	if is_instance_valid(campaign) and campaign.has_method("map_is_open") and campaign.map_is_open(): return
@@ -304,10 +313,12 @@ func world_snapshot() -> Dictionary:
 		if not actor.has_meta("save_id"): continue
 		if actor.has_method("reset_item") and actor.taken: items.append(actor.get_meta("save_id"))
 		if actor.has_method("reset_block") and actor.used: blocks.append(actor.get_meta("save_id"))
-	return {"character":"Pipo" if tico==pipo else "Tico","checkpoint":checkpoint_active,"completed":completed,"rescued":rescued,
+	var snapshot := {"character":"Pipo" if tico==pipo else "Tico","checkpoint":checkpoint_active,"completed":completed,"rescued":rescued,
 		"items":items,"blocks":blocks,"stone":clampf(stone.position.x,850,1190) if is_instance_valid(stone) else 850,
 		"gate":gate_open,"heavy":is_instance_valid(heavy) and heavy.destroyed,"secret":is_instance_valid(secret) and secret.revealed,
 		"boss_done":is_instance_valid(guardian) and guardian.health==0}
+	if is_instance_valid(optional_area): snapshot.optional_area = optional_area.snapshot()
+	return snapshot
 
 func restore_world(data: Dictionary) -> void:
 	rescued = data.rescued
@@ -351,10 +362,12 @@ func restore_world(data: Dictionary) -> void:
 		tico.reset_at(exit_marker.position)
 		exit_marker.activated = true
 		_on_exit(exit_marker)
+	if is_instance_valid(optional_area): optional_area.restore(data.get("optional_area",{}))
 	_update_layout()
 
 func _test_details() -> Dictionary:
 	var data := super._test_details()
+	if is_instance_valid(optional_area): data.merge({"optional_active":optional_area.active,"optional_checkpoint":optional_area.checkpoint,"optional_transition":optional_area.transitioning})
 	data["phase_restart_confirmation"] = is_instance_valid(phase_restart_dialog) and phase_restart_dialog.visible
 	if is_instance_valid(phase_restart_button):
 		var phase_rect := phase_restart_button.get_global_rect()
