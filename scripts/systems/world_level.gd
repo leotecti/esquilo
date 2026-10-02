@@ -446,6 +446,9 @@ func _test_details() -> Dictionary:
 	data["restart_rect"] = [restart_rect.position.x,restart_rect.position.y,restart_rect.size.x,restart_rect.size.y]
 	if is_instance_valid(campaign):
 		data["world_finished"] = campaign.data.finished
+		if campaign.has_method("play_narrative") and is_instance_valid(campaign.narrative):
+			var story_details: Dictionary = campaign.narrative.details()
+			for key in story_details: data["narrative_"+key] = story_details[key]
 		if campaign.scene_paths.size()>4: data["stage"] = 9
 		data["campaign_stage"] = campaign.data.stage
 		data["save_state"] = campaign.store.state

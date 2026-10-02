@@ -14,6 +14,7 @@ var map_button: Button
 var _map_after_load := false
 var _unlocked_stage := -1
 var narrative: CanvasLayer
+var _opening_after_load := false
 
 func save_progress() -> void:
 	var previous := int(data.get("unlocked",0))
@@ -42,7 +43,20 @@ func _ready() -> void:
 	narrative = preload("res://scripts/systems/narrative_director.gd").new()
 	narrative.campaign = self
 	add_child(narrative)
-	if start_on_map: show_map()
+	narrative.sequence_finished.connect(_on_narrative_finished)
+	if start_on_map:
+		if _should_play_opening(): _play_opening.call_deferred()
+		else: show_map()
+
+func _should_play_opening() -> bool:
+	return "opening_complete" not in data.story.events and int(data.stage)==0 and int(data.unlocked)==0
+
+func _play_opening() -> void:
+	if not play_narrative("opening_complete",preload("res://scripts/systems/opening_sequence.gd").steps()):
+		if start_on_map: show_map()
+
+func _on_narrative_finished(id: String, _skipped: bool) -> void:
+	if id=="opening_complete" and start_on_map: show_map()
 
 ## Ponto único para fases e eventos futuros iniciarem cenas descritas por dados.
 func play_narrative(id: String, steps: Array, replay := false) -> bool:
@@ -118,7 +132,8 @@ func _map_portrait() -> bool:
 
 func new_adventure() -> void:
 	_unlocked_stage = -1
-	_map_after_load = start_on_map
+	_opening_after_load = start_on_map
+	_map_after_load = false
 	super.new_adventure()
 
 func fresh() -> Dictionary:
@@ -127,7 +142,10 @@ func fresh() -> Dictionary:
 	result.tutorials = {}
 	result.context_hints_seen = []
 	for key in preload("res://scripts/ui/contextual_help.gd").KEYS: result.tutorials[key] = false
-	return store.migrate(result)
+	result = store.migrate(result)
+	# Uma aventura realmente nova deve assistir ou pular a abertura da E11.
+	result.story.events.erase("opening_complete")
+	return result
 
 func _new_survival() -> Dictionary:
 	return {"lives":initial_lives,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
@@ -271,7 +289,10 @@ func _load_stage(index: int) -> void:
 	level.next_button.pressed.connect(advance)
 	level.next_button.text = "Voltar ao mapa"
 	level._update_layout()
-	if awaiting_return(): show_return.call_deferred()
+	if _opening_after_load:
+		_opening_after_load = false
+		_play_opening.call_deferred()
+	elif awaiting_return(): show_return.call_deferred()
 	elif _map_after_load:
 		_map_after_load = false
 		show_map()

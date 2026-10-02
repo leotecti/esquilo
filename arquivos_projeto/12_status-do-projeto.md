@@ -1,10 +1,24 @@
 # Status do projeto
 
 **Data:** 2026-10-02
-**Etapa atual:** Evolução E10 — estrutura narrativa, versão 0.19.0.
+**Etapa atual:** Evolução E11 — abertura do jogo, versão 0.20.0.
 
-**Próximo trabalho previsto:** validar a infraestrutura narrativa na PWA e então
-produzir a abertura do jogo na E11.
+**Próximo trabalho previsto:** validar a abertura no aparelho do usuário e
+seguir para os encontros recorrentes da Coruja na E12.
+
+## Evolução E11 — Entrega atual
+
+- Abertura ilustrada do vilarejo até o mapa da jornada.
+- Escassez de comida, exploração de Tico e área desconhecida apresentadas.
+- Coruja mentora resgatada, primeira pista entregue e objetivo da aventura claro.
+- Título apresentado antes do mapa, com falas curtas e comunicação visual.
+- Continuação e pulo funcionam com mouse, teclado e toque em landscape.
+- Eventos `owl_rescued`, `first_clue_received` e `opening_complete` persistem.
+- Campanhas anteriores abrem no mapa sem interrupção; nova aventura repõe a cena.
+- 15 verificações Godot, 79 regressões de save e dois cenários Web aprovados.
+- Ilustrações em 1280×720; cenas medidas com p95 de 17,30–18,32 ms no PC local.
+
+[Implementação, validação e roteiro da E11](../tests/evolucao_e11.md).
 
 ## Evolução E10 — Entrega atual
 

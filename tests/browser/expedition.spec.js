@@ -52,6 +52,44 @@ async function mapWorld(page,target,touch=false){
   expect((await snapshot(page)).map_world).toBe(target);
 }
 
+test('E11: abertura, resgate da Coruja, mapa e reabertura offline',async({page,context})=>{
+  const errors=errorsFor(page);await page.goto('./?test=1');await page.locator('#play').click();
+  await expect.poll(async()=>(await snapshot(page))?.narrative_active,{timeout:45000}).toBe(true);
+  expect((await snapshot(page)).narrative_text).toContain('inverno');
+  await page.screenshot({path:'builds/web/e11-abertura.png'});
+  const scenes=new Set();
+  for(let i=0;i<100;i++){
+    const s=await snapshot(page);if(s.map_open)break;
+    if(s.narrative_title)scenes.add(s.narrative_title);
+    if(s.narrative_active&&s.narrative_continue_rect)await clickRect(page,'narrative_continue_rect');
+    await page.waitForTimeout(180);
+  }
+  await expect.poll(async()=>(await snapshot(page)).map_open,{timeout:15000}).toBe(true);
+  expect([...scenes]).toEqual(expect.arrayContaining(['O vilarejo na floresta','Além das trilhas conhecidas','Uma nova amiga']));
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await startGame(page,false);
+  expect((await snapshot(page)).map_open).toBe(true);
+  expect((await snapshot(page)).narrative_active).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test('E11: abertura por toque em landscape',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true,baseURL:'http://127.0.0.1:8080/tico/'});
+  const page=await context.newPage();const errors=errorsFor(page);
+  await page.goto('./?test=1');await page.locator('#play').tap();
+  await expect.poll(async()=>(await snapshot(page))?.narrative_active,{timeout:45000}).toBe(true);
+  const first=await snapshot(page),advance=first.narrative_continue_rect,skip=first.narrative_skip_rect;
+  expect(advance[2]).toBeGreaterThanOrEqual(80);expect(advance[3]).toBeGreaterThanOrEqual(54);
+  expect(skip[1]+skip[3]).toBeLessThanOrEqual(first.height);
+  await clickRect(page,'narrative_continue_rect',true);
+  await clickRect(page,'narrative_continue_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).narrative_speaker).toBe('Tico');
+  await page.screenshot({path:'builds/web/e11-abertura-touch.png'});
+  await clickRect(page,'narrative_skip_rect',true);
+  await expect.poll(async()=>(await snapshot(page)).map_open).toBe(true);
+  expect(errors).toEqual([]);await context.close();
+});
+
 test('E09: alimento abastece o vilarejo e persiste offline',async({page,context})=>{
   const data=fixture(0);data.levels['0'].checkpoint=true;
   data.levels['0'].items=['24115:716','24215:716'];

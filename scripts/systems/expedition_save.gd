@@ -101,6 +101,8 @@ func migrate(source: Dictionary) -> Dictionary:
 	result.collectibles = {"golden_nuts":{}}
 	result.story = {"events":[],"village":{}}
 	sync_story(result)
+	# Campanhas anteriores começaram sem abertura; não interrompê-las após atualizar.
+	if "opening_complete" not in result.story.events: result.story.events.append("opening_complete")
 	return result
 
 func sync_story(data: Dictionary) -> void:

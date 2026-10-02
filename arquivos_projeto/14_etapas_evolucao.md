@@ -665,6 +665,13 @@ O jogo possui infraestrutura reutilizável para narrativa.
 
 # 16. EVOLUÇÃO E11 — ABERTURA DO JOGO
 
+**Status:** implementada na versão 0.20.0. Uma nova aventura apresenta o
+vilarejo se preparando para o inverno, Tico procurando comida, o depósito quase
+vazio, a trilha para a área desconhecida, o resgate da Coruja mentora, a primeira
+pista, a decisão de ajudar e o título antes do mapa. A cena pode ser pulada,
+registra seu progresso e não se repete ao reabrir. Campanhas anteriores migram
+diretamente para o mapa. [Execução e testes](../tests/evolucao_e11.md).
+
 Implementar a sequência inicial.
 
 Ordem:

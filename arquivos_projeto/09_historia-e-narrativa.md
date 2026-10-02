@@ -2660,4 +2660,12 @@ jogador poderá continuar ou pular, e cenas concluídas não reaparecerão por e
 A E10 não transforma o roteiro em conteúdo jogável. A abertura será produzida
 na E11 e a participação recorrente da Coruja mentora será integrada na E12.
 
+## ABERTURA IMPLEMENTADA NA E11
+
+A versão 0.20.0 implementa a primeira sequência completa: vilarejo, preparação
+para o inverno, busca de Tico, depósito quase vazio, trilha desconhecida, resgate
+da Coruja, primeira pista, decisão de ajudar, título e mapa. A Coruja aparece
+como aliada e mentora; não há confronto com ela. As falas são curtas, e três
+ilustrações mostram o problema e o resgate com pouca exposição textual.
+
 **FIM DO DOCUMENTO**

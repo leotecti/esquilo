@@ -13,12 +13,19 @@ var _skipped := false
 var _previous_paused := false
 var _interface_was_visible := true
 var backdrop: ColorRect
+var scene_image: TextureRect
+var story_actor: TextureRect
 var scene_title: Label
+var story_panel: PanelContainer
 var portrait: TextureRect
 var speaker: Label
 var dialogue: Label
 var continue_button: Button
 var skip_button: Button
+var _actor_motion: Dictionary = {}
+var _actor_elapsed := 0.0
+var _text_tween: Tween
+var _scene_motion: Tween
 
 func _ready() -> void:
 	layer = 40
@@ -26,6 +33,21 @@ func _ready() -> void:
 	_build_interface()
 	hide()
 	get_viewport().size_changed.connect(_layout)
+
+func _process(delta: float) -> void:
+	if _actor_motion.is_empty() or not active: return
+	_actor_elapsed += delta
+	var duration: float = maxf(float(_actor_motion.get("duration",1.0)),0.01)
+	var progress := clampf(_actor_elapsed/duration,0.0,1.0)
+	var eased := progress*progress*(3.0-2.0*progress)
+	var viewport_size := get_viewport().get_visible_rect().size
+	var from := _actor_screen_point(_actor_motion.get("from",Vector2.ZERO),viewport_size)
+	var to := _actor_screen_point(_actor_motion.get("to",Vector2.ONE),viewport_size)
+	story_actor.position = from.lerp(to,eased)-story_actor.size*Vector2(0.5,1.0)
+	story_actor.position.y -= sin(progress*PI)*float(_actor_motion.get("arc",0.0))
+	var frame := int(_actor_elapsed*10.0)%4
+	story_actor.texture = ATLAS.frame("run",frame) if str(_actor_motion.get("pose","run"))=="run" else ATLAS.frame("tico",3 if progress<0.72 else 0)
+	if progress>=1.0: _actor_motion.clear()
 
 func play(id: String, content: Array, replay := false) -> bool:
 	if active or content.is_empty() or not _valid_id(id): return false
@@ -66,7 +88,8 @@ func _advance() -> void:
 		"transition": _transition(step)
 		"animation":
 			animation_requested.emit(str(step.get("actor","")),str(step.get("animation","")))
-			_wait_then_advance(float(step.get("duration",0.35)))
+			_start_actor_animation(step)
+			_wait_then_advance(float(step.get("duration",1.0)))
 		"event":
 			if is_instance_valid(campaign): campaign.record_story_event(str(step.get("id","")))
 			_advance()
@@ -76,15 +99,56 @@ func _apply_scene(step: Dictionary) -> void:
 	scene_title.text = str(step.get("title",""))
 	scene_title.visible = not scene_title.text.is_empty()
 	backdrop.color = Color(str(step.get("color","173d2fee")))
+	var image: Variant = step.get("background")
+	if is_instance_valid(_scene_motion): _scene_motion.kill()
+	scene_image.texture = image if image is Texture2D else null
+	scene_image.visible = scene_image.texture != null
+	if scene_image.visible:
+		scene_image.pivot_offset = get_viewport().get_visible_rect().size*0.5
+		scene_image.scale = Vector2(1.035,1.035)
+		scene_image.modulate.a = 0.0
+		_scene_motion = create_tween().set_parallel().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_scene_motion.tween_property(scene_image,"modulate:a",1.0,0.65)
+		_scene_motion.tween_property(scene_image,"scale",Vector2.ONE,7.0)
+	if step.has("actor_position"):
+		_place_actor(step.get("actor_position"),str(step.get("actor_pose","idle")))
+	elif bool(step.get("hide_actor",false)): story_actor.hide()
 
 func _show_dialogue(step: Dictionary) -> void:
 	var who := str(step.get("speaker","Narrador"))
 	speaker.text = who
 	dialogue.text = str(step.get("text",""))
+	dialogue.visible_ratio = 0.0
 	_set_portrait(str(step.get("portrait",who.to_lower())))
 	continue_button.text = "Continuar"
 	continue_button.disabled = false
 	continue_button.grab_focus()
+	if is_instance_valid(_text_tween): _text_tween.kill()
+	_text_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_text_tween.tween_property(dialogue,"visible_ratio",1.0,clampf(dialogue.text.length()*0.018,0.35,0.9))
+
+func _on_continue() -> void:
+	if is_instance_valid(_text_tween) and _text_tween.is_running():
+		_text_tween.kill()
+		dialogue.visible_ratio = 1.0
+		return
+	_advance()
+
+func _place_actor(normalized_position: Vector2, pose: String) -> void:
+	story_actor.show()
+	story_actor.texture = ATLAS.frame("tico",0 if pose=="idle" else 3)
+	var viewport_size := get_viewport().get_visible_rect().size
+	story_actor.position = _actor_screen_point(normalized_position,viewport_size)-story_actor.size*Vector2(0.5,1.0)
+
+func _actor_screen_point(normalized_position: Vector2, viewport_size: Vector2) -> Vector2:
+	var point := normalized_position*viewport_size
+	point.y = minf(point.y,(story_panel.anchor_top-0.018)*viewport_size.y)
+	return point
+
+func _start_actor_animation(step: Dictionary) -> void:
+	story_actor.show()
+	_actor_elapsed = 0.0
+	_actor_motion = {"from":step.get("from",Vector2(0.08,0.66)),"to":step.get("to",Vector2(0.48,0.66)),"arc":float(step.get("arc",0.0)),"duration":float(step.get("duration",1.0)),"pose":str(step.get("pose","run"))}
 
 func _transition(step: Dictionary) -> void:
 	continue_button.disabled = true
@@ -139,28 +203,46 @@ func _build_interface() -> void:
 	backdrop.color = Color("173d2fee")
 	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.add_child(backdrop)
-	var panel := PanelContainer.new()
-	panel.name = "StoryPanel"
-	panel.anchor_left = 0.08
-	panel.anchor_top = 0.50
-	panel.anchor_right = 0.92
-	panel.anchor_bottom = 0.92
-	panel.add_theme_stylebox_override("panel",_box(Color("fff3d9f5"),Color("aec68b")))
-	root.add_child(panel)
+	scene_image = TextureRect.new()
+	scene_image.name = "SceneImage"
+	scene_image.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scene_image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	scene_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	scene_image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(scene_image)
+	story_actor = TextureRect.new()
+	story_actor.name = "StoryActor"
+	story_actor.custom_minimum_size = Vector2(132,132)
+	story_actor.size = Vector2(132,132)
+	story_actor.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	story_actor.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	story_actor.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	story_actor.material = ShaderMaterial.new()
+	story_actor.material.shader = preload("res://scripts/presentation/chroma_key.gdshader")
+	story_actor.hide()
+	root.add_child(story_actor)
+	story_panel = PanelContainer.new()
+	story_panel.name = "StoryPanel"
+	story_panel.anchor_left = 0.08
+	story_panel.anchor_top = 0.50
+	story_panel.anchor_right = 0.92
+	story_panel.anchor_bottom = 0.92
+	story_panel.add_theme_stylebox_override("panel",_box(Color("fff3d9f5"),Color("aec68b")))
+	root.add_child(story_panel)
 	var column := VBoxContainer.new()
-	column.add_theme_constant_override("separation",10)
-	panel.add_child(column)
+	column.add_theme_constant_override("separation",4)
+	story_panel.add_child(column)
 	scene_title = Label.new()
 	scene_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	scene_title.add_theme_font_size_override("font_size",24)
+	scene_title.add_theme_font_size_override("font_size",20)
 	scene_title.add_theme_color_override("font_color",Color("31543e"))
 	column.add_child(scene_title)
 	var row := HBoxContainer.new()
 	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	row.add_theme_constant_override("separation",18)
+	row.add_theme_constant_override("separation",10)
 	column.add_child(row)
 	portrait = TextureRect.new()
-	portrait.custom_minimum_size = Vector2(120,120)
+	portrait.custom_minimum_size = Vector2(68,68)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.material = ShaderMaterial.new()
@@ -171,13 +253,13 @@ func _build_interface() -> void:
 	text_column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(text_column)
 	speaker = Label.new()
-	speaker.add_theme_font_size_override("font_size",22)
+	speaker.add_theme_font_size_override("font_size",17)
 	speaker.add_theme_color_override("font_color",Color("7d512e"))
 	text_column.add_child(speaker)
 	dialogue = Label.new()
 	dialogue.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	dialogue.add_theme_font_size_override("font_size",25)
+	dialogue.add_theme_font_size_override("font_size",20)
 	dialogue.add_theme_color_override("font_color",Color("244b37"))
 	text_column.add_child(dialogue)
 	var buttons := HBoxContainer.new()
@@ -188,14 +270,14 @@ func _build_interface() -> void:
 	skip_button.pressed.connect(func(): _finish(true))
 	buttons.add_child(skip_button)
 	continue_button = _button("Continuar")
-	continue_button.pressed.connect(_advance)
+	continue_button.pressed.connect(_on_continue)
 	buttons.add_child(continue_button)
 
 func _button(text_value: String) -> Button:
 	var button := Button.new()
 	button.text = text_value
-	button.custom_minimum_size = Vector2(190,64)
-	button.add_theme_font_size_override("font_size",20)
+	button.custom_minimum_size = Vector2(150,48)
+	button.add_theme_font_size_override("font_size",17)
 	button.add_theme_color_override("font_color",Color("fff1ce"))
 	button.add_theme_stylebox_override("normal",_box(Color("31543e"),Color("88a16a"),14))
 	button.add_theme_stylebox_override("pressed",_box(Color("93612e"),Color("f3cb70"),14))
@@ -208,19 +290,31 @@ func _box(color: Color, border: Color, radius := 20) -> StyleBoxFlat:
 	style.border_color = border
 	style.set_border_width_all(2)
 	style.set_corner_radius_all(radius)
-	style.content_margin_left = 22
-	style.content_margin_right = 22
-	style.content_margin_top = 14
-	style.content_margin_bottom = 14
+	style.content_margin_left = 14
+	style.content_margin_right = 14
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
 	return style
 
 func _layout() -> void:
 	if not is_instance_valid(continue_button): return
 	var touch_mode: bool = is_instance_valid(campaign) and is_instance_valid(campaign.level) and bool(campaign.level.touch.touch_enabled)
-	var height := 88.0 if touch_mode else 64.0
+	var height := 58.0 if touch_mode else 48.0
+	story_panel.anchor_left = 0.035 if touch_mode else 0.06
+	story_panel.anchor_right = 0.965 if touch_mode else 0.94
+	story_panel.anchor_top = 0.68 if touch_mode else 0.72
+	story_panel.anchor_bottom = 0.98 if touch_mode else 0.95
 	continue_button.custom_minimum_size.y = height
 	skip_button.custom_minimum_size.y = height
+	var actor_edge := 92.0 if touch_mode else 132.0
+	story_actor.size = Vector2(actor_edge,actor_edge)
 
 func details() -> Dictionary:
-	return {"active":active,"sequence":sequence_id,"step":step_index,
-		"speaker":speaker.text if active else "","text":dialogue.text if active else ""}
+	var result := {"active":active,"sequence":sequence_id,"step":step_index,
+		"title":scene_title.text if active else "","speaker":speaker.text if active else "",
+		"text":dialogue.text if active else ""}
+	if active:
+		for entry in [["continue_rect",continue_button],["skip_rect",skip_button]]:
+			var rect: Rect2 = entry[1].get_global_rect()
+			result[entry[0]] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
+	return result
