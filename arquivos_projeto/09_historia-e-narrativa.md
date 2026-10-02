@@ -2648,4 +2648,16 @@ Mas termina com uma descoberta maior:
 
 ---
 
+---
+
+# INFRAESTRUTURA IMPLEMENTADA NA E10
+
+A versão 0.19.0 criou o diretor narrativo reutilizável que apresentará as cenas
+deste documento. Cada sequência poderá combinar cenário, falas curtas, retratos,
+transições, eventos persistentes e sinais para animações dos personagens. O
+jogador poderá continuar ou pular, e cenas concluídas não reaparecerão por engano.
+
+A E10 não transforma o roteiro em conteúdo jogável. A abertura será produzida
+na E11 e a participação recorrente da Coruja mentora será integrada na E12.
+
 **FIM DO DOCUMENTO**

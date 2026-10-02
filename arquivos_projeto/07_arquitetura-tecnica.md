@@ -2386,4 +2386,21 @@ O objetivo técnico permanece subordinado ao objetivo principal:
 
 ---
 
+---
+
+# 115. DIRETOR NARRATIVO — E10
+
+A campanha instancia `narrative_director.gd` uma única vez. Fases e sistemas
+iniciam sequências por `play_narrative(id, steps, replay)`, usando passos de
+dados em vez de criar uma interface diferente para cada cena.
+
+Tipos suportados: `scene`, `dialogue`, `transition`, `animation` e `event`.
+O passo de animação emite um sinal para manter o diretor desacoplado dos atores.
+O diretor suspende gameplay e controles, mantém a própria interface processando,
+e restaura o estado anterior ao concluir ou pular. IDs concluídos usam
+`story.events` do Save V2 e impedem repetição automática.
+
+Conteúdo narrativo pertence aos arquivos e etapas de história; a infraestrutura
+não conhece fases, falas ou eventos específicos.
+
 **FIM DO DOCUMENTO**

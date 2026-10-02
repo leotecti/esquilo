@@ -13,6 +13,7 @@ var world_map: Control
 var map_button: Button
 var _map_after_load := false
 var _unlocked_stage := -1
+var narrative: CanvasLayer
 
 func save_progress() -> void:
 	var previous := int(data.get("unlocked",0))
@@ -38,7 +39,15 @@ func _present_result() -> void:
 
 func _ready() -> void:
 	super._ready()
+	narrative = preload("res://scripts/systems/narrative_director.gd").new()
+	narrative.campaign = self
+	add_child(narrative)
 	if start_on_map: show_map()
+
+## Ponto único para fases e eventos futuros iniciarem cenas descritas por dados.
+func play_narrative(id: String, steps: Array, replay := false) -> bool:
+	if map_is_open() or awaiting_return() or not is_instance_valid(narrative): return false
+	return narrative.play(id,steps,replay)
 
 func map_is_open() -> bool:
 	return is_instance_valid(world_map)

@@ -1,10 +1,24 @@
 # Status do projeto
 
 **Data:** 2026-10-02
-**Etapa atual:** Evolução E09 — recompensas e coletáveis, versão 0.18.0.
+**Etapa atual:** Evolução E10 — estrutura narrativa, versão 0.19.0.
 
-**Próximo trabalho previsto:** validar no celular o ritmo das novas recompensas,
-os alimentos, os blocos e a persistência offline antes de aplicar o padrão às outras fases.
+**Próximo trabalho previsto:** validar a infraestrutura narrativa na PWA e então
+produzir a abertura do jogo na E11.
+
+## Evolução E10 — Entrega atual
+
+- Diretor narrativo reutilizável baseado em passos de dados.
+- Suporte a cena, diálogo, retrato, transição, evento e sinal de animação.
+- Gameplay, HUD, comandos mantidos e controles de toque suspensos durante cenas.
+- Botões grandes para continuar e pular, com restauração segura da partida.
+- Eventos e sequências concluídas persistem no `story.events` do Save V2.
+- Cenas concluídas não reaparecem automaticamente; reprodução explícita é possível.
+- 14 verificações específicas e 79 regressões de save/progresso aprovadas.
+- Exportações Web/PWA e Windows concluídas; cenário Web de save offline aprovado.
+
+[Implementação, validação e roteiro da E10](../tests/evolucao_e10.md).
+Nenhum conteúdo da abertura foi antecipado; ele pertence à E11.
 
 ## Fase modelo — Entrega atual
 

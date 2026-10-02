@@ -625,6 +625,14 @@ Explorar oferece vantagens reais ao jogador.
 
 # 15. EVOLUÇÃO E10 — ESTRUTURA NARRATIVA
 
+**Status:** implementada na versão 0.19.0. A campanha agora possui um diretor
+narrativo reutilizável, orientado por uma lista de passos, com cenas, diálogos,
+retratos, transições, eventos persistentes e sinais de animação. O sistema
+suspende e restaura gameplay, HUD e controles, permite pular cenas e impede a
+repetição automática de sequências concluídas. A abertura e o conteúdo da
+história continuam reservados às E11 e E12.
+[Execução e testes](../tests/evolucao_e10.md).
+
 Com o loop de gameplay funcionando, implementar a estrutura necessária para contar a história.
 
 Criar suporte para:

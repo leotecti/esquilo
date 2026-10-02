@@ -9,15 +9,14 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E09 — Recompensas e coletáveis (0.18.0)**. Inclui
-271 nozes, 39 alimentos, 14 blocos de recompensa e duas Nozes Douradas em
-Primeiros Passos, preservando o save V2 e o conteúdo da E08.
-[Alterações e roteiro da E09](../tests/evolucao_e09.md).
+Versão atual: **Evolução E10 — Estrutura narrativa (0.19.0)**. Inclui o diretor
+reutilizável de cenas e preserva todo o conteúdo da E09 e o Save V2.
+[Alterações e roteiro da E10](../tests/evolucao_e10.md).
 
-`builds/web/Tico-evolucao-E09-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-evolucao-E10-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e09` entre `/tico/` e os arquivos.
+Não coloque outra pasta `evolucao_e10` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

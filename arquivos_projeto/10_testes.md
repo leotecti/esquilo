@@ -2863,4 +2863,16 @@ Será parte do processo de criação.
 
 ---
 
+---
+
+# VALIDAÇÃO NARRATIVA — E10
+
+Toda sequência narrativa deve verificar: suspensão e retorno do gameplay,
+teclado e toque, avanço e pulo, retratos e texto em landscape, transições,
+sinais de animação, ausência de repetição involuntária, persistência do evento,
+reabertura offline e compatibilidade com saves anteriores. A primeira cena real
+da E11 acrescentará a validação visual em celular.
+
+Teste automatizado atual: `tests/narrative_e10_test.gd`, com 14 verificações.
+
 **FIM DO DOCUMENTO**
