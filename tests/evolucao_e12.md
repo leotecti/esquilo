@@ -45,5 +45,12 @@ herói. Depois da conversa, o mapa abre com o próximo destino selecionado.
 - Os botões flutuantes `Tela cheia` e `Sair da tela cheia` foram removidos.
 - Navegadores que não oferecem a API continuam abrindo o jogo na maior área disponível.
 
+## Arte cinematográfica de Tico
+
+- A abertura e os encontros com Valda usam quatro poses próprias de Tico.
+- O acabamento pictórico, a luz quente e o detalhamento do pelo acompanham as ilustrações narrativas.
+- A escala foi ampliada para manter uma relação visual equilibrada com Valda.
+- Os sprites das fases permanecem inalterados e continuam priorizando leitura durante a jogabilidade.
+
 Pacotes: `builds/web/Tico-evolucao-E12-web.zip` e
 `builds/windows/Tico-evolucao-E12-windows.zip`. Sem commit ou publicação automática.

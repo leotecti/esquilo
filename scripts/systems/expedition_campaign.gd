@@ -117,6 +117,8 @@ func close_map() -> void:
 	level.show()
 	level.get_node("Interface").show()
 	level.set_paused(false)
+	if level.has_method("start_pending_narrative"):
+		level.start_pending_narrative.call_deferred()
 
 func enter_from_map(index: int) -> void:
 	if not map_is_open() or _changing or index<0 or index>int(data.unlocked) or _map_portrait(): return

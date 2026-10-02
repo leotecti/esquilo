@@ -33,6 +33,7 @@ func _ready() -> void:
 	next_button.pressed.disconnect(restart)
 	next_button.pressed.connect(_continue_world)
 	next_button.text = "Próxima fase" if world_stage<2 else ("Encontrar o Guardião" if world_stage==2 else "Jogar novamente")
+	start_pending_narrative.call_deferred()
 	if world_stage==3 and is_instance_valid(campaign) and campaign.scene_paths.size()>4:
 		next_button.text = "Seguir para o Rio"
 	if world_stage==2:
@@ -244,8 +245,9 @@ func _on_block(block: Node2D, reward: bool) -> void:
 	super._on_block(block,reward)
 	if block==rescue_lock and not rescued:
 		_release_pipo()
-		_say("Pipo: Roubaram a comida da minha família também. Vamos juntos!")
-		_message_time = 8
+		_say("Pipo agora faz parte da equipe! Troque para usar a força dele.")
+		_message_time = 6
+		start_pending_narrative.call_deferred()
 	elif block==secret_block:
 		secret.reveal()
 		_say("Você encontrou uma noz escondida!")
@@ -279,6 +281,15 @@ func _release_pipo() -> void:
 	rescue_gate.get_node("Collision").set_deferred("disabled",true)
 	if is_instance_valid(captive): captive.hide()
 	_update_layout()
+
+func start_pending_narrative() -> void:
+	if world_stage!=2 or not is_instance_valid(campaign) or campaign.map_is_open(): return
+	var events: Array = campaign.data.story.events
+	var sequence = preload("res://scripts/systems/pipo_sequence.gd")
+	if not rescued and "pipo_first_meeting" not in events:
+		campaign.play_narrative("pipo_first_meeting",sequence.first_meeting())
+	elif rescued and "pipo_first_meeting" in events and "pipo_joins_team" not in events:
+		campaign.play_narrative("pipo_joins_team",sequence.joins_team())
 
 func _on_guardian_calmed() -> void:
 	_say("Guardião: Obrigado! A trilha até o rio está livre, amigos.")

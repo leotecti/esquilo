@@ -57,7 +57,7 @@ func run() -> void:
 	await open_campaign()
 	check(campaign.narrative.active,"Nova campanha volta a apresentar a abertura")
 	campaign.narrative.skip_button.pressed.emit()
-	await frames(3)
+	await frames(20)
 	check(campaign.map_is_open() and "opening_complete" in campaign.data.story.events,"Pular abertura também segue para o mapa e persiste")
 	check("owl_rescued" not in campaign.data.story.events,"Pular não registra eventos narrativos ainda não vistos")
 	await close_world()

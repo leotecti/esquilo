@@ -1,10 +1,23 @@
 # Status do projeto
 
 **Data:** 2026-10-02
-**Etapa atual:** Evolução E12 — Valda e progressão da história, versão 0.21.0.
+**Etapa atual:** Evolução E13 — introdução de Pipo, versão 0.22.0.
 
-**Próximo trabalho previsto:** validar os encontros de Valda no aparelho do
-usuário e seguir para a introdução narrativa de Pipo na E13.
+**Próximo trabalho previsto:** validar a apresentação e o resgate de Pipo no
+aparelho do usuário e, após o aceite, seguir para as mecânicas da E14.
+
+## Evolução E13 — Entrega atual
+
+- Pipo é apresentado na fase 1-3 antes do resgate jogável.
+- A falta de comida da família dele conecta sua história à missão de Tico e Valda.
+- O diálogo após o resgate explica por que Pipo entra na equipe.
+- Uma demonstração visual apresenta força de Pipo e agilidade de Tico.
+- O percurso cooperativo existente permanece como demonstração jogável.
+- Pipo continua bloqueado antes do resgate e globalmente liberado depois dele.
+- Saves antigos preservam o resgate sem apresentar uma cena retroativa.
+- 15 verificações específicas cobrem narrativa, gameplay, save e revisitas.
+
+[Implementação e validação da E13](../tests/evolucao_e13.md).
 
 ## Evolução E12 — Entrega atual
 

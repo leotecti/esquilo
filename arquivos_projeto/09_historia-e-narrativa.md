@@ -2682,4 +2682,17 @@ pelas penas; Montanha para Vila pelos carregamentos; e Vila para a conclusão do
 arco na Grande Árvore. O adversário aéreo da montanha passa a ser o Gavião da
 Montanha, preservando Valda exclusivamente como aliada e mentora.
 
+## INTRODUÇÃO DE PIPO IMPLEMENTADA NA E13
+
+A versão 0.22.0 apresenta Pipo durante a fase 1-3, sem retirar o resgate das mãos
+do jogador. Antes de romper o bloco que sustenta os cipós, Tico descobre que Pipo
+também procurava comida para sua família. Depois do resgate, Tico explica a missão
+recebida de Valda e Pipo decide ajudar.
+
+A cena demonstra Pipo movendo um obstáculo pesado e Tico alcançando uma passagem
+alta. Em seguida, o percurso exige que o jogador use força e agilidade de verdade.
+Os eventos `pipo_first_meeting` e `pipo_joins_team` impedem repetições acidentais.
+Saves antigos que já registravam o resgate mantêm Pipo sem interromper a partida
+com uma apresentação retroativa.
+
 **FIM DO DOCUMENTO**

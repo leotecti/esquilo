@@ -4,6 +4,7 @@ signal animation_requested(actor_id: String, animation_id: String)
 signal sequence_finished(sequence_id: String, skipped: bool)
 
 const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
+const CINEMATIC_TICO = preload("res://assets/narrative/tico_cinematic.png")
 var campaign: Node
 var sequence_id := ""
 var steps: Array = []
@@ -15,6 +16,7 @@ var _interface_was_visible := true
 var backdrop: ColorRect
 var scene_image: TextureRect
 var story_actor: TextureRect
+var story_companion: TextureRect
 var scene_title: Label
 var story_panel: PanelContainer
 var portrait: TextureRect
@@ -23,15 +25,18 @@ var dialogue: Label
 var continue_button: Button
 var skip_button: Button
 var _actor_motion: Dictionary = {}
+var _motion_actor: TextureRect
 var _actor_elapsed := 0.0
 var _text_tween: Tween
 var _scene_motion: Tween
 var _scene_fade: Tween
+var _cinematic_frames: Array[Texture2D] = []
 
 func _ready() -> void:
 	layer = 40
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_interface()
+	_build_cinematic_frames()
 	hide()
 	get_viewport().size_changed.connect(_layout)
 
@@ -44,15 +49,21 @@ func _process(delta: float) -> void:
 	var viewport_size := get_viewport().get_visible_rect().size
 	var from := _actor_screen_point(_actor_motion.get("from",Vector2.ZERO),viewport_size)
 	var to := _actor_screen_point(_actor_motion.get("to",Vector2.ONE),viewport_size)
-	story_actor.position = from.lerp(to,eased)-story_actor.size*Vector2(0.5,1.0)
-	story_actor.position.y -= sin(progress*PI)*float(_actor_motion.get("arc",0.0))
-	var frame := int(_actor_elapsed*10.0)%4
+	var moving_actor := _motion_actor if is_instance_valid(_motion_actor) else story_actor
+	moving_actor.position = from.lerp(to,eased)-moving_actor.size*Vector2(0.5,1.0)
+	moving_actor.position.y -= sin(progress*PI)*float(_actor_motion.get("arc",0.0))
 	var pose := str(_actor_motion.get("pose","run"))
-	if pose=="run": story_actor.texture = ATLAS.frame("run",frame)
-	elif pose=="gesture":
-		story_actor.texture = ATLAS.frame("tico",1 if int(_actor_elapsed*3.0)%2==0 else 0)
+	if moving_actor==story_actor and pose=="run":
+		story_actor.texture = _cinematic_frames[1]
+		story_actor.position.y -= absf(sin(progress*PI*5.0))*5.0
+	elif moving_actor==story_actor and pose=="gesture":
+		story_actor.texture = _cinematic_frames[3]
 		story_actor.position.y -= sin(progress*PI*2.0)*4.0
-	else: story_actor.texture = ATLAS.frame("tico",3 if progress<0.72 else 0)
+	elif moving_actor==story_actor:
+		story_actor.texture = _cinematic_frames[2] if progress<0.72 else _cinematic_frames[0]
+	else:
+		story_companion.texture = ATLAS.frame("pipo",6 if pose in ["push","charge"] else (1 if pose=="run" else 0))
+		story_companion.position.y -= absf(sin(progress*PI*4.0))*3.0
 	if progress>=1.0: _actor_motion.clear()
 
 func play(id: String, content: Array, replay := false) -> bool:
@@ -63,6 +74,10 @@ func play(id: String, content: Array, replay := false) -> bool:
 	step_index = -1
 	_skipped = false
 	active = true
+	_actor_motion.clear()
+	_motion_actor = null
+	story_actor.hide()
+	story_companion.hide()
 	_previous_paused = get_tree().paused
 	if is_instance_valid(campaign.level):
 		_interface_was_visible = campaign.level.get_node("Interface").visible
@@ -89,6 +104,9 @@ func _advance() -> void:
 	match str(step.get("type","dialogue")):
 		"scene":
 			_apply_scene(step)
+			_advance()
+		"actors":
+			_apply_actors(step)
 			_advance()
 		"dialogue": _show_dialogue(step)
 		"camera": _move_camera(step)
@@ -137,6 +155,15 @@ func _apply_scene(step: Dictionary) -> void:
 	if step.has("actor_position"):
 		_place_actor(step.get("actor_position"),str(step.get("actor_pose","idle")))
 	elif bool(step.get("hide_actor",false)): story_actor.hide()
+	if step.has("companion_position"):
+		_place_companion(step.get("companion_position"),int(step.get("companion_pose",0)))
+	elif bool(step.get("hide_companion",false)): story_companion.hide()
+
+func _apply_actors(step: Dictionary) -> void:
+	if step.has("tico_position"): _place_actor(step.get("tico_position"),str(step.get("tico_pose","idle")))
+	elif bool(step.get("hide_tico",false)): story_actor.hide()
+	if step.has("pipo_position"): _place_companion(step.get("pipo_position"),int(step.get("pipo_pose",0)))
+	elif bool(step.get("hide_pipo",false)): story_companion.hide()
 
 func _show_dialogue(step: Dictionary) -> void:
 	var who := str(step.get("speaker","Narrador"))
@@ -160,9 +187,15 @@ func _on_continue() -> void:
 
 func _place_actor(normalized_position: Vector2, pose: String) -> void:
 	story_actor.show()
-	story_actor.texture = ATLAS.frame("tico",0 if pose=="idle" else 3)
+	story_actor.texture = _cinematic_frames[0 if pose=="idle" else 2]
 	var viewport_size := get_viewport().get_visible_rect().size
 	story_actor.position = _actor_screen_point(normalized_position,viewport_size)-story_actor.size*Vector2(0.5,1.0)
+
+func _place_companion(normalized_position: Vector2, pose: int) -> void:
+	story_companion.show()
+	story_companion.texture = ATLAS.frame("pipo",clampi(pose,0,11))
+	var viewport_size := get_viewport().get_visible_rect().size
+	story_companion.position = _actor_screen_point(normalized_position,viewport_size)-story_companion.size*Vector2(0.5,1.0)
 
 func _actor_screen_point(normalized_position: Vector2, viewport_size: Vector2) -> Vector2:
 	var point := normalized_position*viewport_size
@@ -170,7 +203,8 @@ func _actor_screen_point(normalized_position: Vector2, viewport_size: Vector2) -
 	return point
 
 func _start_actor_animation(step: Dictionary) -> void:
-	story_actor.show()
+	_motion_actor = story_companion if str(step.get("actor","tico"))=="pipo" else story_actor
+	_motion_actor.show()
 	_actor_elapsed = 0.0
 	_actor_motion = {"from":step.get("from",Vector2(0.08,0.66)),"to":step.get("to",Vector2(0.48,0.66)),"arc":float(step.get("arc",0.0)),"duration":float(step.get("duration",1.0)),"pose":str(step.get("pose","run"))}
 
@@ -213,7 +247,16 @@ func _finish(skipped: bool) -> void:
 func _set_portrait(id: String) -> void:
 	portrait.visible = id in ["tico","pipo"]
 	if portrait.visible:
-		portrait.texture = ATLAS.frame(id,0)
+		portrait.texture = _cinematic_frames[0] if id=="tico" else ATLAS.frame(id,0)
+
+func _build_cinematic_frames() -> void:
+	_cinematic_frames.clear()
+	var frame_width := CINEMATIC_TICO.get_width()/4.0
+	for index in 4:
+		var frame := AtlasTexture.new()
+		frame.atlas = CINEMATIC_TICO
+		frame.region = Rect2(frame_width*index,0,frame_width,CINEMATIC_TICO.get_height())
+		_cinematic_frames.append(frame)
 
 func _valid_id(id: String) -> bool:
 	return is_instance_valid(campaign) and campaign.store.valid_id(id)
@@ -236,15 +279,24 @@ func _build_interface() -> void:
 	root.add_child(scene_image)
 	story_actor = TextureRect.new()
 	story_actor.name = "StoryActor"
-	story_actor.custom_minimum_size = Vector2(132,132)
-	story_actor.size = Vector2(132,132)
+	story_actor.custom_minimum_size = Vector2(285,285)
+	story_actor.size = Vector2(285,285)
 	story_actor.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	story_actor.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	story_actor.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	story_actor.material = ShaderMaterial.new()
-	story_actor.material.shader = preload("res://scripts/presentation/chroma_key.gdshader")
 	story_actor.hide()
 	root.add_child(story_actor)
+	story_companion = TextureRect.new()
+	story_companion.name = "StoryCompanion"
+	story_companion.custom_minimum_size = Vector2(250,250)
+	story_companion.size = Vector2(250,250)
+	story_companion.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	story_companion.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	story_companion.material = ShaderMaterial.new()
+	story_companion.material.shader = preload("res://scripts/presentation/chroma_key.gdshader")
+	story_companion.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	story_companion.hide()
+	root.add_child(story_companion)
 	story_panel = PanelContainer.new()
 	story_panel.name = "StoryPanel"
 	story_panel.anchor_left = 0.08
@@ -330,8 +382,12 @@ func _layout() -> void:
 	story_panel.anchor_bottom = 0.98 if touch_mode else 0.95
 	continue_button.custom_minimum_size.y = height
 	skip_button.custom_minimum_size.y = height
-	var actor_edge := 92.0 if touch_mode else 132.0
+	var actor_edge := 180.0 if touch_mode else 285.0
+	story_actor.custom_minimum_size = Vector2(actor_edge,actor_edge)
 	story_actor.size = Vector2(actor_edge,actor_edge)
+	var companion_edge := 170.0 if touch_mode else 250.0
+	story_companion.custom_minimum_size = Vector2(companion_edge,companion_edge)
+	story_companion.size = Vector2(companion_edge,companion_edge)
 
 func details() -> Dictionary:
 	var result := {"active":active,"sequence":sequence_id,"step":step_index,

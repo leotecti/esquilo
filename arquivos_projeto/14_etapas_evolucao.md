@@ -751,6 +751,12 @@ As fases passam a fazer parte de uma história contínua.
 
 # 18. EVOLUÇÃO E13 — INTRODUÇÃO DE PIPO
 
+**Status:** implementada na versão 0.22.0. O encontro e o resgate continuam
+jogáveis em 1-3. Duas cenas curtas apresentam Pipo, a falta de comida, a missão
+de Tico e a entrada na equipe. A demonstração visual de força e agilidade conduz
+ao desafio cooperativo existente. O desbloqueio global, as revisitas e os saves
+anteriores foram preservados. [Execução e testes](../tests/evolucao_e13.md).
+
 Preservar o resgate jogável de Pipo em 1-3 e melhorar sua apresentação narrativa. Antes do resgate, somente Tico fica disponível. Depois, registrar Pipo como desbloqueado globalmente e permitir sua seleção também nas fases iniciais revisitadas.
 
 Criar sua entrada através da narrativa.
