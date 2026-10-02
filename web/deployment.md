@@ -12,6 +12,10 @@ controles, faro e percurso completo.
 Versão atual: **Evolução E12 — Valda e progressão da história (0.21.0)**. Inclui
 a abertura, os encontros recorrentes de Valda após os confrontos decisivos e
 preserva o Save V2.
+
+Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientação
+horizontal. A PWA instalada abre diretamente no modo `fullscreen`; não há botão
+flutuante sobre o jogo para alternar esse estado.
 [Alterações e roteiro da E12](../tests/evolucao_e12.md).
 
 `builds/web/Tico-evolucao-E12-web.zip` contém os arquivos que devem ficar diretamente

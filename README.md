@@ -11,7 +11,8 @@ Para configurar outra máquina após clonar o repositório, consulte o
 **Evolução E12 — Valda e progressão da história (0.21.0):** Valda reencontra
 Tico e Pipo depois dos quatro confrontos decisivos, contextualiza o resultado,
 revela a pista seguinte e conduz a transição para o mapa. A antiga chefe coruja
-da montanha agora é o Gavião da Montanha. [Entrega e validação da E12](tests/evolucao_e12.md).
+da montanha agora é o Gavião da Montanha. Windows, navegador e PWA iniciam em
+tela cheia, sem controle flutuante sobre o jogo. [Entrega e validação da E12](tests/evolucao_e12.md).
 
 **Evolução E11 — abertura do jogo (0.20.0):** nova aventura apresenta o vilarejo,
 a falta de comida, o resgate de Valda, a conversa que transforma a busca de Tico

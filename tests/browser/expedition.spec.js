@@ -53,6 +53,17 @@ async function mapWorld(page,target,touch=false){
   expect((await snapshot(page)).map_world).toBe(target);
 }
 
+test('E12: inicia em tela cheia sem botão flutuante',async({page})=>{
+  await page.goto('./?test=1');
+  expect(await page.locator('#fullscreen').count()).toBe(0);
+  await page.locator('#play').click();
+  await expect.poll(async()=>(await snapshot(page))?.narrative_active,{timeout:45000}).toBe(true);
+  if(await page.evaluate(()=>document.fullscreenEnabled))
+    await expect.poll(()=>page.evaluate(()=>Boolean(document.fullscreenElement))).toBe(true);
+  const manifest=await page.evaluate(async()=>fetch('index.manifest.json').then(r=>r.json()));
+  expect(manifest.display).toBe('fullscreen');expect(manifest.orientation).toBe('landscape');
+});
+
 test('E11: abertura, resgate de Valda, mapa e reabertura offline',async({page,context})=>{
   test.setTimeout(90000);
   const errors=errorsFor(page);await page.goto('./?test=1');await page.locator('#play').click();

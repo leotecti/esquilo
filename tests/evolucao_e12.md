@@ -37,5 +37,13 @@ herói. Depois da conversa, o mapa abre com o próximo destino selecionado.
 - Regressão de abertura, campanha e Save V2 permanece obrigatória.
 - Navegador valida o encontro após o Bosque, persistência e reabertura offline.
 
+## Tela cheia
+
+- Windows inicia diretamente em tela cheia.
+- O navegador solicita tela cheia no clique ou toque em `Jogar`.
+- A PWA instalada usa o modo `fullscreen` e orientação horizontal.
+- Os botões flutuantes `Tela cheia` e `Sair da tela cheia` foram removidos.
+- Navegadores que não oferecem a API continuam abrindo o jogo na maior área disponível.
+
 Pacotes: `builds/web/Tico-evolucao-E12-web.zip` e
 `builds/windows/Tico-evolucao-E12-windows.zip`. Sem commit ou publicação automática.

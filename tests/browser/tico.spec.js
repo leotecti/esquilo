@@ -8,10 +8,13 @@ async function boot(page) {
 }
 async function snapshot(page) { return page.evaluate(()=>window.__ticoTest); }
 
-test('teclado, salto, planar, pausa e tela cheia',async({page})=>{
+test('teclado, salto, planar, pausa e abertura em tela cheia',async({page})=>{
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
   page.on('console',m=>{if(m.type()==='error') errors.push(m.text());});
   await boot(page);
+  await expect(page.locator('#fullscreen')).toHaveCount(0);
+  if(await page.evaluate(()=>document.fullscreenEnabled))
+    await expect.poll(()=>page.evaluate(()=>Boolean(document.fullscreenElement))).toBe(true);
   const initial=await snapshot(page);
   expect(initial.health).toBe(3);
   expect(initial.total_nuts).toBe(13);
@@ -28,9 +31,6 @@ test('teclado, salto, planar, pausa e tela cheia',async({page})=>{
   await expect.poll(async()=>(await snapshot(page)).paused).toBe(true);
   await page.keyboard.press('Escape');
   await expect.poll(async()=>(await snapshot(page)).paused).toBe(false);
-  await page.getByRole('button',{name:'Tela cheia',exact:true}).click();
-  await expect.poll(()=>page.evaluate(()=>Boolean(document.fullscreenElement))).toBe(true);
-  await page.getByRole('button',{name:'Sair da tela cheia'}).click();
   await page.screenshot({path:'builds/web/preview-desktop.png'});
   expect(errors).toEqual([]);
 });
@@ -45,7 +45,7 @@ test('manifesto, cache completo e reabertura offline',async({page,context})=>{
   expect(installability.installabilityErrors.filter(e=>e.errorId!=='in-incognito')).toEqual([]);
   const manifest=await page.evaluate(async()=>fetch('index.manifest.json').then(r=>r.json()));
   expect(manifest.start_url).toBe('./'); expect(manifest.scope).toBe('./');
-  expect(manifest.display).toBe('standalone'); expect(manifest.orientation).toBe('landscape');
+  expect(manifest.display).toBe('fullscreen'); expect(manifest.orientation).toBe('landscape');
   const cached=await page.evaluate(async()=>{
     const names=await caches.keys();
     return (await (await caches.open(names.find(n=>n.startsWith('tico-/tico/-')))).keys()).map(r=>r.url);
