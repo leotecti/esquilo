@@ -4,6 +4,7 @@ signal collected(item: Node2D)
 var taken: bool = false
 var campaign: Node
 var life_reward := false
+var collectible_kind := "nut"
 var _time: float = 0.0
 
 func _ready() -> void:
@@ -12,7 +13,9 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
-	queue_redraw()
+	# A apresentação comercial usa ObjectArt; evita redesenhar o desenho-base
+	# transparente de centenas de recompensas fora da tela.
+	if self_modulate.a>0.01: queue_redraw()
 
 func _physics_process(_delta: float) -> void:
 	# Um coração recusado com saúde cheia continua utilizável sem sair da área.

@@ -1,14 +1,15 @@
 # Status do projeto
 
 **Data:** 2026-10-02
-**Etapa atual:** Primeiros Passos como fase modelo, versão 0.17.2.
+**Etapa atual:** Evolução E09 — recompensas e coletáveis, versão 0.18.0.
 
-**Próximo trabalho previsto:** validar os ajustes de retorno, bandeira única, lesmas e corações no celular. O tamanho e a duração da fase modelo foram aprovados. A regra de vida a cada 100 nozes da E09 foi antecipada a pedido do usuário.
+**Próximo trabalho previsto:** validar no celular o ritmo das novas recompensas,
+os alimentos, os blocos e a persistência offline antes de aplicar o padrão às outras fases.
 
 ## Fase modelo — Entrega atual
 
 - Percurso principal de 42.000 unidades, com entrada da copa na metade.
-- 198 nozes principais e 26 opcionais; contador de vida extra a cada 100 novas coletas.
+- 245 nozes principais e 26 opcionais; contador de vida extra a cada 100 novas coletas.
 - Uma única bandeira após a árvore; quatro corações na trilha e três na copa.
 - Tamanho e duração aprovados pelo usuário. Retorno e acesso à árvore pelos dois lados revisados.
 - Saúde cheia: coletar um coração concede uma vida, até o limite de 99.
@@ -18,6 +19,17 @@
 - Recompensas não se repetem ao morrer, salvar novamente ou rejogar.
 
 [Entrega e playtest](../tests/primeiros_passos_modelo.md). Sem commit ou publicação automática.
+
+## Evolução E09 — Entrega atual
+
+- 271 nozes, 39 alimentos e 14 blocos de recompensa em Primeiros Passos.
+- Maçãs, frutas silvestres e cenouras abastecem o contador do vilarejo.
+- Duas Nozes Douradas opcionais, uma na trilha e outra na copa.
+- Intervalo máximo de 540 unidades entre recompensas na fase ainda não coletada.
+- Animações dos coletáveis atualizadas apenas perto da câmera.
+- Saves V2 anteriores recebem contador de alimentos sem perder progresso.
+
+[Testes e roteiro da E09](../tests/evolucao_e09.md).
 
 ## Evolução E08 — Revisão anterior
 

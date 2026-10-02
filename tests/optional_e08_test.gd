@@ -10,7 +10,7 @@ func run() -> void:
 	await start_phase(0)
 	campaign.data.survival.lives = 5
 	check(is_instance_valid(level.optional_area),"Primeiros Passos possui área opcional")
-	check(not level.optional_area.active and level.total_nuts==224,"Trilha ampliada tem 198 nozes principais e 26 opcionais")
+	check(not level.optional_area.active and level.total_nuts==271,"Trilha E09 tem 245 nozes principais e 26 opcionais")
 	check(level.main_right==42000 and level.exit_marker.position.x==41780,"Trilha principal ganha trecho final")
 	check(level.optional_area.RIGHT_EDGE==64000 and level.optional_area.slugs.size()==3,"Copa ampliada tem três lesmas")
 	level._on_checkpoint(level.checkpoint)

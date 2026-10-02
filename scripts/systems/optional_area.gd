@@ -31,6 +31,11 @@ func area_nut(point: Vector2, healing := false) -> void:
 	# IDs históricos: deslocar a área não recria recompensas já coletadas.
 	item.set_meta("save_id","%d:%d" % [point.x,point.y])
 
+func area_food(point: Vector2, kind: int) -> void:
+	level._food(location(point),kind)
+	var item = level.actors.get_child(level.actors.get_child_count()-1)
+	item.set_meta("save_id","food:%d:%d" % [point.x,point.y])
+
 func build() -> void:
 	level._platform(Rect2(60000,760,4000,200))
 	for rect in BRANCHES:
@@ -43,6 +48,10 @@ func build() -> void:
 	for row in [[7690,405,4],[8130,515,3],[8520,415,3],[8840,315,3],[9320,415,3],[8620,615,3],[8030,715,3]]:
 		for i in int(row[2]): area_nut(Vector2(row[0]+i*75,row[1]))
 	for point in [Vector2(7970,405),Vector2(8700,615),Vector2(9500,415)]: area_nut(point,true)
+	for entry in [[7750,405,1],[8350,515,0],[8580,415,2],[8990,315,1],[9180,415,0],[8800,615,2]]:
+		area_food(Vector2(entry[0],entry[1]),entry[2])
+	level._golden_nut(location(Vector2(9030,315)),"copa_01")
+	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","golden:copa_01")
 	for point in [Vector2(7830,450),Vector2(8220,560),Vector2(9350,760)]:
 		level._slug(location(point),65)
 		slugs.append(level.actors.get_child(level.actors.get_child_count()-1))

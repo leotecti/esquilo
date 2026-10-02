@@ -11,6 +11,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
+	if not is_instance_valid(object) or not object.visible: return
+	var screen_position := get_viewport().get_canvas_transform()*global_position
+	var viewport_size := get_viewport_rect().size
+	if screen_position.x < -100 or screen_position.x > viewport_size.x+100 or screen_position.y < -120 or screen_position.y > viewport_size.y+120: return
 	queue_redraw()
 
 func prop(index: int, rect: Rect2, color: Color = Color.WHITE) -> void:
@@ -19,19 +23,42 @@ func prop(index: int, rect: Rect2, color: Color = Color.WHITE) -> void:
 func _draw() -> void:
 	if not is_instance_valid(object): return
 	match kind:
-		"nut", "secret":
+		"nut", "secret", "golden":
 			if kind == "secret" and not object.revealed:
 				prop(7,Rect2(-42,-25,84,57))
 			else:
 				var y := sin(_time*3)*3
 				if object.healing: draw_texture_rect(HEART,Rect2(-18,-20+y,36,36),false)
-				else: prop(0,Rect2(-15,-22+y,30,36))
+				else:
+					prop(0,Rect2(-17,-24+y,34,41),Color("ffe178") if kind=="golden" else Color.WHITE)
+					if kind=="golden":
+						draw_arc(Vector2(0,-3+y),25,0,TAU,24,Color("ffe9a688"),3)
 			if kind == "secret" and object.scent_visible and not object.taken:
 				var start: Vector2 = to_local(object.scent_from)
 				for i in 5:
 					var progress := fmod(_time*.7+i*.2,1)
 					var point := start.lerp(Vector2.ZERO,progress)+Vector2(0,sin(progress*TAU)*12)
 					draw_circle(point,3+progress*3,Color("ffdc80"))
+		"food":
+			var y := sin(_time*3+object.food_kind)*3
+			if object.food_kind==0:
+				draw_circle(Vector2(0,y),17,Color("713f32"))
+				draw_circle(Vector2(0,y),14,Color("d95b45"))
+				draw_circle(Vector2(-7,-5+y),9,Color("ec7455"))
+				draw_circle(Vector2(-6,-8+y),3,Color("ffd0a1aa"))
+				draw_line(Vector2(1,-14+y),Vector2(4,-23+y),Color("65462f"),4,true)
+				draw_colored_polygon(PackedVector2Array([Vector2(4,-21+y),Vector2(15,-25+y),Vector2(10,-16+y)]),Color("6b9147"))
+			elif object.food_kind==1:
+				for point in [Vector2(-9,-5),Vector2(7,-7),Vector2(-3,7),Vector2(11,6)]:
+					draw_circle(point+Vector2(0,y),10,Color("51394f"))
+					draw_circle(point+Vector2(0,y),8,Color("8b557d"))
+					draw_circle(point+Vector2(-2,-2+y),2,Color("e5a5c7aa"))
+				draw_colored_polygon(PackedVector2Array([Vector2(-8,-14+y),Vector2(0,-25+y),Vector2(7,-13+y)]),Color("668b4b"))
+			else:
+				draw_colored_polygon(PackedVector2Array([Vector2(-15,-13+y),Vector2(16,-13+y),Vector2(2,23+y)]),Color("77462e"))
+				draw_colored_polygon(PackedVector2Array([Vector2(-12,-10+y),Vector2(13,-10+y),Vector2(2,19+y)]),Color("e68a3c"))
+				draw_line(Vector2(-5,-4+y),Vector2(7,-1+y),Color("f5b45f"),2,true)
+				for x in [-8.0,0.0,8.0]: draw_line(Vector2(x,-12+y),Vector2(x*.6,-25+y),Color("6c974d"),5,true)
 		"block":
 			prop([2,3,4][object.kind],Rect2(-28,-28,56,56),Color("b4a98d") if object.used else Color.WHITE)
 		"stone": prop(6,Rect2(-38,-64,76,64))

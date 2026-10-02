@@ -52,6 +52,22 @@ async function mapWorld(page,target,touch=false){
   expect((await snapshot(page)).map_world).toBe(target);
 }
 
+test('E09: alimento abastece o vilarejo e persiste offline',async({page,context})=>{
+  const data=fixture(0);data.levels['0'].checkpoint=true;
+  data.levels['0'].items=['24115:716','24215:716'];
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  const nutsBefore=(await snapshot(page)).nuts;
+  await walk(page,24400);
+  await expect.poll(async()=>(await snapshot(page)).food_total).toBeGreaterThanOrEqual(1);
+  expect((await snapshot(page)).nuts).toBe(nutsBefore);
+  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).survival.food_total);
+  expect(stored).toBeGreaterThanOrEqual(1);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await startGame(page);
+  expect((await snapshot(page)).food_total).toBe(stored);
+  expect(errors).toEqual([]);
+});
+
 test('E08: subida à copa, recompensa, portal e reabertura offline',async({page,context})=>{
   test.setTimeout(300000);const errors=errorsFor(page);const initial=fixture(0);Object.assign(initial.levels[0],{checkpoint:true,route_checkpoint:2});await seed(page,initial);await boot(page);
   async function jumpTo(x){

@@ -110,3 +110,6 @@ específica de otimização antes de aplicar o modelo às demais fases.
 
 Pacotes: `builds/web/Tico-evolucao-E08-web.zip` e
 `builds/windows/Tico-evolucao-E08-windows.zip`. Sem commit ou publicação automática.
+
+Este documento registra a fase modelo até a revisão visual 0.17.2. A distribuição
+atual está em [Evolução E09](evolucao_e09.md), com novos alimentos e recompensas.

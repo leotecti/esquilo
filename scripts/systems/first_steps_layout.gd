@@ -33,8 +33,23 @@ static func build(level) -> void:
 					level._nut(Vector2(x+offset,y-44))
 					level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","%d:%d" % [x+offset,old_profiles[section%3][step]-44])
 			if step==4 and section%2==0: level._slug(Vector2(x+270,y),65)
+		# Um arco recompensa o salto sem transformar o caminho em uma linha contínua.
+		var arc_y: int = heights[3]
+		for reward in [[1265,75],[1400,115],[1535,75]]:
+			level._nut(Vector2(origin+reward[0],arc_y-reward[1]))
+		# Alimentos variados representam provisões recuperadas para o vilarejo.
+		for entry in [[0,315],[4,315],[7,315]]:
+			var step: int = entry[0]
+			level._food(Vector2(origin+step*400+entry[1],heights[step]-48),(section+step)%3)
+		# Todo trecho possui ao menos um bloco de recompensa; alguns formam pares.
+		level._block(Vector2(origin+2600,heights[6]-150),2,"SupplyBlock%02dA" % section)
+		if section in [2,5,8]:
+			level._block(Vector2(origin+540,heights[1]-150),2,"SupplyBlock%02dB" % section)
 		if section in [1,4,7,10]:
 			level._nut(Vector2(origin+260,715),true)
+	# Coletável opcional fora da linha de corrida, sobre uma elevação intermediária.
+	level._golden_nut(Vector2(32600,560),"trilha_alta_01")
+	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","golden:trilha_alta_01")
 	# Área de chegada mais tranquila depois do último conjunto de subidas.
 	for rect in [Rect2(20700,680,140,80),Rect2(20840,610,140,150)]: level._platform(rect)
 	for point in [Vector2(20760,636),Vector2(20890,566)]: level._nut(point)

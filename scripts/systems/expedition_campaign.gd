@@ -30,7 +30,7 @@ func _present_result() -> void:
 	var message := "Trilha concluída!"
 	if data.finished and int(data.stage)==scene_paths.size()-1: message = "Todas as trilhas desta aventura concluídas!"
 	level.result_text.add_theme_font_size_override("font_size",25)
-	level.result_text.text = "%s\n%s\n\nNozes: %d / %d   •   Vidas: %d\nNozes Douradas: %d\n%s" % [title,message,level.nuts,level.total_nuts,int(data.survival.lives),golden.size(),"Segredo encontrado!" if snapshot.get("secret",false) else "Você pode voltar para explorar mais."]
+	level.result_text.text = "%s\n%s\n\nNozes: %d / %d   •   Vidas: %d\nAlimentos: %d / %d   •   Nozes Douradas: %d\n%s" % [title,message,level.nuts,level.total_nuts,int(data.survival.lives),level.foods,level.total_foods,golden.size(),"Segredo encontrado!" if snapshot.get("secret",false) else "Você pode voltar para explorar mais."]
 	level.result_panel.custom_minimum_size = Vector2(700,360)
 	level.next_button.text = "Voltar ao mapa"
 	if save_enabled and store.state!="saved":
@@ -118,7 +118,7 @@ func fresh() -> Dictionary:
 	return store.migrate(result)
 
 func _new_survival() -> Dictionary:
-	return {"lives":initial_lives,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
+	return {"lives":initial_lives,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
 
 func _prepare_save() -> void:
 	store.sync_story(data)
@@ -175,6 +175,8 @@ func _restore_level(state: Dictionary) -> void:
 		data.survival = _new_survival()
 		for previous in data.levels.values():
 			if previous.rescued: data.survival.pipo_unlocked = true
+	if not data.survival.has("nut_total"): data.survival.nut_total = 0
+	if not data.survival.has("food_total"): data.survival.food_total = 0
 	for i in data.survival.claimed.size(): data.survival.claimed[i] = int(data.survival.claimed[i])
 	var restored: Dictionary = (level.world_snapshot() if state.is_empty() else state).duplicate(true)
 	if data.survival.pipo_unlocked: restored.rescued = true
@@ -186,21 +188,40 @@ func _restore_level(state: Dictionary) -> void:
 func _capture_level() -> Dictionary:
 	var snapshot: Dictionary = level.world_snapshot()
 	var previous: Dictionary = data.levels.get(str(data.stage),{})
+	# Recompensas repetíveis continuam visíveis no replay, mas seus IDs históricos
+	# permanecem no save para impedir novo crédito permanente.
+	if data.survival.replay:
+		for key in ["items","blocks"]:
+			for id in previous.get(key,[]):
+				if id not in snapshot[key]: snapshot[key].append(id)
 	var earned := 0
+	var food_earned := 0
 	var heart_lives := 0
+	var golden_found := false
 	for actor in level.actors.get_children():
 		if not actor.has_meta("save_id"): continue
 		var id: String = actor.get_meta("save_id")
-		if actor.has_method("reset_item") and actor.taken and actor.healing and actor.life_reward and id not in previous.get("items",[]): heart_lives += 1
-		if actor.has_method("reset_item") and actor.taken and not actor.healing and id not in previous.get("items",[]): earned += 1
+		if actor.has_method("reset_item") and actor.taken and actor.collectible_kind=="heart" and actor.life_reward and id not in previous.get("items",[]): heart_lives += 1
+		if actor.has_method("reset_item") and actor.taken and actor.collectible_kind=="nut" and id not in previous.get("items",[]): earned += 1
+		elif actor.has_method("reset_item") and actor.taken and actor.collectible_kind=="food" and id not in previous.get("items",[]): food_earned += actor.food_value
+		elif actor.has_method("reset_item") and actor.taken and actor.collectible_kind=="golden" and id not in previous.get("items",[]):
+			var stage_id := str(int(data.stage))
+			var golden: Array = data.collectibles.golden_nuts.get(stage_id,[])
+			if actor.reward_id not in golden and golden.size()<64:
+				golden.append(actor.reward_id)
+				data.collectibles.golden_nuts[stage_id] = golden
+				golden_found = true
 		elif actor.has_method("reset_block") and actor.used and actor.kind==2 and id not in previous.get("blocks",[]): earned += 1
 	var old_total := int(data.survival.get("nut_total",0))
 	var new_total := old_total+earned
 	data.survival.nut_total = new_total
+	data.survival.food_total = int(data.survival.get("food_total",0))+food_earned
 	var bonus := new_total/NUTS_PER_LIFE-old_total/NUTS_PER_LIFE
 	data.survival.lives = mini(99,int(data.survival.lives)+bonus+heart_lives)
 	if bonus>0:
 		level._say.call_deferred("100 nozes! Uma vida extra para a aventura.")
+	elif golden_found:
+		level._say.call_deferred("Noz Dourada encontrada! Um tesouro da floresta.")
 	_refresh_lives()
 	if snapshot.rescued: data.survival.pipo_unlocked = true
 	if level.completed: data.survival.replay = false
@@ -252,7 +273,7 @@ func mark_hint_seen(id: String) -> void:
 
 func _refresh_lives() -> void:
 	if is_instance_valid(lives_label): lives_label.text = "Vidas: %02d" % int(data.survival.lives)
-	if is_instance_valid(nut_progress): nut_progress.text = "Vida extra: %d / 100" % (int(data.survival.get("nut_total",0))%NUTS_PER_LIFE)
+	if is_instance_valid(nut_progress): nut_progress.text = "Vida: %d / 100  •  Comida: %d" % [int(data.survival.get("nut_total",0))%NUTS_PER_LIFE,int(data.survival.get("food_total",0))]
 
 func awaiting_return() -> bool:
 	return data.get("survival",{}).get("pending_return",false)
@@ -315,7 +336,7 @@ func _restart_stage() -> void:
 	_load_stage(int(data.stage))
 
 func survival_details() -> Dictionary:
-	var details := {"lives":data.survival.lives,"game_over":awaiting_return(),"return_stage":data.survival.return_stage,"pipo_unlocked":data.survival.pipo_unlocked}
+	var details := {"lives":data.survival.lives,"food_total":data.survival.get("food_total",0),"game_over":awaiting_return(),"return_stage":data.survival.return_stage,"pipo_unlocked":data.survival.pipo_unlocked}
 	details.map_open = map_is_open()
 	if map_is_open(): details.merge(world_map.details())
 	if is_instance_valid(map_button):

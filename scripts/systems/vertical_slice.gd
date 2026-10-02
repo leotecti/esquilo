@@ -71,7 +71,7 @@ func _skin_objects() -> void:
 		elif actor == heavy: kind = "heavy"
 		elif actor == checkpoint or actor.get_meta("checkpoint_marker",false): kind = "checkpoint"
 		elif actor == exit_marker: kind = "exit"
-		elif actor.has_method("reset_item"): kind = "nut"
+		elif actor.has_method("reset_item"): kind = actor.collectible_kind
 		elif actor.has_method("reset_block"): kind = "block"
 		elif actor is CharacterBody2D and actor.has_method("reset_enemy"): kind = "slug"
 		if not kind.is_empty():

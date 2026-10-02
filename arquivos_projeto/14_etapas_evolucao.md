@@ -581,18 +581,21 @@ Passos é o modelo de tamanho, com meta de 5–8 minutos de exploração, copa n
 metade e corações. Tamanho e tempo aprovados em 2026-10-02. Na versão 0.17.1,
 um coração coletado com saúde cheia concede uma vida; com saúde incompleta,
 recupera um coração. No limite de 99 vidas e saúde cheia, o item permanece.
-O restante da E09 continua no planejamento.
-[Fase modelo](../tests/primeiros_passos_modelo.md).
+**Implementada na versão 0.18.0:** Primeiros Passos possui 271 nozes, 39
+alimentos de três tipos, 14 blocos de recompensa e duas Nozes Douradas opcionais.
+O maior intervalo entre recompensas é de 540 unidades. Alimentos abastecem um
+contador permanente do vilarejo e não interferem na regra de 100 nozes por vida.
+[Execução e testes](../tests/evolucao_e09.md).
 
 Depois das áreas opcionais, tornar a exploração relevante.
 
-Implementar:
+Implementado:
 
-- alimentos;
-- coração;
-- vida extra;
-- Noz Dourada;
-- segredos.
+- [x] alimentos;
+- [x] coração;
+- [x] vida extra;
+- [x] Noz Dourada;
+- [x] segredos e infraestrutura persistente.
 
 Definir regras para recompensas.
 

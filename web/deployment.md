@@ -9,17 +9,15 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E08 — Áreas opcionais e exploração (0.17.2)**. Inclui
-a ampliação de Primeiros Passos, a copa no meio do percurso, corações e uma vida
-a cada 100 nozes, preservando o progresso no save V2. A revisão 0.17.1 usa uma
-única bandeira após a árvore, permite voltar pelo percurso e converte corações
-coletados com saúde cheia em vidas.
-[Alterações e roteiro da fase modelo](../tests/primeiros_passos_modelo.md).
+Versão atual: **Evolução E09 — Recompensas e coletáveis (0.18.0)**. Inclui
+271 nozes, 39 alimentos, 14 blocos de recompensa e duas Nozes Douradas em
+Primeiros Passos, preservando o save V2 e o conteúdo da E08.
+[Alterações e roteiro da E09](../tests/evolucao_e09.md).
 
-`builds/web/Tico-evolucao-E08-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-evolucao-E09-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e08` entre `/tico/` e os arquivos.
+Não coloque outra pasta `evolucao_e09` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

@@ -40,6 +40,7 @@ func valid(data: Variant) -> bool:
 		if not survival is Dictionary: return false
 		if not _integer(survival.get("lives"),1,99): return false
 		if survival.has("nut_total") and not _integer(survival.nut_total,0,100000): return false
+		if survival.has("food_total") and not _integer(survival.food_total,0,100000): return false
 		for key in ["pending_return","replay","pipo_unlocked"]:
 			if not survival.get(key) is bool: return false
 		if not _integer(survival.get("return_stage"),0,12) or int(survival.return_stage)%4!=0: return false
@@ -88,7 +89,7 @@ func migrate(source: Dictionary) -> Dictionary:
 	if result.get("save_version",1)==2: return result
 	result.save_version = 2
 	if not result.has("survival"):
-		result.survival = {"lives":3,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
+		result.survival = {"lives":3,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
 	# O acesso aos mundos posteriores também comprova o resgate no formato antigo.
 	result.survival.pipo_unlocked = result.survival.pipo_unlocked or result.unlocked>=3
 	for previous in result.levels.values():

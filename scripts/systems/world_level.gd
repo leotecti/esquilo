@@ -19,6 +19,10 @@ var optional_area: Node2D
 var main_right := 3800
 var route_checkpoint := 0
 var route_flags := {}
+var foods := 0
+var total_foods := 0
+const FOOD = preload("res://scenes/objects/food.tscn")
+const GOLDEN_NUT = preload("res://scenes/objects/golden_nut.tscn")
 
 func _ready() -> void:
 	save_enabled = false
@@ -133,10 +137,29 @@ func _nut(point: Vector2, healing := false) -> void:
 	var item = NUT.instantiate()
 	item.position = point
 	item.healing = healing
+	item.collectible_kind = "heart" if healing else "nut"
 	if is_instance_valid(campaign) and campaign.has_method("survival_details"): item.campaign = campaign
 	actors.add_child(item)
 	item.collected.connect(_on_collected)
 	if not healing: total_nuts += 1
+
+func _food(point: Vector2, kind: int, value := 1) -> void:
+	var item = FOOD.instantiate()
+	item.position = point
+	item.food_kind = kind
+	item.food_value = value
+	item.campaign = campaign
+	actors.add_child(item)
+	item.collected.connect(_on_collected)
+	total_foods += value
+
+func _golden_nut(point: Vector2, reward_id: String) -> void:
+	var item = GOLDEN_NUT.instantiate()
+	item.position = point
+	item.reward_id = reward_id
+	item.campaign = campaign
+	actors.add_child(item)
+	item.collected.connect(_on_collected)
 
 func _block(point: Vector2, kind: int, node_name: String) -> StaticBody2D:
 	var block = BLOCK.instantiate()
@@ -227,6 +250,22 @@ func _on_block(block: Node2D, reward: bool) -> void:
 		secret.reveal()
 		_say("Você encontrou uma noz escondida!")
 	_save_progress()
+
+func _on_collected(item: Node2D) -> void:
+	if item.collectible_kind=="food":
+		foods += item.food_value
+		_feedback(item.position,"+%d alimento%s" % [item.food_value,"s" if item.food_value>1 else ""])
+		sounds.play_notes([659,784,988],.06)
+		puff(item.position,Color("f0b96e"),8)
+		_save_progress()
+		return
+	if item.collectible_kind=="golden":
+		_feedback(item.position,"Noz Dourada!",Color("ffe39a"))
+		sounds.play_notes([784,988,1319],.09)
+		puff(item.position,Color("ffe08a"),14)
+		_save_progress()
+		return
+	super._on_collected(item)
 
 func _on_checkpoint(marker: Node2D) -> void:
 	var index := int(marker.get_meta("route_checkpoint",0))
@@ -362,14 +401,19 @@ func restore_world(data: Dictionary) -> void:
 		guardian.phase = "calm"
 		guardian.queue_redraw()
 	nuts = 0
+	foods = 0
+	var replaying: bool = is_instance_valid(campaign) and campaign.data.has("survival") and bool(campaign.data.survival.get("replay",false))
 	for actor in actors.get_children():
 		if not actor.has_meta("save_id"): continue
 		var id: String = actor.get_meta("save_id")
 		if actor.has_method("reset_item") and id in data.items:
+			if replaying and actor.collectible_kind=="food": continue
 			actor.taken = true
 			actor.hide()
-			if not actor.healing: nuts += 1
+			if actor.collectible_kind=="nut": nuts += 1
+			elif actor.collectible_kind=="food": foods += actor.food_value
 		elif actor.has_method("reset_block") and id in data.blocks and actor.kind>0:
+			if replaying and actor.kind==2 and str(actor.name).begins_with("SupplyBlock"): continue
 			actor.used = true
 			if actor.kind==1:
 				actor.hide()

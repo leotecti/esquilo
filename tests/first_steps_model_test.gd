@@ -4,7 +4,7 @@ func run() -> void:
 	root.size = Vector2i(1280,720)
 	root.content_scale_size = Vector2i(1280,720)
 	await start_phase(0)
-	check(level.total_nuts==224,"Modelo tem 198 nozes principais e 26 na copa")
+	check(level.total_nuts==271,"Modelo E09 tem 245 nozes principais e 26 na copa")
 	check(level.optional_area.ENTRY.x/level.main_right==.5,"Copa está no meio do percurso")
 	var flags := 0
 	for actor in level.actors.get_children():
@@ -15,7 +15,7 @@ func run() -> void:
 	level.tico.invulnerability_left = 10000
 	var pickups: Array = []
 	for actor in level.actors.get_children():
-		if actor.has_method("reset_item") and not actor.healing: pickups.append(actor)
+		if actor.has_method("reset_item") and actor.collectible_kind=="nut": pickups.append(actor)
 	var initial: int = campaign.data.survival.lives
 	for i in 200:
 		level.tico.reset_at(pickups[i].position+Vector2(0,25))
