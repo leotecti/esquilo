@@ -16,12 +16,20 @@ func _physics_process(delta: float) -> void:
 		modulate.a = maxf(0.0, 1.0 - _defeat_time)
 		queue_redraw()
 		return
-	if absf(position.x - origin.x) >= patrol_distance or is_on_wall():
-		direction = -1.0 if position.x > origin.x else 1.0
-	if is_on_floor() and not $FloorAhead.is_colliding():
+	if is_on_wall() and velocity.x==0:
+		direction = signf(get_wall_normal().x)
+	elif (position.x-origin.x)*direction>=patrol_distance:
 		direction *= -1.0
 	$FloorAhead.position.x = direction * 30.0
-	velocity = Vector2(direction * speed, minf(velocity.y + 1200.0 * delta, 900.0))
+	$FloorAhead.force_raycast_update()
+	var can_walk := true
+	if is_on_floor() and not $FloorAhead.is_colliding():
+		# Só vira se houver chão do outro lado; evita oscilar em espaços estreitos.
+		$FloorAhead.position.x = -direction * 30.0
+		$FloorAhead.force_raycast_update()
+		if $FloorAhead.is_colliding(): direction *= -1.0
+		else: can_walk = false
+	velocity = Vector2(direction * speed if can_walk else 0.0, minf(velocity.y + 1200.0 * delta, 900.0))
 	move_and_slide()
 	for body in $Contact.get_overlapping_bodies():
 		if not body.is_in_group("player") or not body.controls_enabled:

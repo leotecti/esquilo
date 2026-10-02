@@ -4,6 +4,7 @@ func _init() -> void:
 	current_version = 2
 	max_stage = 15
 	global_companion = true
+	item_limit = 512
 	path = "user://campaign.json"
 	web_key = "tico.campaign.v1"
 
@@ -38,6 +39,7 @@ func valid(data: Variant) -> bool:
 		var survival: Variant = data.survival
 		if not survival is Dictionary: return false
 		if not _integer(survival.get("lives"),1,99): return false
+		if survival.has("nut_total") and not _integer(survival.nut_total,0,100000): return false
 		for key in ["pending_return","replay","pipo_unlocked"]:
 			if not survival.get(key) is bool: return false
 		if not _integer(survival.get("return_stage"),0,12) or int(survival.return_stage)%4!=0: return false
@@ -49,6 +51,9 @@ func valid(data: Variant) -> bool:
 			seen.append(int(id))
 	for id in data.levels:
 		var index := int(id)
+		if data.levels[id].has("route_checkpoint"):
+			if index!=0 or not _integer(data.levels[id].route_checkpoint,0,4): return false
+			if data.levels[id].route_checkpoint>0 and not data.levels[id].checkpoint: return false
 		if data.levels[id].has("optional_area"):
 			var area: Variant = data.levels[id].optional_area
 			if index!=0 or not area is Dictionary or area.size()!=2: return false

@@ -242,6 +242,11 @@ O jogador possui saúde, pode morrer, perder vidas e chegar ao Game Over.
 # 7. EVOLUÇÃO E03 — CHECKPOINTS E REINÍCIO
 
 **Implementada em 2026-09-30 (0.11.0); playtest do usuário pendente.**
+Padrão aprovado em 2026-10-02: cada fase deve ter **uma única bandeira**,
+preferencialmente após o acesso à área secundária. A copa não acrescenta outra
+bandeira. Primeiros Passos aplica esse padrão na versão 0.17.1, mantendo o tamanho
+e a duração aprovados e permitindo regressar pelo percurso com os dois personagens.
+
 As bandeiras existentes foram mantidas e verificadas nas 16 fases. O menu de
 pausa oferece **Reiniciar fase**, com confirmação, sem gastar vidas. A tentativa
 volta ao início e desativa a bandeira; conquistas e progresso coletado permanecem.
@@ -523,7 +528,10 @@ Este é o primeiro grande marco técnico.
 
 **Status: implementada na versão 0.16.0; conferência no celular pendente.**
 Primeiros Passos recebeu a Copa dos Segredos: acesso por galhos, transição,
-desafio de salto, quatro nozes, bandeira local e portais de retorno.
+desafio de salto, bandeira local e portais de retorno. Na versão 0.16.2,
+o usuário aprovou ampliar esta fase e a copa: 42 nozes ao todo, vida adicional
+e novas lesmas, preservando a árvore e o acesso discreto. Os demais mundos
+aguardam a validação deste ritmo de exploração.
 O save V2 preserva área, itens e bandeiras independentes.
 [Execução e testes](../tests/evolucao_e08.md).
 
@@ -566,6 +574,15 @@ Uma fase possui caminho principal e exploração opcional.
 ---
 
 # 14. EVOLUÇÃO E09 — RECOMPENSAS E COLETÁVEIS
+
+**Antecipação na versão 0.17.0, solicitada pelo usuário:** uma vida a cada 100
+novas nozes, com contador persistente e sem duplicação por replay. Primeiros
+Passos é o modelo de tamanho, com meta de 5–8 minutos de exploração, copa na
+metade e corações. Tamanho e tempo aprovados em 2026-10-02. Na versão 0.17.1,
+um coração coletado com saúde cheia concede uma vida; com saúde incompleta,
+recupera um coração. No limite de 99 vidas e saúde cheia, o item permanece.
+O restante da E09 continua no planejamento.
+[Fase modelo](../tests/primeiros_passos_modelo.md).
 
 Depois das áreas opcionais, tornar a exploração relevante.
 

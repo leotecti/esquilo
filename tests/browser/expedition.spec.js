@@ -24,9 +24,10 @@ async function startGame(page,enter=true) {
 async function ground(page){await expect.poll(async()=>(await snapshot(page)).grounded,{timeout:10000}).toBe(true);}
 async function walk(page,x){await page.keyboard.down('ArrowRight');await expect.poll(async()=>{const s=await snapshot(page);return s.x>=x||s.completed;},{timeout:18000,intervals:[30]}).toBe(true);await page.keyboard.up('ArrowRight');}
 async function glide(page,x) {
-  await page.keyboard.down('ArrowRight');let held=0;const deadline=Date.now()+25000;
+  const right=(await snapshot(page)).x<x,direction=right?'ArrowRight':'ArrowLeft';
+  await page.keyboard.down(direction);let held=0;const deadline=Date.now()+60000;
   while(Date.now()<deadline) {
-    const s=await snapshot(page);if(s.x>=x||s.completed)break;
+    const s=await snapshot(page);if((right?s.x>=x:s.x<=x)||s.completed)break;
     if(s.pose==='glide'&&!page.ticoGlideCaptured){
       await page.screenshot({path:'builds/web/e04-planagem.png'});page.ticoGlideCaptured=true;
     }
@@ -34,8 +35,9 @@ async function glide(page,x) {
     else if(!held&&s.grounded){await page.keyboard.down('Space');held=Date.now();}
     await page.waitForTimeout(30);
   }
-  await page.keyboard.up('ArrowRight');await page.keyboard.up('Space');await ground(page);
-  expect((await snapshot(page)).x).toBeGreaterThan(x-10);
+  await page.keyboard.up(direction);await page.keyboard.up('Space');await ground(page);
+  if(right) expect((await snapshot(page)).x).toBeGreaterThan(x-10);
+  else expect((await snapshot(page)).x).toBeLessThan(x+10);
 }
 async function clickRect(page,name,touch=false){const s=await snapshot(page),r=s[name],v=page.viewportSize();const x=(r[0]+r[2]/2)*v.width/s.width,y=(r[1]+r[3]/2)*v.height/s.height;if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);}
 function errorsFor(page){const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;}
@@ -51,25 +53,35 @@ async function mapWorld(page,target,touch=false){
 }
 
 test('E08: subida à copa, recompensa, portal e reabertura offline',async({page,context})=>{
-  test.setTimeout(150000);const errors=errorsFor(page);await seed(page,fixture(0));await boot(page);
+  test.setTimeout(300000);const errors=errorsFor(page);const initial=fixture(0);Object.assign(initial.levels[0],{checkpoint:true,route_checkpoint:2});await seed(page,initial);await boot(page);
   async function jumpTo(x){
     const direction=(await snapshot(page)).x<x?'ArrowRight':'ArrowLeft';
-    await page.keyboard.down('Space');await page.waitForTimeout(130);await page.keyboard.down(direction);
+    await page.keyboard.down('Space');
+    await expect.poll(async()=>(await snapshot(page)).grounded,{timeout:8000,intervals:[30]}).toBe(false);
+    await page.waitForTimeout(130);await page.keyboard.down(direction);
     await expect.poll(async()=>direction==='ArrowRight'?(await snapshot(page)).x>=x:(await snapshot(page)).x<=x,{timeout:8000,intervals:[30]}).toBe(true);
     await page.keyboard.up(direction);await page.keyboard.up('Space');await ground(page);
   }
-  await walk(page,565);await jumpTo(800);await jumpTo(1160);
-  await jumpTo(1325);await jumpTo(1510);await jumpTo(1340);
+  await glide(page,22700);await glide(page,21420);
+  for(const x of [21290,21170,21020,21170,21000]) await jumpTo(x);
   await page.screenshot({path:'builds/web/e08-arvore.png'});
   await page.keyboard.press('e');
   await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(true);
   await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
-  await walk(page,6300);await jumpTo(6540);
-  await expect.poll(async()=>(await snapshot(page)).optional_checkpoint).toBe(true);
-  await jumpTo(6810);await jumpTo(7060);await jumpTo(7320);
+  await walk(page,60400);await jumpTo(60640);
+  expect((await snapshot(page)).optional_checkpoint).toBe(false);
+  await jumpTo(60910);await jumpTo(61160);await jumpTo(61420);
   await page.screenshot({path:'builds/web/e08-copa.png'});
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
-  expect(saved.levels['0'].items.filter(id=>Number(id.split(':')[0])>5900).length).toBe(4);
+  expect(saved.levels['0'].items).toEqual(expect.arrayContaining(['6500:615','6810:515','7060:415','7290:315']));
+  const livesBefore=(await snapshot(page)).lives;
+  await jumpTo(62000);await jumpTo(62360);await jumpTo(62680);await jumpTo(63020);await jumpTo(63340);
+  if(!await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).story.events.includes('copa_life'))) await page.keyboard.down('ArrowLeft');
+  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).story.events.includes('copa_life')),{intervals:[30]}).toBe(true);
+  await page.keyboard.up('ArrowLeft');
+  expect((await snapshot(page)).lives).toBeGreaterThanOrEqual(livesBefore+1);
+  await walk(page,63650);await ground(page);
+  await page.screenshot({path:'builds/web/e08-copa-ampliada.png'});
   await page.keyboard.press('e');
   await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
   await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
@@ -79,12 +91,23 @@ test('E08: subida à copa, recompensa, portal e reabertura offline',async({page,
   await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
   await context.setOffline(true);await page.reload();await startGame(page);
   expect((await snapshot(page)).optional_active).toBe(true);
-  expect((await snapshot(page)).optional_checkpoint).toBe(true);
+  expect((await snapshot(page)).optional_checkpoint).toBe(false);
   await page.keyboard.down('ArrowLeft');
-  await expect.poll(async()=>(await snapshot(page)).x<6130,{timeout:8000,intervals:[30]}).toBe(true);
+  await expect.poll(async()=>(await snapshot(page)).x<60230,{timeout:8000,intervals:[30]}).toBe(true);
   await page.keyboard.up('ArrowLeft');await ground(page);await page.keyboard.press('e');
   await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
   expect((await snapshot(page)).campaign_stage).toBe(0);expect(errors).toEqual([]);
+});
+
+test('E08: trecho principal ampliado termina na nova chegada',async({page})=>{
+  test.setTimeout(300000);const data=fixture(0);data.levels['0'].checkpoint=true;data.levels['0'].route_checkpoint=4;
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  for(let x=25500;x<41550;x+=1400) await glide(page,x);
+  await glide(page,41550);await walk(page,41800);
+  await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
+  expect((await snapshot(page)).x).toBeGreaterThan(41600);
+  await page.screenshot({path:'builds/web/e08-trilha-ampliada.png'});
+  expect(errors).toEqual([]);
 });
 
 test('E08: Pipo usa portal por toque e mantém área offline',async({browser})=>{
@@ -96,7 +119,7 @@ test('E08: Pipo usa portal por toque e mantém área offline',async({browser})=>
   const cdp=await context.newCDPSession(page);
   async function touch(name){const s=await snapshot(page);await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:(s.buttons[name][0]+64)*844/s.width,y:(s.buttons[name][1]+64)*390/s.height}]});}
   async function releaseTouch(){await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
-  await touch('Left');await expect.poll(async()=>(await snapshot(page)).x<6130,{timeout:8000,intervals:[30]}).toBe(true);await releaseTouch();await ground(page);
+  await touch('Left');await expect.poll(async()=>(await snapshot(page)).x<60230,{timeout:8000,intervals:[30]}).toBe(true);await releaseTouch();await ground(page);
   await touch('Action');await page.waitForTimeout(80);await releaseTouch();
   await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
   await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);await ground(page);
@@ -217,7 +240,8 @@ test('E05: migra V1, coleta e recupera após fechar a página offline',async({pa
   const reopened=await context.newPage();const reopenedErrors=errorsFor(reopened);await boot(reopened);
   const restored=await reopened.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')));
   expect(restored.levels['0'].items).toEqual(saved.levels['0'].items);
-  expect(restored.tutorials).toEqual(saved.tutorials);
+  // Reabrir pode apresentar uma dica nova; dicas já vistas devem continuar vistas.
+  for(const [id,seen] of Object.entries(saved.tutorials)) if(seen) expect(restored.tutorials[id]).toBe(true);
   expect(restored.settings).toEqual(saved.settings);
   expect((await snapshot(reopened)).nuts).toBeGreaterThan(0);
   expect(errors.concat(reopenedErrors)).toEqual([]);

@@ -2,6 +2,8 @@ extends Area2D
 signal collected(item: Node2D)
 @export var healing: bool = false
 var taken: bool = false
+var campaign: Node
+var life_reward := false
 var _time: float = 0.0
 
 func _ready() -> void:
@@ -41,11 +43,13 @@ func _collect(body: Node2D) -> void:
 	if not area_rect.intersects(body_rect):
 		return
 	if healing and not body.recover():
-		return
+		if body.health!=body.max_health or not is_instance_valid(campaign) or campaign.data.survival.lives>=99: return
+		life_reward = true
 	taken = true
 	hide()
 	collected.emit(self)
 
 func reset_item() -> void:
 	taken = false
+	life_reward = false
 	show()

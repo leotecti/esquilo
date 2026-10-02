@@ -9,9 +9,12 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E08 — Áreas opcionais e exploração (0.16.0)**. Inclui
-a Copa dos Segredos em Primeiros Passos e preserva o progresso no save V2.
-[Alterações e roteiro](../tests/evolucao_e08.md).
+Versão atual: **Evolução E08 — Áreas opcionais e exploração (0.17.2)**. Inclui
+a ampliação de Primeiros Passos, a copa no meio do percurso, corações e uma vida
+a cada 100 nozes, preservando o progresso no save V2. A revisão 0.17.1 usa uma
+única bandeira após a árvore, permite voltar pelo percurso e converte corações
+coletados com saúde cheia em vidas.
+[Alterações e roteiro da fase modelo](../tests/primeiros_passos_modelo.md).
 
 `builds/web/Tico-evolucao-E08-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,

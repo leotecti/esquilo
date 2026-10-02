@@ -16,11 +16,15 @@ var phase_restart_button: Button
 var phase_restart_dialog: ConfirmationDialog
 var _phase_was_paused := false
 var optional_area: Node2D
+var main_right := 3800
+var route_checkpoint := 0
+var route_flags := {}
 
 func _ready() -> void:
 	save_enabled = false
 	rescued = world_stage == 3
 	super._ready()
+	$FollowCamera.limit_right = main_right
 	next_button = result_panel.get_child(0).get_child(1)
 	next_button.pressed.disconnect(restart)
 	next_button.pressed.connect(_continue_world)
@@ -68,8 +72,9 @@ func _build_gameplay() -> void:
 		add_child(optional_area)
 		optional_area.build()
 	for actor in actors.get_children():
+		if actor.has_method("reset_item") and is_instance_valid(campaign) and campaign.has_method("survival_details"): actor.campaign = campaign
 		if actor.has_method("reset_item") or actor.has_method("reset_block"):
-			actor.set_meta("save_id","%d:%d" % [actor.position.x,actor.position.y])
+			if not actor.has_meta("save_id"): actor.set_meta("save_id","%d:%d" % [actor.position.x,actor.position.y])
 
 func _build_solo_or_arena() -> void:
 	if world_stage==0:
@@ -78,6 +83,8 @@ func _build_solo_or_arena() -> void:
 		_slug(Vector2(1900,760),65)
 		_slug(Vector2(2460,760),55)
 		_markers(Vector2(2230,760),Vector2(3570,550))
+		if is_instance_valid(campaign) and campaign.has_method("progress_summary"):
+			preload("res://scripts/systems/first_steps_layout.gd").build(self)
 		_sign(Vector2(330,580),"Siga as nozes")
 		_sign(Vector2(560,535),"Pule • Segure para planar")
 		_sign(Vector2(1760,570),"Pule sobre a lesma")
@@ -126,6 +133,7 @@ func _nut(point: Vector2, healing := false) -> void:
 	var item = NUT.instantiate()
 	item.position = point
 	item.healing = healing
+	if is_instance_valid(campaign) and campaign.has_method("survival_details"): item.campaign = campaign
 	actors.add_child(item)
 	item.collected.connect(_on_collected)
 	if not healing: total_nuts += 1
@@ -219,6 +227,12 @@ func _on_block(block: Node2D, reward: bool) -> void:
 		secret.reveal()
 		_say("Você encontrou uma noz escondida!")
 	_save_progress()
+
+func _on_checkpoint(marker: Node2D) -> void:
+	var index := int(marker.get_meta("route_checkpoint",0))
+	if index<route_checkpoint: return
+	route_checkpoint = index
+	super._on_checkpoint(marker)
 
 func _release_pipo() -> void:
 	rescued = true
@@ -318,6 +332,7 @@ func world_snapshot() -> Dictionary:
 		"gate":gate_open,"heavy":is_instance_valid(heavy) and heavy.destroyed,"secret":is_instance_valid(secret) and secret.revealed,
 		"boss_done":is_instance_valid(guardian) and guardian.health==0}
 	if is_instance_valid(optional_area): snapshot.optional_area = optional_area.snapshot()
+	if not route_flags.is_empty(): snapshot.route_checkpoint = route_checkpoint if checkpoint_active else 0
 	return snapshot
 
 func restore_world(data: Dictionary) -> void:
@@ -326,6 +341,11 @@ func restore_world(data: Dictionary) -> void:
 	checkpoint.activated = checkpoint_active
 	checkpoint.queue_redraw()
 	checkpoint_position = checkpoint.position+Vector2(0,-5) if checkpoint_active else $PlayerSpawn.position
+	route_checkpoint = int(data.get("route_checkpoint",0)) if checkpoint_active and not route_flags.is_empty() else 0
+	if route_flags.has(route_checkpoint): checkpoint_position = route_flags[route_checkpoint].position+Vector2(0,-5)
+	for index in route_flags:
+		route_flags[index].activated = index<=route_checkpoint
+		route_flags[index].queue_redraw()
 	if world_stage==2:
 		if rescued: _release_pipo()
 		gate_open = data.gate

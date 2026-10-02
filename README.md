@@ -8,9 +8,20 @@ Para configurar outra máquina após clonar o repositório, consulte o
 
 ## Estado atual
 
-**Evolução E08 (0.16.0):** Primeiros Passos ganhou a Copa dos Segredos, uma área
-opcional acessível pelos galhos da árvore, com quatro nozes, bandeira local e
+**Primeiros Passos — modelo 0.17.2:** tamanho e duração aprovados em playtest,
+com 224 nozes, vida a cada 100 novas coletas, copa na metade da fase e uma única
+bandeira após a árvore. O caminho permite voltar e acessar a árvore pelos dois lados.
+Corações coletados com saúde cheia concedem uma vida extra.
+O solo agora preenche plataformas altas com textura contínua e usa bordas
+erodidas nas transições, eliminando blocos escuros e cantos retos.
+[Regras, compatibilidade e playtest](tests/primeiros_passos_modelo.md).
+
+**Evolução E08 (0.16.2):** Primeiros Passos ganhou um trecho final e a Copa dos Segredos,
+uma área opcional ampliada com 26 nozes, uma vida extra, três lesmas, bandeira local e
 portais de retorno. [Entrega e validação](tests/evolucao_e08.md).
+
+A revisão visual integra entradas à madeira e à folhagem, usa galhos finos
+com musgo e mostra a indicação de ação apenas quando o personagem se aproxima.
 
 **Correção 0.15.1:** Tico e Pipo caminham pelo mapa com as setas direcionais,
 incluindo a passagem entre mundos desbloqueados. Enter confirma a fase.

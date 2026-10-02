@@ -75,7 +75,8 @@ func run() -> void:
 		if is_instance_valid(enemy): check(not enemy.defeated,"Inimigo comum reaparece: %d" % index)
 		if is_instance_valid(level.guardian): check(level.guardian.health==3 and level.guardian.phase=="waiting","Chefe ainda não vencido reinicia o encontro: %d" % index)
 		if character==level.pipo: check(character.ability=="ready" and not character.pushing,"Pipo volta sem investida nem empurrão residual")
-		if index>=4: check(level.safe_spot==level.checkpoint_position,"Margem segura acompanha a bandeira: %d" % index)
+		# O contato com o chão pode ajustar alguns pixels após o respawn.
+		if index>=4: check(level.safe_spot.distance_to(level.checkpoint_position)<8,"Margem segura acompanha a bandeira: %d" % index)
 		check(campaign.store.read_save().levels[str(index)].checkpoint,"Bandeira persiste no save: %d" % index)
 		await close_world()
 	# Reinício manual e cancelamento: checkpoint, escolhas e vida extra são preservados conforme a regra.

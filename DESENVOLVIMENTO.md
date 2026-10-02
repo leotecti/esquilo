@@ -2,7 +2,7 @@
 
 Este guia cobre o ambiente Windows com PowerShell, usado neste projeto.
 Execute os comandos na raiz do repositório, onde está `project.godot`.
-Os caminhos de saída abaixo correspondem à **Evolução E08, versão 0.16.0**.
+Os caminhos de saída abaixo correspondem à **Evolução E08, versão 0.17.2**.
 
 ## 1. Preparar o ambiente
 
@@ -273,7 +273,7 @@ Ao criar uma nova versão, mantenha coerentes:
 Para atualizar a versão npm sem criar commit ou tag, por exemplo:
 
 ```powershell
-npm.cmd version 0.16.1 --no-git-tag-version
+npm.cmd version 0.17.2 --no-git-tag-version
 ```
 
 Execute esse comando apenas quando estiver preparando uma nova versão. O cache

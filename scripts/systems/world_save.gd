@@ -1,6 +1,7 @@
 extends "res://scripts/systems/save_manager.gd"
 var max_stage := 3
 var global_companion := false
+var item_limit := 64
 ## Slot separado: mantém intacta a aventura do protótipo.
 func _init() -> void:
 	path = "user://world1.json"
@@ -48,7 +49,7 @@ func valid(data: Variant) -> bool:
 			for key in state.mechanisms:
 				if not key is String or key.length()>64 or not state.mechanisms[key] is bool: return false
 		for key in ["items","blocks"]:
-			if not state.get(key) is Array or state[key].size() > 64: return false
+			if not state.get(key) is Array or state[key].size() > item_limit: return false
 			for item in state[key]:
 				if not item is String or item.length() > 80: return false
 	return true

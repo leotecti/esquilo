@@ -187,9 +187,9 @@ func _feedback(point: Vector2, text: String, color: Color = Color("fff3d9")) -> 
 
 func _on_collected(item: Node2D) -> void:
 	if item.healing:
-		_feedback(item.position,"+1 coração")
+		_feedback(item.position,"+1 vida" if item.life_reward else "+1 coração")
 		sounds.play_notes([523,659,784])
-		_say("Um coração recuperado!")
+		_say("Saúde cheia! Uma vida extra." if item.life_reward else "Um coração recuperado!")
 	else:
 		nuts += 1
 		_feedback(item.position,"+1 noz")

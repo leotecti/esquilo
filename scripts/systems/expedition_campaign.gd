@@ -4,6 +4,8 @@ var legacy_path := "user://world1.json"
 @export var extra_life_stages: Array[int] = [0,4,8,12]
 const WORLD_NAMES = ["Bosque das Folhas","Rio das Pedras","Montanha das Corujas","Vila dos Castores"]
 var lives_label: Label
+var nut_progress: Label
+const NUTS_PER_LIFE := 100
 var return_layer: CanvasLayer
 var return_button: Button
 @export var start_on_map := true
@@ -183,6 +185,23 @@ func _restore_level(state: Dictionary) -> void:
 
 func _capture_level() -> Dictionary:
 	var snapshot: Dictionary = level.world_snapshot()
+	var previous: Dictionary = data.levels.get(str(data.stage),{})
+	var earned := 0
+	var heart_lives := 0
+	for actor in level.actors.get_children():
+		if not actor.has_meta("save_id"): continue
+		var id: String = actor.get_meta("save_id")
+		if actor.has_method("reset_item") and actor.taken and actor.healing and actor.life_reward and id not in previous.get("items",[]): heart_lives += 1
+		if actor.has_method("reset_item") and actor.taken and not actor.healing and id not in previous.get("items",[]): earned += 1
+		elif actor.has_method("reset_block") and actor.used and actor.kind==2 and id not in previous.get("blocks",[]): earned += 1
+	var old_total := int(data.survival.get("nut_total",0))
+	var new_total := old_total+earned
+	data.survival.nut_total = new_total
+	var bonus := new_total/NUTS_PER_LIFE-old_total/NUTS_PER_LIFE
+	data.survival.lives = mini(99,int(data.survival.lives)+bonus+heart_lives)
+	if bonus>0:
+		level._say.call_deferred("100 nozes! Uma vida extra para a aventura.")
+	_refresh_lives()
 	if snapshot.rescued: data.survival.pipo_unlocked = true
 	if level.completed: data.survival.replay = false
 	# Conclusão permanente e tentativa atual são estados diferentes.
@@ -197,6 +216,11 @@ func _load_stage(index: int) -> void:
 	lives_label.add_theme_font_size_override("font_size",26)
 	lives_label.add_theme_color_override("font_color",Color("244b37"))
 	level.hearts.add_child(lives_label)
+	nut_progress = Label.new()
+	nut_progress.position = Vector2(0,30)
+	nut_progress.add_theme_font_size_override("font_size",15)
+	nut_progress.add_theme_color_override("font_color",Color("355b43"))
+	level.counter.add_child(nut_progress)
 	level.save_label.position.x = 515
 	_refresh_lives()
 	if index in extra_life_stages and index not in data.survival.claimed:
@@ -228,6 +252,7 @@ func mark_hint_seen(id: String) -> void:
 
 func _refresh_lives() -> void:
 	if is_instance_valid(lives_label): lives_label.text = "Vidas: %02d" % int(data.survival.lives)
+	if is_instance_valid(nut_progress): nut_progress.text = "Vida extra: %d / 100" % (int(data.survival.get("nut_total",0))%NUTS_PER_LIFE)
 
 func awaiting_return() -> bool:
 	return data.get("survival",{}).get("pending_return",false)
@@ -245,9 +270,14 @@ func lose_life() -> void:
 	_refresh_lives()
 	save_progress()
 
-func claim_life(stage_id: int) -> bool:
-	if awaiting_return() or stage_id!=int(data.stage) or stage_id not in extra_life_stages or stage_id in data.survival.claimed or data.survival.lives>=99: return false
-	data.survival.claimed.append(stage_id)
+func claim_life(stage_id: int, reward_id := "") -> bool:
+	if awaiting_return() or stage_id!=int(data.stage) or data.survival.lives>=99: return false
+	if reward_id.is_empty():
+		if stage_id not in extra_life_stages or stage_id in data.survival.claimed: return false
+		data.survival.claimed.append(stage_id)
+	else:
+		if stage_id!=0 or reward_id!="copa_life" or reward_id in data.story.events or data.story.events.size()>=200: return false
+		data.story.events.append(reward_id)
 	data.survival.lives += 1
 	_refresh_lives()
 	save_progress()

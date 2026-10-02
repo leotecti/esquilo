@@ -2,6 +2,7 @@ extends Area2D
 var campaign: Node
 var stage_id := 0
 var taken := false
+var reward_id := ""
 
 func _ready() -> void:
 	set_meta("extra_life",true)
@@ -39,7 +40,7 @@ func _draw() -> void:
 
 func _collect(body: Node2D) -> void:
 	if taken or body!=campaign.level.tico or body.health<=0 or not body.controls_enabled: return
-	if campaign.claim_life(stage_id):
+	if campaign.claim_life(stage_id,reward_id):
 		taken = true
 		hide()
 		set_deferred("monitoring",false)

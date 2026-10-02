@@ -1,14 +1,30 @@
 # Status do projeto
 
-**Data:** 2026-10-01
-**Etapa atual:** evolução E08 — Copa dos Segredos implementada na versão 0.16.0.
+**Data:** 2026-10-02
+**Etapa atual:** Primeiros Passos como fase modelo, versão 0.17.2.
 
-**Próximo trabalho previsto:** conferir a área opcional no celular antes da E09 — recompensas e coletáveis. Mundo 5 continua planejado no roadmap original.
+**Próximo trabalho previsto:** validar os ajustes de retorno, bandeira única, lesmas e corações no celular. O tamanho e a duração da fase modelo foram aprovados. A regra de vida a cada 100 nozes da E09 foi antecipada a pedido do usuário.
 
-## Evolução E08 — Entrega atual
+## Fase modelo — Entrega atual
+
+- Percurso principal de 42.000 unidades, com entrada da copa na metade.
+- 198 nozes principais e 26 opcionais; contador de vida extra a cada 100 novas coletas.
+- Uma única bandeira após a árvore; quatro corações na trilha e três na copa.
+- Tamanho e duração aprovados pelo usuário. Retorno e acesso à árvore pelos dois lados revisados.
+- Saúde cheia: coletar um coração concede uma vida, até o limite de 99.
+- Solo redesenhado: textura contínua nas plataformas altas, laterais erodidas
+  e transições sem áreas escuras retangulares.
+- Saves V2 preservados, incluindo IDs antigos dos itens da copa deslocada.
+- Recompensas não se repetem ao morrer, salvar novamente ou rejogar.
+
+[Entrega e playtest](../tests/primeiros_passos_modelo.md). Sem commit ou publicação automática.
+
+## Evolução E08 — Revisão anterior
 
 - Área opcional em Primeiros Passos, acessível subindo os galhos da árvore.
-- Quatro nozes, bandeira local, transição e dois portais de retorno.
+- Copa ampliada para 4.000 unidades, com 26 nozes, uma vida extra, três lesmas,
+  bandeira local e três portais de retorno.
+- Caminho principal ampliado para 5.200 unidades, com 16 nozes e nova chegada.
 - Bandeira principal preservada; morte, Game Over e reinício integrados.
 - Save V2 compatível com campanhas anteriores e reabertura offline na copa.
 - Arte e mecânicas existentes reaproveitadas; Pipo depende do resgate.
