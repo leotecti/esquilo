@@ -40,8 +40,11 @@ A regra vale para novas coletas em toda a campanha, incluindo nozes de blocos e
 segredos. O contador continua entre fases, mortes e reaberturas; o HUD mostra
 o progresso até a próxima vida. `NUTS_PER_LIFE`, na campanha, define o limite de 100.
 
-Cada item entra no contador uma vez. Saves, replay e revisitas não repetem o
-crédito dos itens já recolhidos. A vida especial da copa continua independente.
+Cada item entra no contador uma vez por tentativa: morrer, salvar novamente ou
+reabrir durante a tentativa não duplica créditos. Ao iniciar pelo mapa uma nova
+tentativa de uma fase concluída, recompensas comuns podem ser recolhidas de novo.
+Nozes Douradas mantêm o registro permanente; corações seguem a regra de cura ou
+vida conforme a saúde.
 O limite de 99 vidas permanece; atingir um marco nesse limite não acumula uma
 vida para receber depois. Nova aventura reinicia o contador.
 
@@ -113,3 +116,6 @@ Pacotes: `builds/web/Tico-evolucao-E08-web.zip` e
 
 Este documento registra a fase modelo até a revisão visual 0.17.2. A distribuição
 atual está em [Evolução E09](evolucao_e09.md), com novos alimentos e recompensas.
+O padrão atual para reestruturar outras fases está em
+[15_estrutura_fase_modelo.md](../arquivos_projeto/15_estrutura_fase_modelo.md).
+Atualize-o junto com qualquer mudança aprovada na estrutura de Primeiros Passos.

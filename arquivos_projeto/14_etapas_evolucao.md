@@ -585,6 +585,14 @@ recupera um coração. No limite de 99 vidas e saúde cheia, o item permanece.
 alimentos de três tipos, 14 blocos de recompensa e duas Nozes Douradas opcionais.
 O maior intervalo entre recompensas é de 540 unidades. Alimentos abastecem um
 contador permanente do vilarejo e não interferem na regra de 100 nozes por vida.
+Após playtest, a cenoura recebeu arte refinada e a depressão sob a árvore foi
+coberta por uma plataforma contínua. Ao escolher **Jogar novamente** para
+Primeiros Passos no mapa, nozes, alimentos e blocos de provisão reaparecem e
+podem dar vidas e provisões novamente. Corações consumidos e Nozes Douradas
+seguem suas regras de vida e registro permanente; revisitar não altera a regra
+de reinício ou Game Over. O padrão estrutural da fase está em
+[15_estrutura_fase_modelo.md](15_estrutura_fase_modelo.md) e deve ser atualizado
+junto com qualquer mudança aprovada na estrutura modelo.
 [Execução e testes](../tests/evolucao_e09.md).
 
 Depois das áreas opcionais, tornar a exploração relevante.

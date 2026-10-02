@@ -16,6 +16,7 @@ Corações coletados com saúde cheia concedem uma vida extra.
 O solo agora preenche plataformas altas com textura contínua e usa bordas
 erodidas nas transições, eliminando blocos escuros e cantos retos.
 [Entrega, regras e playtest da E09](tests/evolucao_e09.md).
+[Padrão estrutural para reestruturar as outras fases](arquivos_projeto/15_estrutura_fase_modelo.md).
 
 **Evolução E08 (0.16.2):** Primeiros Passos ganhou um trecho final e a Copa dos Segredos,
 uma área opcional ampliada com 26 nozes, uma vida extra, três lesmas, bandeira local e
@@ -150,7 +151,9 @@ Ao reabrir, a aventura continua automaticamente no início ou na bandeira ativad
 com três corações. Nozes, blocos usados, pedra, passagem, parede, segredo e personagem
 ficam salvos. Uma fase concluída reabre no resultado, exceto quando uma tentativa
 de replay está em andamento. Inimigos comuns reaparecem; chefes já vencidos
-permanecem calmos. Corações consumidos e nozes coletadas não reaparecem.
+permanecem calmos. Corações consumidos não reaparecem. Em Primeiros Passos,
+**Jogar novamente** pelo mapa repõe nozes, alimentos e blocos de provisão para
+permitir novas vidas e provisões; Nozes Douradas e corações continuam únicos.
 O indicador no menu de pausa informa se foi possível salvar.
 
 No Web/PWA, o progresso pertence ao navegador e à origem do site (`localStorage`).

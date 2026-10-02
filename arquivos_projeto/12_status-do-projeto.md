@@ -16,9 +16,11 @@ os alimentos, os blocos e a persistência offline antes de aplicar o padrão às
 - Solo redesenhado: textura contínua nas plataformas altas, laterais erodidas
   e transições sem áreas escuras retangulares.
 - Saves V2 preservados, incluindo IDs antigos dos itens da copa deslocada.
-- Recompensas não se repetem ao morrer, salvar novamente ou rejogar.
+- Recompensas não se repetem ao morrer ou salvar novamente. Em uma nova tentativa
+  de fase concluída pelo mapa, nozes, alimentos e blocos de provisão podem ser recolhidos de novo.
 
 [Entrega e playtest](../tests/primeiros_passos_modelo.md). Sem commit ou publicação automática.
+[Padrão a aplicar nas demais fases](15_estrutura_fase_modelo.md).
 
 ## Evolução E09 — Entrega atual
 
@@ -28,6 +30,10 @@ os alimentos, os blocos e a persistência offline antes de aplicar o padrão às
 - Intervalo máximo de 540 unidades entre recompensas na fase ainda não coletada.
 - Animações dos coletáveis atualizadas apenas perto da câmera.
 - Saves V2 anteriores recebem contador de alimentos sem perder progresso.
+- Ao rejogar Primeiros Passos pelo mapa, nozes, alimentos e blocos de provisão reaparecem e podem ser coletados para ganhar vidas e provisões novamente.
+- Corações voltam na nova tentativa e curam ou concedem vida conforme a saúde; Nozes Douradas não duplicam o tesouro registrado.
+- Entrada da árvore protegida por uma plataforma contínua; Tico e Pipo conseguem seguir nos dois sentidos.
+- Cenoura redesenhada com corpo, contorno, folhas e detalhes de luz.
 
 [Testes e roteiro da E09](../tests/evolucao_e09.md).
 

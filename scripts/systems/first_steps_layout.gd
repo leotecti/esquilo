@@ -59,7 +59,8 @@ static func build(level) -> void:
 	# Apoios para regressar pelos desníveis antigos e subir à árvore pela direita.
 	for rect in [Rect2(1240,690,140,70),Rect2(3730,620,140,140),
 		Rect2(5170,640,160,120),Rect2(5330,710,160,50),
-		Rect2(21100,610,140,150),Rect2(21240,680,140,80)]: level._platform(rect)
+		Rect2(20940,680,440,80),
+		Rect2(21100,610,140,150)]: level._platform(rect)
 	# Ao elevar um apoio, mantém o ID histórico da recompensa e deixa-a acima do chão.
 	for actor in level.actors.get_children():
 		if not actor.has_method("reset_item"): continue

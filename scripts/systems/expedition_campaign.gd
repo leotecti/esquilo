@@ -95,7 +95,10 @@ func enter_from_map(index: int) -> void:
 		return
 	_changing = true
 	data.survival.replay = data.levels.get(str(index),{}).get("completed",false)
-	if data.survival.replay: data.levels[str(index)].checkpoint = false
+	if data.survival.replay:
+		data.levels[str(index)].checkpoint = false
+		data.levels[str(index)].items = []
+		data.levels[str(index)].blocks = []
 	_load_stage.call_deferred(index)
 
 func _map_portrait() -> bool:
