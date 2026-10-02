@@ -19,7 +19,7 @@ func _physics_process(delta: float) -> void:
 			"waiting":
 				phase = "warning"
 				remaining = 1.2
-				level._say(["A água vai subir! Salte para o tronco.","A coruja vai mergulhar! Espere na plataforma.","Engrenagens chegando! Pule e espere a abertura."][biome-2])
+				level._say(["A água vai subir! Salte para o tronco.","O Gavião vai mergulhar! Espere na plataforma.","Engrenagens chegando! Pule e espere a abertura."][biome-2])
 			"warning":
 				phase = "attack"
 				remaining = 0.7
@@ -51,7 +51,7 @@ func reset_enemy() -> void:
 	position = origin
 
 func _draw() -> void:
-	var color: Color = [Color("659dac"),Color("8f819f"),Color("ab794f")][biome-2]
+	var color: Color = [Color("659dac"),Color("755342"),Color("ab794f")][biome-2]
 	if health==0: color = color.lightened(.15)
 	if phase in ["warning","attack"]:
 		var y: float = origin.y-position.y
@@ -76,7 +76,10 @@ func _draw() -> void:
 	for x in [-22,22]:
 		draw_circle(Vector2(x,-75),19,Color("e9d8b4"))
 		draw_circle(Vector2(x,-74),7,Color("34454d"))
-	if biome==3: draw_colored_polygon(PackedVector2Array([Vector2(-10,-58),Vector2(10,-58),Vector2(0,-43)]),Color("edbc64"))
+	if biome==3:
+		draw_colored_polygon(PackedVector2Array([Vector2(-18,-61),Vector2(23,-57),Vector2(0,-37)]),Color("e6a83f"))
+		draw_line(Vector2(-39,-101),Vector2(-8,-91),Color("3a2923"),7)
+		draw_line(Vector2(39,-101),Vector2(8,-91),Color("3a2923"),7)
 	else: draw_arc(Vector2(0,-42),18,0,PI,18,Color("493e34"),3)
 	for i in 3: draw_circle(Vector2(-26+i*26,-148),8,Color("f6d584") if i<health else Color("677b80"))
 	if phase=="tired": draw_arc(Vector2(0,-112),67,PI,TAU,32,Color("ffe6a0"),4)

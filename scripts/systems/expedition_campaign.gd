@@ -15,6 +15,7 @@ var _map_after_load := false
 var _unlocked_stage := -1
 var narrative: CanvasLayer
 var _opening_after_load := false
+var _map_after_narrative := false
 
 func save_progress() -> void:
 	var previous := int(data.get("unlocked",0))
@@ -56,7 +57,16 @@ func _play_opening() -> void:
 		if start_on_map: show_map()
 
 func _on_narrative_finished(id: String, _skipped: bool) -> void:
-	if id=="opening_complete" and start_on_map: show_map()
+	if id=="opening_complete" and start_on_map: _show_map_after_narrative.call_deferred()
+	elif id.begins_with("valda_after_") and _map_after_narrative:
+		_map_after_narrative = false
+		_show_map_after_narrative.call_deferred()
+
+func _show_map_after_narrative() -> void:
+	# Aguarda o toque/clique que encerrou a última fala ser liberado antes de
+	# criar os botões do mapa; assim a mesma entrada não fecha o mapa em seguida.
+	await get_tree().create_timer(0.18,true,false,true).timeout
+	show_map()
 
 ## Ponto único para fases e eventos futuros iniciarem cenas descritas por dados.
 func play_narrative(id: String, steps: Array, replay := false) -> bool:
@@ -354,6 +364,14 @@ func resume_at(index: int) -> void:
 
 func advance() -> void:
 	if _changing or not level.completed: return
+	var stage := int(data.stage)
+	if start_on_map and stage in [3,7,11,15]:
+		var sequence = preload("res://scripts/systems/valda_progression.gd")
+		var id: String = sequence.event_id(stage)
+		if id not in data.story.events:
+			_map_after_narrative = true
+			if play_narrative(id,sequence.steps(stage)): return
+			_map_after_narrative = false
 	show_map()
 
 func restart_stage() -> void:

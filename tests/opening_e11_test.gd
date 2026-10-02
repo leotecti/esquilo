@@ -11,7 +11,7 @@ func open_campaign() -> void:
 	level = campaign.level
 
 func finish_opening() -> Dictionary:
-	var seen := {"village":false,"trapped":false,"rescued":false,"title":false}
+	var seen := {"village":false,"trapped":false,"rescued":false,"title":false,"tico_intro":false,"valda_intro":false,"mission":false,"trail":false}
 	for _frame in 1200:
 		if campaign.map_is_open(): break
 		if campaign.narrative.active:
@@ -23,6 +23,11 @@ func finish_opening() -> Dictionary:
 				elif title=="Além das trilhas conhecidas": seen.trapped = true
 				elif title=="Uma nova amiga": seen.rescued = true
 				elif title=="Tico e a Floresta das Nozes": seen.title = true
+				var text: String = str(step.get("text",""))
+				if text.contains("Eu sou Tico"): seen.tico_intro = true
+				if text.contains("Meu nome é Valda"): seen.valda_intro = true
+				if text.contains("animais precisarão de ajuda"): seen.mission = true
+				if text.contains("trilha de nozes"): seen.trail = true
 				if str(step.get("type",""))=="dialogue": campaign.narrative._advance()
 		await frames(1)
 	return seen
@@ -38,6 +43,8 @@ func run() -> void:
 	check(campaign.narrative.dialogue.text.contains("inverno"),"Primeira fala estabelece a preparação para o inverno")
 	var seen := await finish_opening()
 	check(seen.village and seen.trapped and seen.rescued and seen.title,"Sequência percorre vilarejo, encontro, resgate e título")
+	check(seen.tico_intro and seen.valda_intro,"Tico e Valda se apresentam depois do resgate")
+	check(seen.mission and seen.trail,"Valda explica a missão do bosque e indica a trilha inicial")
 	check(campaign.map_is_open() and paused,"Conclusão leva ao mapa da jornada")
 	for id in ["owl_rescued","first_clue_received","opening_complete"]:
 		check(id in campaign.data.story.events,"Abertura registra evento %s" % id)

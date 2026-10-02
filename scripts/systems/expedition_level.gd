@@ -354,7 +354,7 @@ func _respawn() -> void:
 		hazard_delay = 0
 
 func _on_guardian_calmed() -> void:
-	_say(["Guardião: A correnteza está calma. Sigam as penas até a montanha!","Coruja: Vi as nozes na vila. Os castores vão ajudar vocês!","Rei Castor: Obrigado! Os alimentos foram levados para a grande árvore."][biome-2])
+	_say(["Guardião: A correnteza está calma. Sigam as penas até a montanha!","Gavião: Vi os carregamentos descendo para a vila. Sigam por lá!","Rei Castor: Obrigado! Os alimentos foram levados para a grande árvore."][biome-2])
 	_message_time = 8
 	_save_progress()
 

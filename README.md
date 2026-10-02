@@ -8,9 +8,15 @@ Para configurar outra máquina após clonar o repositório, consulte o
 
 ## Estado atual
 
+**Evolução E12 — Valda e progressão da história (0.21.0):** Valda reencontra
+Tico e Pipo depois dos quatro confrontos decisivos, contextualiza o resultado,
+revela a pista seguinte e conduz a transição para o mapa. A antiga chefe coruja
+da montanha agora é o Gavião da Montanha. [Entrega e validação da E12](tests/evolucao_e12.md).
+
 **Evolução E11 — abertura do jogo (0.20.0):** nova aventura apresenta o vilarejo,
-a falta de comida, o resgate da Coruja mentora, a primeira pista e o título antes
-do mapa. A sequência funciona com toque, pode ser pulada e não se repete depois
+a falta de comida, o resgate de Valda, a conversa que transforma a busca de Tico
+em uma missão por todo o bosque e o título antes do mapa. A sequência usa
+enquadramentos animados, funciona com toque, pode ser pulada e não se repete depois
 de concluída. [Entrega e validação da E11](tests/evolucao_e11.md).
 
 **Evolução E10 — estrutura narrativa (0.19.0):** infraestrutura reutilizável para
@@ -185,10 +191,10 @@ documentados em [testes da etapa 7](tests/etapa_7.md).
 
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — evolução E11
+## Web/PWA — evolução E12
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-evolucao-E11-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-evolucao-E12-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -204,10 +210,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da evolução E11
+## Build Windows da evolução E12
 
-Abra `builds/windows/evolucao_e11/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-evolucao-E11-windows.zip` contém os dois arquivos.
+Abra `builds/windows/evolucao_e12/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-evolucao-E12-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -217,8 +223,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/evolucao_e11 | Out-Null
-& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e11/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/evolucao_e12 | Out-Null
+& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e12/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -313,8 +319,8 @@ e [verificações executadas](tests/evolucao_e00.md).
 
 **E09 implementada:** [recompensas e coletáveis](tests/evolucao_e09.md).
 **E10 implementada:** [estrutura narrativa](tests/evolucao_e10.md).
-**E11 implementada:** [abertura do jogo](tests/evolucao_e11.md).
-Próximo passo: implementar a Coruja recorrente e a progressão da história na E12.
+**E12 implementada:** [Valda e progressão da história](tests/evolucao_e12.md).
+Próximo passo: melhorar a introdução narrativa de Pipo na E13.
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

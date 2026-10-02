@@ -2658,14 +2658,28 @@ transições, eventos persistentes e sinais para animações dos personagens. O
 jogador poderá continuar ou pular, e cenas concluídas não reaparecerão por engano.
 
 A E10 não transforma o roteiro em conteúdo jogável. A abertura será produzida
-na E11 e a participação recorrente da Coruja mentora será integrada na E12.
+na E11 e a participação recorrente de Valda, a Coruja mentora, será integrada na E12.
 
 ## ABERTURA IMPLEMENTADA NA E11
 
 A versão 0.20.0 implementa a primeira sequência completa: vilarejo, preparação
 para o inverno, busca de Tico, depósito quase vazio, trilha desconhecida, resgate
-da Coruja, primeira pista, decisão de ajudar, título e mapa. A Coruja aparece
-como aliada e mentora; não há confronto com ela. As falas são curtas, e três
-ilustrações mostram o problema e o resgate com pouca exposição textual.
+de Valda, apresentações dos dois personagens, explicação do problema em todo o
+bosque, convite para a missão, primeira pista, decisão de ajudar, título e mapa.
+Valda aparece como aliada e mentora; não há confronto com ela. Enquadramentos e
+movimentos de personagem sustentam a conversa com falas curtas.
+
+## PROGRESSÃO IMPLEMENTADA NA E12
+
+A versão 0.21.0 integra Valda ao encerramento dos quatro mundos. Depois de cada
+confronto decisivo, Tico relata o resultado, Valda relaciona a descoberta ao
+conflito maior e aponta o próximo destino. Ela oferece contexto e incentivo sem
+resolver os obstáculos pelos protagonistas. Os encontros conduzem diretamente
+ao mapa e aparecem uma única vez por aventura.
+
+A progressão estabelecida é: Bosque para Rio pelas marcas; Rio para Montanha
+pelas penas; Montanha para Vila pelos carregamentos; e Vila para a conclusão do
+arco na Grande Árvore. O adversário aéreo da montanha passa a ser o Gavião da
+Montanha, preservando Valda exclusivamente como aliada e mentora.
 
 **FIM DO DOCUMENTO**

@@ -1,21 +1,33 @@
 # Status do projeto
 
 **Data:** 2026-10-02
-**Etapa atual:** Evolução E11 — abertura do jogo, versão 0.20.0.
+**Etapa atual:** Evolução E12 — Valda e progressão da história, versão 0.21.0.
 
-**Próximo trabalho previsto:** validar a abertura no aparelho do usuário e
-seguir para os encontros recorrentes da Coruja na E12.
+**Próximo trabalho previsto:** validar os encontros de Valda no aparelho do
+usuário e seguir para a introdução narrativa de Pipo na E13.
+
+## Evolução E12 — Entrega atual
+
+- Valda reaparece depois dos quatro confrontos decisivos da campanha.
+- Cada encontro contextualiza a vitória, entrega uma pista e abre o mapa.
+- Os encontros são persistentes, podem ser pulados e não se repetem em revisitas.
+- A antiga chefe coruja da montanha foi substituída pelo Gavião da Montanha.
+- Falas, cores, bico e expressão do Gavião foram atualizados.
+- 24 verificações específicas cobrem narrativa, save, mapa e reabertura.
+
+[Implementação e validação da E12](../tests/evolucao_e12.md).
 
 ## Evolução E11 — Entrega atual
 
 - Abertura ilustrada do vilarejo até o mapa da jornada.
 - Escassez de comida, exploração de Tico e área desconhecida apresentadas.
-- Coruja mentora resgatada, primeira pista entregue e objetivo da aventura claro.
+- Valda é resgatada, apresenta-se como mentora e convida Tico para ajudar o bosque.
+- Tico explica sua busca por comida antes de aceitar a missão e receber a primeira pista.
 - Título apresentado antes do mapa, com falas curtas e comunicação visual.
 - Continuação e pulo funcionam com mouse, teclado e toque em landscape.
 - Eventos `owl_rescued`, `first_clue_received` e `opening_complete` persistem.
 - Campanhas anteriores abrem no mapa sem interrupção; nova aventura repõe a cena.
-- 15 verificações Godot, 79 regressões de save e dois cenários Web aprovados.
+- 17 verificações Godot, 79 regressões de save e dois cenários Web aprovados.
 - Ilustrações em 1280×720; cenas medidas com p95 de 17,30–18,32 ms no PC local.
 
 [Implementação, validação e roteiro da E11](../tests/evolucao_e11.md).

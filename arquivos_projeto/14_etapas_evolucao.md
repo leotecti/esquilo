@@ -667,8 +667,9 @@ O jogo possui infraestrutura reutilizável para narrativa.
 
 **Status:** implementada na versão 0.20.0. Uma nova aventura apresenta o
 vilarejo se preparando para o inverno, Tico procurando comida, o depósito quase
-vazio, a trilha para a área desconhecida, o resgate da Coruja mentora, a primeira
-pista, a decisão de ajudar e o título antes do mapa. A cena pode ser pulada,
+vazio, a trilha para a área desconhecida, o resgate de Valda, a apresentação de
+Tico e da mentora, o convite para ajudar todo o bosque, a primeira pista, a
+decisão de ajudar e o título antes do mapa. A cena pode ser pulada,
 registra seu progresso e não se repete ao reabrir. Campanhas anteriores migram
 diretamente para o mapa. [Execução e testes](../tests/evolucao_e11.md).
 
@@ -686,9 +687,9 @@ PROCURA MAIS LONGE
    ↓
 ENTRA EM ÁREA DESCONHECIDA
    ↓
-ENCONTRA CORUJA
+ENCONTRA VALDA
    ↓
-SALVA CORUJA
+SALVA VALDA
    ↓
 RECEBE PISTA
    ↓
@@ -708,9 +709,14 @@ A aventura possui uma motivação clara desde o início.
 
 ---
 
-# 17. EVOLUÇÃO E12 — CORUJA E PROGRESSÃO DA HISTÓRIA
+# 17. EVOLUÇÃO E12 — VALDA E PROGRESSÃO DA HISTÓRIA
 
-Transformar a Coruja em mentora recorrente e aliada. Substituir a chefe coruja pelo Gavião da Montanha; a Coruja não participa de combates como adversária.
+**Status:** implementada na versão 0.21.0. Valda aparece depois dos confrontos
+das etapas 3, 7, 11 e 15, contextualiza a vitória, oferece a pista seguinte e
+conduz ao mapa. Os encontros persistem no Save V2 e não se repetem. A antiga
+chefe coruja foi substituída pelo Gavião da Montanha. [Execução e testes](../tests/evolucao_e12.md).
+
+Manter Valda como mentora recorrente e aliada. Substituir a antiga chefe coruja pelo Gavião da Montanha; Valda não participa de combates como adversária.
 
 Criar encontros após momentos importantes.
 
@@ -718,7 +724,7 @@ Estrutura:
 
 CHEFE / FINAL
    ↓
-CORUJA
+VALDA
    ↓
 DIÁLOGO
    ↓
@@ -728,7 +734,7 @@ PRÓXIMO DESTINO
    ↓
 MAPA
 
-A Coruja deverá:
+Valda deverá:
 
 - orientar;
 - revelar pistas;

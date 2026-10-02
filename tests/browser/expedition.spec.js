@@ -43,6 +43,7 @@ async function clickRect(page,name,touch=false){const s=await snapshot(page),r=s
 function errorsFor(page){const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});return errors;}
 
 async function clickMapRect(page,r,touch=false){const s=await snapshot(page),v=page.viewportSize();const x=(r[0]+r[2]/2)*v.width/s.width,y=(r[1]+r[3]/2)*v.height/s.height;if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);}
+async function clickSnapshotRect(page,s,r,touch=false){const v=page.viewportSize(),x=(r[0]+r[2]/2)*v.width/s.width,y=(r[1]+r[3]/2)*v.height/s.height;if(touch)await page.touchscreen.tap(x,y);else await page.mouse.click(x,y);}
 async function mapWorld(page,target,touch=false){
   for(let i=0;i<4;i++){
     const current=(await snapshot(page)).map_world;if(current===target)return;
@@ -52,20 +53,27 @@ async function mapWorld(page,target,touch=false){
   expect((await snapshot(page)).map_world).toBe(target);
 }
 
-test('E11: abertura, resgate da Coruja, mapa e reabertura offline',async({page,context})=>{
+test('E11: abertura, resgate de Valda, mapa e reabertura offline',async({page,context})=>{
+  test.setTimeout(90000);
   const errors=errorsFor(page);await page.goto('./?test=1');await page.locator('#play').click();
   await expect.poll(async()=>(await snapshot(page))?.narrative_active,{timeout:45000}).toBe(true);
   expect((await snapshot(page)).narrative_text).toContain('inverno');
   await page.screenshot({path:'builds/web/e11-abertura.png'});
-  const scenes=new Set();
-  for(let i=0;i<100;i++){
+  const scenes=new Set(),speakers=new Set();let mission=false,trappedVisible=false,rescuedVisible=false;
+  for(let i=0;i<220;i++){
     const s=await snapshot(page);if(s.map_open)break;
     if(s.narrative_title)scenes.add(s.narrative_title);
-    if(s.narrative_active&&s.narrative_continue_rect)await clickRect(page,'narrative_continue_rect');
+    if(s.narrative_speaker)speakers.add(s.narrative_speaker);
+    if((s.narrative_text||'').includes('animais precisarão de ajuda'))mission=true;
+    if(s.narrative_speaker==='Valda'&&!trappedVisible){expect(s.narrative_scene_visible).toBe(true);await expect.poll(async()=>(await snapshot(page)).narrative_scene_alpha).toBeGreaterThan(0.95);await page.screenshot({path:'builds/web/e11-valda-presa.png'});trappedVisible=true;}
+    if((s.narrative_text||'').includes('Muito obrigada')&&!rescuedVisible){expect(s.narrative_scene_visible).toBe(true);await expect.poll(async()=>(await snapshot(page)).narrative_scene_alpha).toBeGreaterThan(0.95);await page.screenshot({path:'builds/web/e11-valda-resgatada.png'});rescuedVisible=true;}
+    if(s.narrative_active&&s.narrative_continue_rect)await clickSnapshotRect(page,s,s.narrative_continue_rect);
     await page.waitForTimeout(180);
   }
   await expect.poll(async()=>(await snapshot(page)).map_open,{timeout:15000}).toBe(true);
   expect([...scenes]).toEqual(expect.arrayContaining(['O vilarejo na floresta','Além das trilhas conhecidas','Uma nova amiga']));
+  expect([...speakers]).toEqual(expect.arrayContaining(['Tico','Valda']));expect(mission).toBe(true);
+  expect(trappedVisible&&rescuedVisible).toBe(true);
   await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
   await context.setOffline(true);await page.reload();await startGame(page,false);
   expect((await snapshot(page)).map_open).toBe(true);
@@ -88,6 +96,27 @@ test('E11: abertura por toque em landscape',async({browser})=>{
   await clickRect(page,'narrative_skip_rect',true);
   await expect.poll(async()=>(await snapshot(page)).map_open).toBe(true);
   expect(errors).toEqual([]);await context.close();
+});
+
+test('E12: Valda conecta o Bosque ao Rio e o encontro persiste offline',async({page,context})=>{
+  test.setTimeout(90000);const data=fixture(3);
+  Object.assign(data.levels['3'],{completed:true,boss_done:true});data.unlocked=4;
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  await expect.poll(async()=>(await snapshot(page)).result).toBe(true);
+  await clickRect(page,'next_rect');
+  await expect.poll(async()=>(await snapshot(page)).narrative_speaker,{timeout:15000}).toBe('Tico');
+  let sawValda=false;
+  for(let i=0;i<90;i++){
+    const s=await snapshot(page);if(s.map_open)break;
+    if(s.narrative_speaker==='Valda'){sawValda=true;expect(s.narrative_scene_alpha).toBeGreaterThan(0.9);await page.screenshot({path:'builds/web/e12-valda-bosque.png'});}
+    if(s.narrative_active&&s.narrative_continue_rect)await clickSnapshotRect(page,s,s.narrative_continue_rect);
+    await page.waitForTimeout(180);
+  }
+  expect(sawValda).toBe(true);await expect.poll(async()=>(await snapshot(page)).map_open).toBe(true);
+  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).story.events.includes('valda_after_3'))).toBe(true);
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  await context.setOffline(true);await page.reload();await startGame(page,false);
+  expect((await snapshot(page)).map_open).toBe(true);expect(errors).toEqual([]);
 });
 
 test('E09: alimento abastece o vilarejo e persiste offline',async({page,context})=>{

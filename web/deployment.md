@@ -9,14 +9,15 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E11 — Abertura do jogo (0.20.0)**. Inclui a sequência
-inicial ilustrada e preserva todo o conteúdo da E10 e o Save V2.
-[Alterações e roteiro da E11](../tests/evolucao_e11.md).
+Versão atual: **Evolução E12 — Valda e progressão da história (0.21.0)**. Inclui
+a abertura, os encontros recorrentes de Valda após os confrontos decisivos e
+preserva o Save V2.
+[Alterações e roteiro da E12](../tests/evolucao_e12.md).
 
-`builds/web/Tico-evolucao-E11-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-evolucao-E12-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e11` entre `/tico/` e os arquivos.
+Não coloque outra pasta `evolucao_e12` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

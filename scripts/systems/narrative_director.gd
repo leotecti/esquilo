@@ -26,6 +26,7 @@ var _actor_motion: Dictionary = {}
 var _actor_elapsed := 0.0
 var _text_tween: Tween
 var _scene_motion: Tween
+var _scene_fade: Tween
 
 func _ready() -> void:
 	layer = 40
@@ -46,7 +47,12 @@ func _process(delta: float) -> void:
 	story_actor.position = from.lerp(to,eased)-story_actor.size*Vector2(0.5,1.0)
 	story_actor.position.y -= sin(progress*PI)*float(_actor_motion.get("arc",0.0))
 	var frame := int(_actor_elapsed*10.0)%4
-	story_actor.texture = ATLAS.frame("run",frame) if str(_actor_motion.get("pose","run"))=="run" else ATLAS.frame("tico",3 if progress<0.72 else 0)
+	var pose := str(_actor_motion.get("pose","run"))
+	if pose=="run": story_actor.texture = ATLAS.frame("run",frame)
+	elif pose=="gesture":
+		story_actor.texture = ATLAS.frame("tico",1 if int(_actor_elapsed*3.0)%2==0 else 0)
+		story_actor.position.y -= sin(progress*PI*2.0)*4.0
+	else: story_actor.texture = ATLAS.frame("tico",3 if progress<0.72 else 0)
 	if progress>=1.0: _actor_motion.clear()
 
 func play(id: String, content: Array, replay := false) -> bool:
@@ -85,6 +91,7 @@ func _advance() -> void:
 			_apply_scene(step)
 			_advance()
 		"dialogue": _show_dialogue(step)
+		"camera": _move_camera(step)
 		"transition": _transition(step)
 		"animation":
 			animation_requested.emit(str(step.get("actor","")),str(step.get("animation","")))
@@ -95,20 +102,37 @@ func _advance() -> void:
 			_advance()
 		_: _advance()
 
+func _move_camera(step: Dictionary) -> void:
+	if not scene_image.visible:
+		_advance()
+		return
+	if is_instance_valid(_scene_motion): _scene_motion.kill()
+	var viewport_size := get_viewport().get_visible_rect().size
+	var focus: Vector2 = step.get("focus",Vector2(0.5,0.5))
+	scene_image.pivot_offset = focus*viewport_size
+	var target := Vector2.ONE*clampf(float(step.get("zoom",1.04)),1.0,1.16)
+	var duration := clampf(float(step.get("duration",0.8)),0.15,2.0)
+	_scene_motion = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_scene_motion.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	_scene_motion.tween_property(scene_image,"scale",target,duration)
+	_scene_motion.tween_callback(_advance)
+
 func _apply_scene(step: Dictionary) -> void:
 	scene_title.text = str(step.get("title",""))
 	scene_title.visible = not scene_title.text.is_empty()
 	backdrop.color = Color(str(step.get("color","173d2fee")))
 	var image: Variant = step.get("background")
 	if is_instance_valid(_scene_motion): _scene_motion.kill()
+	if is_instance_valid(_scene_fade): _scene_fade.kill()
 	scene_image.texture = image if image is Texture2D else null
 	scene_image.visible = scene_image.texture != null
 	if scene_image.visible:
 		scene_image.pivot_offset = get_viewport().get_visible_rect().size*0.5
 		scene_image.scale = Vector2(1.035,1.035)
 		scene_image.modulate.a = 0.0
-		_scene_motion = create_tween().set_parallel().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-		_scene_motion.tween_property(scene_image,"modulate:a",1.0,0.65)
+		_scene_fade = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_scene_fade.tween_property(scene_image,"modulate:a",1.0,0.55)
+		_scene_motion = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 		_scene_motion.tween_property(scene_image,"scale",Vector2.ONE,7.0)
 	if step.has("actor_position"):
 		_place_actor(step.get("actor_position"),str(step.get("actor_pose","idle")))
@@ -312,7 +336,8 @@ func _layout() -> void:
 func details() -> Dictionary:
 	var result := {"active":active,"sequence":sequence_id,"step":step_index,
 		"title":scene_title.text if active else "","speaker":speaker.text if active else "",
-		"text":dialogue.text if active else ""}
+		"text":dialogue.text if active else "","scene_visible":scene_image.visible if active else false,
+		"scene_alpha":scene_image.modulate.a if active else 0.0}
 	if active:
 		for entry in [["continue_rect",continue_button],["skip_rect",skip_button]]:
 			var rect: Rect2 = entry[1].get_global_rect()
