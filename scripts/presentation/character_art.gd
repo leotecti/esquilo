@@ -1,7 +1,12 @@
 extends Node2D
 const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
 const CHROMA = preload("res://scripts/presentation/chroma_key.gdshader")
-const TAIL_STRIKE = preload("res://assets/slice/tico_tail_strike.png")
+const TAIL_SPIN = preload("res://assets/slice/tico_tail_spin.png")
+const TAIL_SPIN_FRAME_COUNT := 6
+# Cada pose ocupa uma célula de 512 px com margem transparente lateral. Isso
+# preserva o tamanho de Tico e impede fragmentos dos quadros vizinhos.
+const TAIL_SPIN_CROP_Y := 0.0
+const TAIL_SPIN_CROP_HEIGHT := 335.0
 var character: CharacterBody2D
 var level: Node2D
 var pig := false
@@ -17,6 +22,7 @@ var _last_position := Vector2.ZERO
 var run_frame := 0
 var _run_distance := 0.0
 var _tail_frames: Array[Texture2D] = []
+var tail_spin_frame := 0
 
 func _ready() -> void:
 	character = get_parent()
@@ -25,10 +31,11 @@ func _ready() -> void:
 	material = ShaderMaterial.new()
 	material.shader = CHROMA
 	_last_position = character.global_position
-	for index in 4:
+	for index in TAIL_SPIN_FRAME_COUNT:
 		var frame := AtlasTexture.new()
-		frame.atlas = TAIL_STRIKE
-		frame.region = Rect2(TAIL_STRIKE.get_width()/4.0*index,0,TAIL_STRIKE.get_width()/4.0,TAIL_STRIKE.get_height())
+		frame.atlas = TAIL_SPIN
+		var frame_width := TAIL_SPIN.get_width()/float(TAIL_SPIN_FRAME_COUNT)
+		frame.region = Rect2(frame_width*index,TAIL_SPIN_CROP_Y,frame_width,TAIL_SPIN_CROP_HEIGHT)
 		_tail_frames.append(frame)
 
 func _process(delta: float) -> void:
@@ -103,9 +110,14 @@ func _draw() -> void:
 		maps.merge({"push":5,"charge":6,"sniff":7,"hurt":8,"celebrate":9,"prepare":10,"recover":11},true)
 	var texture := ATLAS.frame("pipo" if pig else "tico",maps.get(pose,0))
 	if not pig and pose.begins_with("tail_"):
-		var tail_frame: int = int({"tail_prepare":0,"tail_recover":3}.get(pose,0))
-		if pose=="tail_active": tail_frame = 1 if character.tail_phase_left>character.tail_active_duration*0.5 else 2
-		texture = _tail_frames[tail_frame]
+		tail_spin_frame = 0
+		if pose=="tail_active":
+			var progress: float = 1.0-character.tail_phase_left/character.tail_active_duration
+			tail_spin_frame = clampi(1+int(progress*4.0),1,4)
+		elif pose=="tail_recover":
+			var recovery: float = 1.0-character.tail_phase_left/character.tail_recovery_duration
+			tail_spin_frame = 4 if recovery<0.35 else 5
+		texture = _tail_frames[tail_spin_frame]
 	if pose == "run":
 		texture = ATLAS.frame("run",(4 if pig else 0)+run_frame)
 	if pose in ["push", "push_attempt"]:
@@ -116,7 +128,7 @@ func _draw() -> void:
 	if pose == "charge": height = 58
 	if pose == "prepare": height = 65
 	if pose in ["push", "push_attempt"]: height = 72
-	if pose.begins_with("tail_"): height = 78
+	if pose.begins_with("tail_"): height = 82
 	var size := texture.get_size() * (height / texture.get_height())
 	var bob := sin(_time*3)*1.0
 	var angle := 0.0

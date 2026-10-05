@@ -85,12 +85,13 @@ func _process_tail_attack(delta: float) -> void:
 	velocity.x = 0
 	velocity.y = minf(velocity.y+get_gravity().y*delta,max_fall_speed)
 	move_and_slide()
-	if tail_phase=="active": tail_window.emit(tail_attack_id)
+	# O acerto acompanha a metade frontal do giro, quando a cauda cruza o alvo.
+	if tail_phase=="active" and 1.0-tail_phase_left/tail_active_duration>=0.50:
+		tail_window.emit(tail_attack_id)
 	if tail_phase_left<=0:
 		if tail_phase=="prepare":
 			tail_phase = "active"
 			tail_phase_left = tail_active_duration
-			tail_window.emit(tail_attack_id)
 		elif tail_phase=="active":
 			tail_phase = "recover"
 			tail_phase_left = tail_recovery_duration

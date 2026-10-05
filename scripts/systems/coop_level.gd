@@ -270,7 +270,8 @@ func _test_details() -> Dictionary:
 		"heavy_broken":is_instance_valid(heavy) and heavy.destroyed,
 		"secret_revealed":is_instance_valid(secret) and secret.revealed,
 		"ability":pipo.ability if is_instance_valid(pipo) else "ready", "tail_phase":squirrel.tail_phase,
-		"grounded":tico.is_on_floor()})
+		"grounded":tico.is_on_floor(),
+		"tail_spin_frame":squirrel.get_node("Illustration").tail_spin_frame if squirrel.has_node("Illustration") else 0})
 	if is_instance_valid(switch_button):
 		var rect := switch_button.get_global_rect()
 		details["switch_rect"] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]

@@ -26,9 +26,17 @@ func run() -> void:
 	enemy.origin = enemy.position
 	await settle(Vector2(450,760))
 	var player: CharacterBody2D = level.tico
+	var art: Node2D = preload("res://scripts/presentation/character_art.gd").new()
+	art.name = "Illustration"
+	art.level = level
+	player.add_child(art)
+	await frames(1)
+	check(art._tail_frames.size()==6,"Giro usa seis poses com rotação completa do personagem")
+	check(art._tail_frames[0].region.size==Vector2(512,335),"Giro usa células isoladas e preserva o tamanho de Tico")
 	key(KEY_E,true)
 	await frames(2)
 	check(player.tail_phase=="prepare" and player.state==&"tail_prepare","E inicia preparação própria da caudada no chão")
+	check(art.tail_spin_frame==0,"Primeira pose prepara o giro com a cauda recolhida")
 	var attack_id: int = player.tail_attack_id
 	check(not level.switch_character(),"Troca fica bloqueada durante a caudada")
 	var phase_left: float = player.tail_phase_left
@@ -36,11 +44,18 @@ func run() -> void:
 	await frames(8)
 	check(player.tail_phase_left==phase_left and not enemy.defeated,"Pausa congela a caudada e sua janela de acerto")
 	level.set_paused(false)
-	await frames(12)
+	var seen_frames := {}
+	for i in 20:
+		await frames(1)
+		seen_frames[art.tail_spin_frame] = true
+	check(seen_frames.has(2) and seen_frames.has(3) and seen_frames.has(4),"Ataque percorre costas, varredura e impacto do giro")
 	check(enemy.defeated and player.tail_phase in ["active","recover"],"Janela ativa derrota lesma à frente")
-	await frames(40)
+	await frames(32)
 	check(player.tail_phase=="ready" and player.tail_attack_id==attack_id,"Segurar E produz somente um golpe")
 	key(KEY_E,false)
+	art.queue_free()
+	await frames(2)
+	player.sprite.show()
 
 	# Direção oposta usa o mesmo alcance curto.
 	enemy.reset_enemy()

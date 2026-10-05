@@ -2,7 +2,10 @@
 
 **Data:** 2026-10-04
 **Etapa atual:** Validação intermediária 2 — aventura completa em miniatura,
-versão 0.25.0.
+versão 0.25.1.
+
+**Correção visual atual:** a caudada foi refeita como giro corporal completo em
+seis poses, com o impacto sincronizado à passagem frontal da cauda.
 
 **Próximo trabalho previsto:** validar o fluxo completo do Mundo 1 no aparelho
 do usuário e, após o aceite, seguir para a progressão de dificuldade da E16.

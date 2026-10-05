@@ -14,6 +14,12 @@ próxima pista de Valda. Mapa, três fases, copa opcional, coletáveis, Pipo,
 progressão e Save V2 foram validados em um fluxo contínuo.
 [Relatório da validação](tests/validacao_intermediaria_2.md).
 
+**Correção 0.25.1:** a caudada de Tico agora é um giro corporal completo em seis
+poses. O personagem prepara, vira de costas, varre o espaço com a cauda, atinge
+o adversário e recupera o equilíbrio. O dano foi sincronizado ao quadro de impacto,
+e o recorte dos quadros preserva o tamanho de Tico durante todo o golpe.
+[Detalhes e testes](tests/correcao_giro_cauda.md).
+
 **Evolução E13 — introdução de Pipo (0.22.0):** Pipo agora recebe uma apresentação
 narrativa dentro da fase 1-3. Tico descobre que ele também procura comida, realiza
 o resgate jogável e o convida para a missão. A cena demonstra força e agilidade
@@ -207,7 +213,7 @@ As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 ## Web/PWA — validação intermediária 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-validacao-intermediaria-2-web-corrigido.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-0.25.1-giro-cauda-laterais-corrigidas-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -226,7 +232,7 @@ Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instal
 ## Build Windows da validação intermediária 2
 
 Abra `builds/windows/validacao_intermediaria_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-validacao-intermediaria-2-windows-corrigido.zip` contém os dois arquivos.
+O pacote `builds/windows/Tico-0.25.1-giro-cauda-laterais-corrigidas-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 

@@ -41,7 +41,8 @@ saves V2 existentes sem apagar progresso.
 
 ## Validação automatizada
 
-- `tail_e14_test.gd`: 15 verificações específicas de entrada, animação lógica,
+- `tail_e14_test.gd`: 19 verificações específicas de entrada, giro em seis poses,
+  sincronização visual,
   direção, parede, pausa, repetição, dano, alvos, troca e investida de Pipo.
 - `coop_test.gd`: 54 verificações da cooperação e percurso completo.
 - `health_e01_test.gd`: 20 verificações de saúde, derrota e cancelamento.
