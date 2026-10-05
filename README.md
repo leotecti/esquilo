@@ -142,12 +142,13 @@ segredos, sem botão extra. Gamepad futuro.
    escondida e salte sobre o ouriço. Os espinhos machucam mesmo por cima.
 3. **1-3 — Um Novo Amigo:** quebre o bloco rachado que prende os cipós de Pipo.
    A troca fica disponível após o resgate. Complete os desafios da dupla abaixo.
-4. **Final de 1-3 — Guardião:** salte quando as raízes douradas se erguerem.
-   Quando ele ficar cansado, use um salto por cima ou a investida de Pipo.
-   Três acertos acalmam o Guardião e liberam a saída do mundo.
+4. **1-4 — Periquito do Bosque:** salte quando as raízes douradas se erguerem.
+   Ele patrulha o ar, mira o personagem ativo e mergulha para tentar atingi-lo.
+   Quando pousar cansado, pule sobre sua cabeça. A investida de Pipo não causa dano.
+   Três pulos na cabeça acalmam o Periquito e liberam a saída do mundo.
 
 Na tela de resultado, **Próxima fase** continua a campanha. O encontro com o
-Guardião tem sua própria bandeira. Recomeçar inicia o mundo novamente após confirmação.
+O Periquito tem sua própria bandeira. Recomeçar inicia o mundo novamente após confirmação.
 
 ### Como jogar os mundos novos
 
@@ -213,7 +214,7 @@ As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 ## Web/PWA — validação intermediária 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-0.27.1-inimigos-animados-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-0.29.2-derrota-periquito-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -232,7 +233,7 @@ Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instal
 ## Build Windows da validação intermediária 2
 
 Abra `builds/windows/validacao_intermediaria_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-0.27.1-inimigos-animados-windows.zip` contém os dois arquivos.
+O pacote `builds/windows/Tico-0.29.2-derrota-periquito-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -350,7 +351,23 @@ comportamentos distintos. O porco-espinho recebeu nova aparência, o besouro
 acelera, a aranha ameaça na vertical e o corvo executa perseguições curtas.
 Todos receberam ciclos de quatro quadros: patas alternam no solo, a lesma rasteja
 por compressão e os inimigos aéreos articulam as asas sem mudar de tamanho.
+As artes terrestres ficam alinhadas à superfície, e a aranha desce até a faixa de
+risco antes de retornar ao alto e liberar a passagem.
 [Detalhes e playtest](tests/evolucao_e17.md).
+
+**Evolução E18 (0.29.2):** os quatro chefes avançam por padrão simples, variação
+e combinação. Cada acerto amplia a área do ataque e acelera o aviso, enquanto a
+abertura continua longa o bastante para observar, posicionar e atacar. As arenas
+retomam as mecânicas ensinadas em cada mundo. O Periquito patrulha o ar, persegue
+Tico ou Pipo e mergulha sobre o alvo. Ao pousar, ele permanece no ponto do mergulho
+e recupera o fôlego com uma respiração visível. Após três pulos na cabeça, ele cai,
+desaparece e o personagem corre automaticamente até o portal.
+[Detalhes e playtest](tests/evolucao_e18.md).
+
+**Evolução E19 (0.29.1):** o mapa agora permite visitar o vilarejo. Alimentos e
+fases concluídas transformam cestos, moradores, iluminação e decoração em quatro
+estados persistentes. A vitória final reúne a comunidade em uma celebração.
+[Detalhes e playtest](tests/evolucao_e19.md).
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

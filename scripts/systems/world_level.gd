@@ -1,6 +1,6 @@
 extends "res://scripts/systems/vertical_slice.gd"
 @export_range(0,3) var world_stage := 0
-const TITLES = ["1-1 • Primeiros Passos","1-2 • Blocos e Segredos","1-3 • Um Novo Amigo","1-3 • Guardião do Bosque"]
+const TITLES = ["1-1 • Primeiros Passos","1-2 • Blocos e Segredos","1-3 • Um Novo Amigo","1-4 • Periquito do Bosque"]
 var campaign: Node
 var world_ready := false
 var rescued := false
@@ -57,7 +57,7 @@ func _ready() -> void:
 	if is_instance_valid(campaign) and campaign.has_method("restart_stage"):
 		_build_phase_restart()
 	_update_layout()
-	var messages := ["As nozes sumiram! Siga a trilha e descubra o que aconteceu.","Uma pista entre os blocos… Explore os caminhos do bosque.","Pipo está preso! Pule sob o bloco rachado para soltá-lo.","O Guardião está assustado. Espere a abertura entre seus ataques."]
+	var messages := ["As nozes sumiram! Siga a trilha e descubra o que aconteceu.","Uma pista entre os blocos… Explore os caminhos do bosque.","Pipo está preso! Pule sob o bloco rachado para soltá-lo.","O Periquito está assustado. Observe suas asas e espere o pouso."]
 	_say(messages[world_stage])
 	_message_time = 7
 
@@ -69,7 +69,7 @@ func _build_gameplay() -> void:
 			if actor.has_method("reset_enemy") and actor.position.x<700:
 				actor.position.x = 2550
 				actor.origin = actor.position
-		_spider(Vector2(2050,535),90)
+		_spider(Vector2(2050,445),285)
 		rescue_lock = _block(Vector2(490,610),1,"RescueLock")
 		rescue_gate = _solid("Vines",Rect2(695,450,32,310),Color("5c7949"))
 		for child in rescue_gate.get_children():
@@ -187,7 +187,7 @@ func _build_solo_or_arena() -> void:
 		actors.add_child(guardian)
 		guardian.calmed.connect(_on_guardian_calmed)
 		_sign(Vector2(500,530),"O bosque precisa de ajuda")
-		_sign(Vector2(1590,540),"Raízes douradas: pule\nGuardião cansado: é a sua vez")
+		_sign(Vector2(1590,540),"Asas abertas: prepare o salto\nPeriquito pousado: pule na cabeça")
 
 func _platform(rect: Rect2) -> void:
 	terrain.append(rect)
@@ -374,14 +374,25 @@ func start_pending_narrative() -> void:
 		campaign.play_narrative("pipo_joins_team",sequence.joins_team())
 
 func _on_guardian_calmed() -> void:
-	_say("Guardião: Obrigado! A trilha até o rio está livre, amigos.")
-	_message_time = 8
+	_say("A trilha até o rio está livre. Vamos, amigos!")
+	_message_time = 5
 	_save_progress()
+	_start_guardian_exit_run.call_deferred()
+
+func _start_guardian_exit_run() -> void:
+	if completed or not is_instance_valid(exit_marker) or not is_instance_valid(tico): return
+	exit_marker.activated = true
+	if not tico.auto_run_finished.is_connected(_finish_guardian_exit_run):
+		tico.auto_run_finished.connect(_finish_guardian_exit_run,CONNECT_ONE_SHOT)
+	tico.start_auto_run(exit_marker.position.x)
+
+func _finish_guardian_exit_run() -> void:
+	if not completed and is_instance_valid(exit_marker): _on_exit(exit_marker)
 
 func _on_exit(marker: Node2D) -> void:
 	if (world_stage==2 and not rescued) or (is_instance_valid(guardian) and guardian.health>0):
 		marker.activated = false
-		_say("Ajude o Guardião antes de seguir." if world_stage==3 else "Pipo ainda precisa de ajuda!")
+		_say("Ajude o Periquito antes de seguir." if world_stage==3 else "Pipo ainda precisa de ajuda!")
 		return
 	super._on_exit(marker)
 	result_text.text = ("Mundo 1 concluído!\nO Bosque das Folhas está em paz.\nTico e Pipo seguem juntos até o rio." if world_stage==3 else TITLES[world_stage]+"\nTrilha concluída!")+"\nNozes: %d de %d" % [nuts,total_nuts]
@@ -491,7 +502,8 @@ func restore_world(data: Dictionary) -> void:
 	if is_instance_valid(secret): secret.revealed = data.secret
 	if is_instance_valid(guardian) and data.boss_done:
 		guardian.health = 0
-		guardian.phase = "calm"
+		guardian.phase = "vanished"
+		guardian.hide()
 		guardian.queue_redraw()
 	nuts = 0
 	foods = 0

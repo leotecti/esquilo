@@ -7,6 +7,7 @@ signal hurt
 signal defeated
 signal tail_attack_started
 signal tail_window(attack_id: int)
+signal auto_run_finished
 
 @export_group("Vida")
 @export var max_health: int = 3
@@ -48,6 +49,7 @@ var _landing_left: float = 0.0
 var _jump_cut_applied: bool = false
 var _gliding: bool = false
 var _reset_pending: bool = false
+var auto_run_target := INF
 var wind_acceleration := Vector2.ZERO
 var tail_phase := "ready"
 var tail_phase_left := 0.0
@@ -62,6 +64,9 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if is_finite(auto_run_target):
+		_process_auto_run(delta)
+		return
 	if tail_enabled and tail_phase=="ready" and controls_enabled and is_on_floor() and not _reset_pending and _hurt_left<=0.0 and Input.is_action_just_pressed("action"):
 		_start_tail_attack()
 	if tail_phase!="ready":
@@ -97,6 +102,32 @@ func _process_tail_attack(delta: float) -> void:
 			tail_phase_left = tail_recovery_duration
 		else: cancel_tail_attack()
 	_update_animation()
+
+func start_auto_run(target_x: float) -> void:
+	cancel_tail_attack()
+	controls_enabled = false
+	auto_run_target = target_x
+	invulnerability_left = maxf(invulnerability_left,5.0)
+
+func _process_auto_run(delta: float) -> void:
+	previous_position = global_position
+	var distance := auto_run_target-global_position.x
+	if absf(distance)<=12.0:
+		global_position.x = auto_run_target
+		velocity = Vector2.ZERO
+		auto_run_target = INF
+		state = &"idle"
+		sprite.play(state)
+		auto_run_finished.emit()
+		return
+	facing = signf(distance)
+	velocity.x = facing*move_speed
+	velocity.y = minf(velocity.y+get_gravity().y*delta,max_fall_speed)
+	move_and_slide()
+	state = &"run"
+	sprite.flip_h = facing<0
+	sprite.speed_scale = 1.0
+	sprite.play(state)
 
 func cancel_tail_attack() -> void:
 	tail_phase = "ready"
@@ -204,6 +235,7 @@ func _update_animation() -> void:
 
 func reset_at(point: Vector2) -> void:
 	cancel_tail_attack()
+	auto_run_target = INF
 	wind_acceleration = Vector2.ZERO
 	global_position = point
 	force_update_transform()

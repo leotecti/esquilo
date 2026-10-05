@@ -1054,6 +1054,8 @@ quatro quadros com 2048 × 384. A colisão permanece independente da ilustraçã
 evitando que o ganho visual mude o alcance de dano. Lesma, besouro, aranha e
 porco-espinho mantêm uma base fixa enquanto rastejam ou alternam as patas;
 morcego e corvo articulam as asas sem reduzir o corpo.
+A aranha alterna espera no alto, descida até a faixa de risco, permanência curta
+próxima ao solo e subida, exigindo que o jogador observe antes de atravessar.
 
 ## Resultado esperado
 
@@ -1063,6 +1065,20 @@ silhueta, cor e movimento antes do contato.
 ---
 
 # 24. EVOLUÇÃO E18 — CHEFES
+
+**Implementada e refinada até a versão 0.29.2.** Os quatro encontros preservados agora possuem
+três momentos reais. A área de ataque aumenta após cada acerto e o aviso fica
+gradualmente mais rápido, mantendo uma abertura de 3,6 a 4 segundos. Periquito do
+Bosque, Guardião do Rio, Gavião da Montanha e Rei Castor retomam respectivamente
+raízes e cooperação, correnteza e troncos, vento e planeio, mecanismos e elevador.
+O Periquito do Bosque patrulha no ar, persegue o personagem ativo e mergulha para
+atingi-lo. Durante o pouso cansado, recebe dano somente de pulos na cabeça e é
+acalmado após três acertos. A investida de Pipo não causa dano nesse encontro.
+O pouso mantém a posição final do mergulho durante a recuperação. A pose de peito
+inflado e a respiração suave mostram cansaço físico sem deixar o personagem triste.
+Após o terceiro pulo, o Periquito cai, desaparece e o personagem ativo corre até
+o portal, encerrando a fase sem uma pausa estática na arena.
+[Execução e testes](../tests/evolucao_e18.md).
 
 Criar chefes utilizando as mecânicas aprendidas no mundo.
 
@@ -1095,6 +1111,12 @@ Chefes funcionam como conclusão do aprendizado do mundo.
 ---
 
 # 25. EVOLUÇÃO E19 — VILAREJO EVOLUTIVO
+
+**Implementada na versão 0.29.1.** O mapa permite visitar o vilarejo a qualquer
+momento. Alimentos e fases concluídas transformam gradualmente cestos, moradores,
+iluminação e decoração; a vitória ativa a celebração final. O estado é derivado
+do Save V2 e também registrado em `story.village`, sem criar uma progressão
+paralela. [Execução e testes](../tests/evolucao_e19.md).
 
 Criar estados diferentes do vilarejo.
 

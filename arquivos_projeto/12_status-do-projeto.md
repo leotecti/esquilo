@@ -1,17 +1,51 @@
 # Status do projeto
 
 **Data:** 2026-10-05
-**Versão atual:** 0.27.1, baseada na Validação intermediária 2 — aventura
+**Versão atual:** 0.29.2, baseada na Validação intermediária 2 — aventura
 completa em miniatura.
 
 **Correção visual atual:** a caudada foi refeita como giro corporal completo em
 seis poses, com o impacto sincronizado à passagem frontal da cauda.
 
-**Etapa atual:** E17 — famílias de inimigos. Lesma, besouro, aranha, morcego,
-porco-espinho e corvo patrulheiro possuem arte e comportamento próprios.
+**Etapa atual:** E19 — vilarejo evolutivo. Provisões e fases concluídas produzem
+quatro estados visuais persistentes, acessíveis pelo mapa da jornada.
 
-**Próximo trabalho previsto:** validar aparência, leitura e comportamento das
-famílias no aparelho antes de aumentar a quantidade ou criar combinações densas.
+**Próximo trabalho previsto:** validar os quatro estados do vilarejo no aparelho
+e seguir para a E20 após o aceite da leitura visual e da navegação por toque.
+
+## Evolução E19 — Entrega atual
+
+- O mapa possui acesso permanente por **Visitar vilarejo**.
+- Escassez, recuperação, preparação e celebração respondem ao Save V2.
+- Cestos, provisões, moradores, luz, bandeirolas e partículas mudam gradualmente.
+- Alimentos de revisitas ajudam a recuperação; a celebração exige a vitória final.
+- A tela respeita toque, teclado, tela cheia e áreas seguras dos celulares.
+- 11 verificações específicas foram aprovadas.
+
+[Implementação e roteiro de playtest](../tests/evolucao_e19.md).
+
+## Evolução E18 — Entrega atual
+
+- Periquito do Bosque, Guardião do Rio, Gavião da Montanha e Rei Castor possuem
+  três momentos distintos.
+- Cada acerto amplia a área perigosa e acelera o próximo aviso.
+- A oportunidade de ataque permanece entre 3,6 e 4 segundos.
+- O Periquito do Bosque possui quatro poses ilustradas: voo, aviso, golpe de asas
+  e pouso cansado. Sua rajada desperta as raízes usadas no primeiro confronto.
+- Ele patrulha no ar, persegue o personagem ativo e mergulha sobre Tico ou Pipo.
+- Somente pulos na cabeça durante o pouso cansado causam dano; são necessários três.
+- O pouso preserva o ponto final do mergulho. A pose e a respiração mostram esforço
+  físico sem transmitir tristeza, dando ao jogador uma oportunidade previsível.
+- A cabeça fica abaixada e marcada durante a recuperação; saltos normais sobre a
+  ilustração acionam a vulnerabilidade sem exigir alinhamento exato dos centros.
+- O terceiro pulo inicia queda, desaparecimento e corrida automática do personagem
+  ativo até o portal que encerra a fase.
+- As arenas retomam raízes, correnteza, vento, planeio, mecanismos e elevadores.
+- Valda continua exclusivamente como mentora.
+- 41 verificações específicas, 19 confrontos completos por comandos, 10 regras e
+  35 verificações da aventura completa foram aprovadas.
+
+[Implementação e roteiro de playtest](../tests/evolucao_e18.md).
 
 ## Evolução E17 — Entrega atual
 
@@ -21,8 +55,10 @@ famílias no aparelho antes de aumentar a quantidade ou criar combinações dens
 - Lesma e morcego preservam seus papéis, agora no mesmo padrão artístico.
 - Os seis inimigos possuem ciclos de quatro quadros para rastejo, passos ou voo.
 - Inimigos terrestres mantêm os pés no solo; morcego e corvo articulam as asas.
+- A aranha desce da teia até a faixa do personagem e retorna ao alto, abrindo
+  uma janela segura de travessia.
 - Primeiros Passos continua ensinando somente a lesma.
-- 39 verificações específicas, 20 da E16, 10 de regras e 35 da aventura completa
+- 41 verificações específicas, 20 da E16, 10 de regras e 35 da aventura completa
   foram aprovadas.
 
 [Implementação e roteiro de playtest](../tests/evolucao_e17.md).
@@ -469,8 +505,9 @@ quando a pedra atinge o limite. As regras de força e movimento não mudam.
 - [x] Fase 1-2 — Blocos e Segredos: três tipos de bloco, segredo opcional e ouriço.
 - [x] Fase 1-3 — Um Novo Amigo: resgate jogável, breve diálogo e desbloqueio de Pipo.
 - [x] Cooperação: pedra, passagem baixa, investida, faro e desafio final.
-- [x] Guardião do Bosque mantido no escopo, em encontro ao final da fase 1-3.
-- [x] Ataque anunciado, abertura para salto/investida, três acertos e encerramento amigável.
+- [x] Periquito do Bosque definido como chefe da fase 1-4.
+- [x] Patrulha aérea, perseguição, mergulho anunciado e encerramento amigável.
+- [x] Periquito derrotado por três pulos na cabeça; investida de Pipo não causa dano.
 - [x] Transição entre fases e conclusão persistente do mundo.
 - [x] Save próprio versionado; slot do protótipo preservado e preferências aproveitadas.
 - [x] Reinício com confirmação; dados danificados ou futuros protegidos.

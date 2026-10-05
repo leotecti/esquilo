@@ -8,7 +8,7 @@ static func steps(stage: int) -> Array:
 	var content: Dictionary = {
 		3:{
 			"title":"O caminho até o rio",
-			"tico":"O Guardião está bem e a passagem foi aberta. Mas ainda não sabemos para onde levaram a comida.",
+			"tico":"O Periquito está bem e a passagem foi aberta. Mas ainda não sabemos para onde levaram a comida.",
 			"valda_1":"Vocês devolveram a paz ao bosque. As marcas seguem para o Rio das Pedras.",
 			"valda_2":"A correnteza carrega sementes e pistas. Atravessem com cuidado e observem tudo o que estiver fora do lugar.",
 			"tico_end":"Vamos seguir juntos. Encontraremos a próxima pista do outro lado do rio!"},

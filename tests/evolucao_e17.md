@@ -24,6 +24,11 @@ Lesma, besouro, aranha e porco-espinho mantêm uma linha de contato fixa com o
 solo. A lesma comprime e estende o corpo; os demais alternam as patas. Morcego e
 corvo articulam as asas sem comprimir ou reduzir o corpo inteiro.
 
+A margem transparente inferior das pranchas terrestres é compensada no desenho,
+mantendo patas e corpo apoiados na superfície. A aranha aguarda no alto, desce
+até a faixa de risco próxima ao solo, permanece brevemente e retorna, criando
+uma janela segura clara para a passagem.
+
 O desenho geométrico provisório permanece apenas como fallback interno e fica
 invisível quando a ilustração é carregada. Colisões e alcance não dependem das
 dimensões da imagem.
@@ -39,7 +44,7 @@ dimensões da imagem.
 
 ## Verificação
 
-- `evolucao_e17_test.gd`: **39 verificações aprovadas**;
+- `evolucao_e17_test.gd`: **41 verificações aprovadas**;
 - `evolucao_e16_test.gd`: **20 verificações aprovadas**;
 - `world_rules_test.gd`: **10 verificações aprovadas**;
 - `tail_e14_test.gd`: **19 verificações aprovadas**;

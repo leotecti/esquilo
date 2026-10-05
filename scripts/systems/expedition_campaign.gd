@@ -163,7 +163,24 @@ func _new_survival() -> Dictionary:
 	return {"lives":initial_lives,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}
 
 func _prepare_save() -> void:
+	_sync_village_flags()
 	store.sync_story(data)
+
+func village_progress() -> Dictionary:
+	var completed := 0
+	for snapshot in data.levels.values():
+		if snapshot.get("completed",false): completed += 1
+	var food := int(data.survival.get("food_total",0))
+	var state := 0
+	if completed>=16 or data.get("finished",false): state = 3
+	elif completed>=8 or food>=75: state = 2
+	elif completed>=3 or food>=20: state = 1
+	return {"state":state,"food":food,"completed":completed,"final":state==3}
+
+func _sync_village_flags() -> void:
+	if not data.has("story") or not data.story.has("village"): return
+	var state := int(village_progress().state)
+	for i in 4: data.story.village["state_%d" % i] = i==state
 
 ## Consulta derivada: evita cópias divergentes de desbloqueios e conclusões no save.
 func progress_summary() -> Dictionary:
@@ -181,7 +198,8 @@ func progress_summary() -> Dictionary:
 			"secret":snapshot.get("secret",false),"golden_nuts":data.collectibles.golden_nuts.get(id,[]).duplicate()}
 	return {"current":int(data.stage),"unlocked":unlocked,"completed":completed,"levels":stages,
 		"characters":["Tico","Pipo"] if data.survival.pipo_unlocked else ["Tico"],
-		"story":data.story.duplicate(true),"tutorials":data.tutorials.duplicate(true),"settings":data.settings.duplicate(true)}
+		"story":data.story.duplicate(true),"village":village_progress(),
+		"tutorials":data.tutorials.duplicate(true),"settings":data.settings.duplicate(true)}
 
 ## IDs estáveis por fase. A criação dos objetos e das recompensas pertence às etapas de conteúdo.
 func record_golden_nut(id: String) -> bool:

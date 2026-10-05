@@ -2,7 +2,20 @@ extends "res://scripts/enemies/forest_guardian.gd"
 var biome := 2
 var origin := Vector2.ZERO
 
+func attack_reach() -> float:
+	var stage := encounter_stage()-1
+	return [[260.0,320.0,380.0],[180.0,230.0,280.0],[160.0,180.0,200.0]][biome-2][stage]
+
+func stage_message() -> String:
+	var messages := {
+		2:["A correnteza alcança uma área maior.","Último padrão: correnteza larga e rápida!"],
+		3:["O Gavião muda a altura do mergulho.","Último padrão: mergulho mais longo e veloz!"],
+		4:["O Rei Castor acelera as engrenagens.","Último padrão: engrenagens cobrem toda a plataforma!"]
+	}
+	return messages[biome][encounter_stage()-2]
+
 func _ready() -> void:
+	is_parakeet = false
 	super._ready()
 	origin = position
 
@@ -18,24 +31,24 @@ func _physics_process(delta: float) -> void:
 		match phase:
 			"waiting":
 				phase = "warning"
-				remaining = 1.2
+				remaining = phase_duration("warning")
 				level._say(["A água vai subir! Salte para o tronco.","O Gavião vai mergulhar! Espere na plataforma.","Engrenagens chegando! Pule e espere a abertura."][biome-2])
 			"warning":
 				phase = "attack"
-				remaining = 0.7
+				remaining = phase_duration("attack")
 			"attack":
 				phase = "tired"
-				remaining = 4.0
+				remaining = phase_duration("tired")
 				level._say("Agora! Salte por cima com Tico." if biome>2 else "Agora! Salte ou use a investida de Pipo.")
 			"tired":
 				phase = "waiting"
-				remaining = 1.4
+				remaining = phase_duration("waiting")
 	if biome==3:
 		var height := 0.0 if phase=="tired" else 125.0
-		if phase=="attack": height *= maxf(0,remaining/0.7)
-		position.y = move_toward(position.y,origin.y-height,delta*260)
+		if phase=="attack": height *= maxf(0,remaining/phase_duration("attack"))
+		position.y = move_toward(position.y,origin.y-height,delta*(260+encounter_stage()*35))
 	var offset: Vector2 = player.position-origin
-	if phase=="attack" and absf(offset.x)<(270 if biome==2 else 180) and offset.y>(-65 if biome==2 else -45) and offset.y<25:
+	if phase=="attack" and absf(offset.x)<attack_reach() and offset.y>(-65 if biome==2 else -45) and offset.y<25:
 		player.take_damage(position)
 	var contact: Vector2 = player.position-position
 	if absf(contact.x)<65 and contact.y>-115 and contact.y<20:
@@ -56,9 +69,11 @@ func _draw() -> void:
 	if phase in ["warning","attack"]:
 		var y: float = origin.y-position.y
 		if biome==2:
-			draw_rect(Rect2(-270,y-60 if phase=="attack" else y-6,540,65 if phase=="attack" else 6),Color("6cd3dda0"))
+			var reach := attack_reach()
+			draw_rect(Rect2(-reach,y-60 if phase=="attack" else y-6,reach*2,65 if phase=="attack" else 6),Color("6cd3dda0"))
 		else:
-			for x in range(-180,181,60):
+			var reach := int(attack_reach())
+			for x in range(-reach,reach+1,60):
 				draw_circle(Vector2(x,y-20),15 if phase=="attack" else 5,Color("f0c87b"))
 	if biome==3:
 		for side in [-1,1]:

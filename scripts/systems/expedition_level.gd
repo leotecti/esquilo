@@ -2,9 +2,9 @@ extends "res://scripts/systems/world_level.gd"
 @export_range(2,4) var biome := 2
 @export_range(0,3) var section := 0
 const NAMES = {
-	2:["2-1 • Atravessando o Rio","2-2 • Correnteza","2-3 • A Grande Ponte","2-3 • Guardião do Rio"],
-	3:["3-1 • Vento nas Alturas","3-2 • Cavernas da Montanha","3-3 • O Ninho das Corujas","3-3 • Coruja da Montanha"],
-	4:["4-1 • A Vila Mecânica","4-2 • A Grande Barragem","4-3 • As Engrenagens","4-3 • Rei Castor"]}
+	2:["2-1 • Atravessando o Rio","2-2 • Correnteza","2-3 • A Grande Ponte","2-4 • Guardião do Rio"],
+	3:["3-1 • Vento nas Alturas","3-2 • Cavernas da Montanha","3-3 • O Ninho das Corujas","3-4 • Gavião da Montanha"],
+	4:["4-1 • A Vila Mecânica","4-2 • A Grande Barragem","4-3 • As Engrenagens","4-4 • Rei Castor"]}
 const BACKGROUNDS = [preload("res://assets/worlds/river.svg"),preload("res://assets/worlds/mountain.svg"),preload("res://assets/worlds/village.svg")]
 var water: Array[Rect2] = []
 var wind_zones: Array[Rect2] = []
@@ -140,7 +140,7 @@ func _boss_arena() -> void:
 		_platform(Rect2(2500,690,750,70))
 		guardian.position.y = 690
 		wind_zones.append(Rect2(2440,420,820,340))
-		_sign(Vector2(1100,520),"Espere a coruja pousar • Tico salta por cima")
+		_sign(Vector2(1100,520),"Espere o Gavião pousar • Tico salta por cima")
 	else:
 		_device("Arena",Vector2(2220,760),"charge")
 		var lift := _mover(Vector2(2460,752),Vector2(0,-220),300,6,false)

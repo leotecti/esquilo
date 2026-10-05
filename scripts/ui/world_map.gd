@@ -2,7 +2,7 @@ extends Control
 ## Paisagem ilustrada; controles, caminhos e personagens acompanham o progresso.
 const WORLDS = ["Bosque das Folhas","Rio das Pedras","Montanha das Corujas","Vila dos Castores"]
 const BACKGROUNDS = ["res://assets/map/forest.png","res://assets/map/river.png","res://assets/map/mountain.png","res://assets/map/village.png"]
-const NAMES = ["Primeiros Passos","Blocos e Segredos","Um Novo Amigo","Guardião do Bosque",
+const NAMES = ["Primeiros Passos","Blocos e Segredos","Um Novo Amigo","Periquito do Bosque",
 	"Atravessando o Rio","Correnteza","A Grande Ponte","Guardião do Rio",
 	"Vento nas Alturas","Cavernas da Montanha","O Ninho das Corujas","Encontro na Montanha",
 	"A Vila Mecânica","A Grande Barragem","As Engrenagens","Rei Castor"]
@@ -22,6 +22,8 @@ var primary: Button
 var back: Button
 var previous_world: Button
 var next_world: Button
+var village_button: Button
+var village_view: Control
 var ambience: Control
 var squirrel: TextureRect
 var companion: TextureRect
@@ -111,6 +113,9 @@ func _ready() -> void:
 	next_world = button(">")
 	next_world.tooltip_text = "Próximo mundo"
 	next_world.pressed.connect(func(): select_world((world+1)%4))
+	village_button = button("Visitar vilarejo")
+	village_button.tooltip_text = "Veja como suas provisões estão mudando o vilarejo"
+	village_button.pressed.connect(open_village)
 	for i in 4:
 		var node := preload("res://scripts/ui/map_marker.gd").new()
 		node.pressed.connect(select_stage.bind(i))
@@ -133,6 +138,22 @@ func _ready() -> void:
 	resized.connect(layout)
 	refresh()
 	primary.grab_focus()
+
+func open_village() -> void:
+	if is_instance_valid(village_view): return
+	village_view = preload("res://scripts/ui/village_view.gd").new()
+	village_view.campaign = campaign
+	village_view.z_index = 100
+	village_view.closed.connect(close_village)
+	add_child(village_view)
+	play_selection()
+
+func close_village() -> void:
+	if not is_instance_valid(village_view): return
+	village_view.queue_free()
+	village_view = null
+	village_button.grab_focus()
+	play_selection()
 
 func portrait(atlas: String, dimensions: Vector2) -> TextureRect:
 	var item := TextureRect.new()
@@ -276,6 +297,8 @@ func layout() -> void:
 	previous_world.size = Vector2(88,88)
 	next_world.position = Vector2(header.end.x-54,header.position.y+7)
 	next_world.size = Vector2(88,88)
+	village_button.position = Vector2(left,132+inset.y)
+	village_button.size = Vector2(225,64)
 	back.position = Vector2(left,29+inset.y)
 	back.size = Vector2(192,88)
 	progress.position = Vector2(right-210,43+inset.y)
@@ -353,9 +376,11 @@ func details() -> Dictionary:
 	for i in 4:
 		states[str(world*4+i)] = stage_state(world*4+i)
 		rects[str(world*4+i)] = rect(nodes[i])
+	var village_details: Dictionary = village_view.details() if is_instance_valid(village_view) else {"village_open":false}
 	return {"map_open":true,"map_world":world,"map_selected":selected,"map_states":states,"map_nodes":rects,"map_walking":_walking,"map_actor_x":_actor_point.x,
 		"map_previous_rect":rect(previous_world),"map_next_rect":rect(next_world),"map_enter_rect":rect(primary),"map_enter_disabled":primary.disabled,"map_back_rect":rect(back),
-		"map_pipo_visible":companion.visible,"map_tico_visible":squirrel.visible,"map_art":BACKGROUNDS[world]}
+		"map_pipo_visible":companion.visible,"map_tico_visible":squirrel.visible,"map_art":BACKGROUNDS[world],
+		"map_village_rect":rect(village_button),"village":village_details}
 
 func rect(control: Control) -> Array:
 	var r := control.get_global_rect()

@@ -10,6 +10,7 @@ const MOVE_SHEETS := {
 }
 const HEIGHTS := {"slug":68.0,"beetle":72.0,"spider":82.0,"bat":88.0,"hedgehog":88.0,"crow":92.0}
 const FRAME_SIZE := Vector2(512,384)
+const GROUND_BASELINE_PX := 368.0
 const FPS := {"slug":5.0,"beetle":7.0,"spider":6.0,"bat":9.0,"hedgehog":6.0,"crow":8.0}
 
 var kind := "slug"
@@ -50,6 +51,9 @@ func _draw() -> void:
 	var scale_value := Vector2(facing,1.0)
 	if enemy.defeated: scale_value.y = 0.35
 	draw_set_transform(Vector2.ZERO,0.0,scale_value)
-	var destination := Rect2(Vector2(-size.x*.5,-size.y),size)
+	var ground_offset := 0.0
+	if kind in ["slug","beetle","hedgehog"]:
+		ground_offset = (FRAME_SIZE.y-GROUND_BASELINE_PX)*(height/FRAME_SIZE.y)
+	var destination := Rect2(Vector2(-size.x*.5,-size.y+ground_offset),size)
 	var source := Rect2(Vector2(animation_frame*FRAME_SIZE.x,0),FRAME_SIZE)
 	draw_texture_rect_region(texture,destination,source)

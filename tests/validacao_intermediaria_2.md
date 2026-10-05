@@ -12,7 +12,7 @@ coerente antes da produção e do refinamento dos demais mundos.
    a Copa dos Segredos como exploração opcional.
 4. **1-2 — Blocos e Segredos** pratica blocos, inimigos e descoberta.
 5. **1-3 — Um Novo Amigo** apresenta e resgata Pipo, liberando a cooperação.
-6. **Guardião do Bosque** exige resolver o confronto antes da saída.
+6. **Periquito do Bosque** exige resolver o confronto antes da saída.
 7. Valda apresenta a próxima pista e o mapa libera o Rio das Pedras.
 8. Fechar e reabrir preserva cenas concluídas, fases, Pipo e conquistas.
 
@@ -48,7 +48,7 @@ coerente antes da produção e do refinamento dos demais mundos.
 2. Complete as fases 1-1, 1-2 e 1-3 pelo mapa.
 3. Entre e saia da Copa dos Segredos; colete uma Noz Dourada.
 4. Resgate Pipo, troque de personagem e use sua força.
-5. Resolva o Guardião do Bosque e acompanhe a conversa com Valda.
+5. Acalme o Periquito do Bosque e acompanhe a conversa com Valda.
 6. Confirme que o Rio das Pedras foi liberado.
 7. Feche e reabra a PWA; confira mapa, Pipo, fases e coletáveis.
 8. Repita a reabertura sem conexão.
