@@ -15,10 +15,14 @@ A E17 completa seis famílias com aparência e comportamento próprios:
 
 ## Direção visual
 
-As seis imagens ficam em `assets/enemies/`, com tela de 512 × 384 e transparência.
-Cada criatura possui paleta, silhueta e forma de movimento próprias. A arte é
-desenhada por `enemy_art.gd`, que acrescenta balanço, direção, voo, fio da aranha
-e sinais breves de alerta.
+As seis imagens-base ficam em `assets/enemies/`, com tela de 512 × 384 e
+transparência. Cada criatura possui uma prancha de quatro quadros em
+`assets/enemies/animation/`, com 2048 × 384. `enemy_art.gd` seleciona os quadros,
+a direção, o fio da aranha e os sinais breves de alerta.
+
+Lesma, besouro, aranha e porco-espinho mantêm uma linha de contato fixa com o
+solo. A lesma comprime e estende o corpo; os demais alternam as patas. Morcego e
+corvo articulam as asas sem comprimir ou reduzir o corpo inteiro.
 
 O desenho geométrico provisório permanece apenas como fallback interno e fica
 invisível quando a ilustração é carregada. Colisões e alcance não dependem das
@@ -35,7 +39,7 @@ dimensões da imagem.
 
 ## Verificação
 
-- `evolucao_e17_test.gd`: **27 verificações aprovadas**;
+- `evolucao_e17_test.gd`: **39 verificações aprovadas**;
 - `evolucao_e16_test.gd`: **20 verificações aprovadas**;
 - `world_rules_test.gd`: **10 verificações aprovadas**;
 - `tail_e14_test.gd`: **19 verificações aprovadas**;
@@ -50,12 +54,14 @@ dimensões da imagem.
 4. Na Montanha, compare o voo previsível do morcego com a perseguição do corvo.
 5. Teste pisão e caudada nos inimigos vulneráveis; a caudada não deve derrotar o
    porco-espinho.
-6. No celular, confira tamanho, transparência, fluidez e identificação das
-   silhuetas sobre fundos claros e escuros.
+6. No celular, confira se pés e patas permanecem apoiados, sem flutuação ou
+   mudança de tamanho, e se as asas completam todo o ciclo.
+7. Confira tamanho, transparência, fluidez e identificação das silhuetas sobre
+   fundos claros e escuros.
 
 ## Arte
 
-As ilustrações foram geradas com a ferramenta integrada de imagens usando o
-visual de Tico como referência. O pedido definiu uma formação com seis criaturas,
-fundo transparente, acabamento infantil de jogo comercial, silhuetas separadas
-e ausência de cenário, texto, cortes ou elementos soltos.
+As ilustrações e os ciclos foram gerados com a ferramenta integrada de imagens
+usando cada inimigo aprovado como referência. Os pedidos preservaram desenho,
+paleta e proporções, exigiram quatro poses separadas, fundo transparente, linha
+de apoio constante e ausência de cenário, texto, cortes ou elementos soltos.

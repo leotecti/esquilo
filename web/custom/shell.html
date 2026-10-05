@@ -89,13 +89,18 @@
         await screen.orientation?.lock?.('landscape').catch(() => {});
       } catch { /* Alguns navegadores só oferecem tela cheia quando o jogo está instalado. */ }
     }
-    update.addEventListener('click', () => registration?.waiting?.postMessage({type:'ACTIVATE_UPDATE'}));
+    update.addEventListener('click', () => {
+      update.disabled = true;
+      update.textContent = 'Atualizando…';
+      registration?.waiting?.postMessage('update');
+    });
     if ('serviceWorker' in navigator && isSecureContext) {
       navigator.serviceWorker.register(config.serviceWorker, {scope:'./', updateViaCache:'none'}).then(async reg => {
         registration = reg;
         const showUpdate = () => { update.hidden = !(reg.waiting && reg.active); };
         showUpdate();
         reg.addEventListener('updatefound', () => reg.installing?.addEventListener('statechange', showUpdate));
+        await reg.update();
         await navigator.serviceWorker.ready;
         document.getElementById('offline-status').textContent = 'Pronto para jogar offline neste dispositivo.';
       }).catch(() => { document.getElementById('offline-status').textContent = 'Jogue online. O modo offline ainda não está disponível.'; });

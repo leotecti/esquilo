@@ -10,17 +10,20 @@ controles, faro e percurso completo.
 ## Pacote
 
 Versão atual: **Validação intermediária 2 — aventura completa em miniatura
-(0.27.0)**. Acrescenta as famílias ilustradas de inimigos da E17 e preserva o Save V2.
+(0.27.1)**. Acrescenta ciclos completos de movimento às famílias ilustradas de inimigos da E17 e preserva o Save V2.
 
 Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientação
 horizontal. A PWA instalada abre diretamente no modo `fullscreen`; não há botão
 flutuante sobre o jogo para alternar esse estado.
 [Relatório e roteiro da validação](../tests/validacao_intermediaria_2.md).
 
-`builds/web/Tico-0.27.0-evolucao-e17-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-0.27.1-inimigos-animados-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
 Não coloque outra pasta `validacao_intermediaria_2` entre `/tico/` e os arquivos.
+O botão **Atualizar** ativa o novo service worker e recarrega a PWA quando uma
+versão estiver aguardando. O registro também consulta atualizações ao abrir a
+página, sem depender do cache HTTP do navegador.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

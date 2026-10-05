@@ -1,7 +1,7 @@
 # Status do projeto
 
-**Data:** 2026-10-04
-**Versão atual:** 0.27.0, baseada na Validação intermediária 2 — aventura
+**Data:** 2026-10-05
+**Versão atual:** 0.27.1, baseada na Validação intermediária 2 — aventura
 completa em miniatura.
 
 **Correção visual atual:** a caudada foi refeita como giro corporal completo em
@@ -19,8 +19,10 @@ famílias no aparelho antes de aumentar a quantidade ou criar combinações dens
 - O porco-espinho ganhou espinhos volumosos e silhueta defensiva legível.
 - Besouro acelera, aranha move-se verticalmente e corvo persegue a curta distância.
 - Lesma e morcego preservam seus papéis, agora no mesmo padrão artístico.
+- Os seis inimigos possuem ciclos de quatro quadros para rastejo, passos ou voo.
+- Inimigos terrestres mantêm os pés no solo; morcego e corvo articulam as asas.
 - Primeiros Passos continua ensinando somente a lesma.
-- 27 verificações específicas, 20 da E16, 10 de regras e 35 da aventura completa
+- 39 verificações específicas, 20 da E16, 10 de regras e 35 da aventura completa
   foram aprovadas.
 
 [Implementação e roteiro de playtest](../tests/evolucao_e17.md).

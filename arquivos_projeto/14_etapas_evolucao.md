@@ -1049,10 +1049,11 @@ Introdução atual:
 - **Montanha:** morcego antes do corvo patrulheiro;
 - combinações mais densas ficam para a reestruturação das fases posteriores.
 
-Todas as artes usam fundo transparente e uma tela padronizada de 512 × 384. A
-colisão permanece independente da ilustração, evitando que o ganho visual mude o
-alcance de dano. A direção, o movimento e os estados de alerta animam a arte sem
-exigir pranchas pesadas para cada inimigo.
+Todas as artes usam fundo transparente. Cada família também possui uma prancha de
+quatro quadros com 2048 × 384. A colisão permanece independente da ilustração,
+evitando que o ganho visual mude o alcance de dano. Lesma, besouro, aranha e
+porco-espinho mantêm uma base fixa enquanto rastejam ou alternam as patas;
+morcego e corvo articulam as asas sem reduzir o corpo.
 
 ## Resultado esperado
 
