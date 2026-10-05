@@ -53,6 +53,22 @@ de provisão por trecho e o maior intervalo entre recompensas foi medido em 540
 unidades. Não transforme cada trecho numa linha contínua de coletáveis: deixe
 espaço para correr e varie altura e posição dos grupos.
 
+## Curva de dificuldade da fase modelo
+
+Primeiros Passos usa uma curva única antes da futura criação de modos separados:
+
+| Momento | Intervalo | Função |
+| --- | ---: | --- |
+| Aprender | x = 0 a 5.200 | apresentar salto, planagem e lesma com espaço |
+| Praticar | x = 5.200 a 14.800 | repetir encontros previsíveis na velocidade base |
+| Combinar | x = 14.800 a 27.600 | juntar terreno, recompensas e lesmas moderadamente mais rápidas |
+| Desafiar | x = 27.600 a 40.500 | pedir reação maior com elementos já ensinados |
+| Chegada | x = 40.500 a 42.000 | reduzir a pressão antes da saída |
+
+Há duas lesmas em cada um dos quatro momentos jogáveis. Suas velocidades são 45,
+45, 50 e 55. Elas continuam isoladas em plataformas abertas; o aumento vem do
+contexto do percurso, sem ampliar saúde ou criar grupos que bloqueiem a passagem.
+
 ## Recompensas e saúde
 
 Primeiros Passos oferece **271 nozes contabilizadas**, sendo 245 no caminho

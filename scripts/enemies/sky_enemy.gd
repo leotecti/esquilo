@@ -8,6 +8,10 @@ var defeated := false
 func _ready() -> void:
 	origin = position
 	add_to_group("enemies")
+	var art := preload("res://scripts/presentation/enemy_art.gd").new()
+	art.name = "EnemyArt"
+	art.kind = "bat"
+	add_child(art)
 
 func _physics_process(delta: float) -> void:
 	if defeated or level.completed or level.respawning: return

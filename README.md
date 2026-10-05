@@ -213,7 +213,7 @@ As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 ## Web/PWA — validação intermediária 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-0.25.1-giro-cauda-laterais-corrigidas-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-0.27.0-evolucao-e17-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -232,7 +232,7 @@ Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instal
 ## Build Windows da validação intermediária 2
 
 Abra `builds/windows/validacao_intermediaria_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-0.25.1-giro-cauda-laterais-corrigidas-windows.zip` contém os dois arquivos.
+O pacote `builds/windows/Tico-0.27.0-evolucao-e17-windows.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -341,7 +341,14 @@ e [verificações executadas](tests/evolucao_e00.md).
 **E14 implementada:** [mecânicas de Tico e Pipo](tests/evolucao_e14.md).
 **E15 implementada:** [backtracking controlado](tests/evolucao_e15.md).
 **Validação intermediária 2 concluída:** [aventura completa em miniatura](tests/validacao_intermediaria_2.md).
-Próximo passo: validar o fluxo completo no aparelho e seguir para a E16.
+**Evolução E16:** a fase Primeiros Passos possui uma curva única de aprender,
+praticar, combinar e desafiar. Os modos Fácil, Médio e Difícil foram adiados até
+o aceite final da fase. Consulte a [implementação e validação](tests/evolucao_e16.md).
+
+**Evolução E17 (0.27.0):** seis famílias de inimigos agora possuem arte própria e
+comportamentos distintos. O porco-espinho recebeu nova aparência, o besouro
+acelera, a aranha ameaça na vertical e o corvo executa perseguições curtas.
+[Detalhes e playtest](tests/evolucao_e17.md).
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

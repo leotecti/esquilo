@@ -995,73 +995,69 @@ Isso é importante para evitar produzir muito conteúdo antes de validar os sist
 
 # 22. EVOLUÇÃO E16 — PROGRESSÃO DE DIFICULDADE
 
-Agora definir formalmente uma curva de dificuldade.
+Definir uma curva única e previsível antes de criar modos separados de
+dificuldade. A fase modelo usa quatro momentos:
 
-Exemplo:
+1. **Aprender:** apresentar movimento, salto e a primeira lesma com espaço.
+2. **Praticar:** repetir o comportamento conhecido em terreno aberto.
+3. **Combinar:** juntar subidas, recompensas, blocos e inimigos já apresentados.
+4. **Desafiar:** exigir reação um pouco maior sem adicionar comandos inéditos.
 
-NÍVEL 1
-Aprender
+Em **1-1 — Primeiros Passos**, a curva foi aplicada assim:
 
-NÍVEL 2
-Praticar
+| Faixa | Posição | Lesmas | Velocidade |
+| --- | ---: | ---: | ---: |
+| Aprender | x = 0 a 5.200 | 2 | 45 |
+| Praticar | x = 5.200 a 14.800 | 2 | 45 |
+| Combinar | x = 14.800 a 27.600 | 2 | 50 |
+| Desafiar | x = 27.600 a 40.500 | 2 | 55 |
+| Chegada | x = 40.500 a 42.000 | 0 | — |
 
-NÍVEL 3
-Combinar
+A quantidade cresce pela combinação com terreno e recompensas, sem amontoar
+inimigos. A última faixa é uma recuperação curta antes da saída. Geometria,
+nozes, alimentos, blocos, copa, bandeira e duração aprovadas foram preservadas.
 
-NÍVEL 4
-Desafiar
-
-Para cada mundo definir:
-
-- velocidade dos inimigos;
-- quantidade;
-- combinação;
-- obstáculos;
-- plataformas;
-- distância entre checkpoints;
-- complexidade das áreas opcionais.
-
-Evitar dificuldade baseada apenas em aumento de saúde.
+Os três modos Fácil, Médio e Difícil ficam adiados até a primeira fase receber
+aceite final. Eles não fazem parte da implementação atual e não exigem Save V3.
 
 ## Resultado esperado
 
-Existe uma curva previsível de desafio.
+Existe uma curva previsível de desafio dentro da fase modelo, documentada e
+testada para orientar a reestruturação das fases seguintes.
 
 ---
 
 # 23. EVOLUÇÃO E17 — NOVOS INIMIGOS
 
-Criar famílias de inimigos gradualmente.
+As seis famílias possuem aparência ilustrada, silhueta própria e comportamento
+identificável:
 
-Exemplo:
+| Família | Leitura visual | Comportamento |
+| --- | --- | --- |
+| Lesma | corpo verde baixo e olhos elevados | patrulha lenta e previsível |
+| Besouro | casco âmbar e chifre azul | acelera ao perceber o personagem |
+| Aranha | oito pernas e abdômen estampado | sobe e desce por um fio |
+| Morcego | asas largas azul-acinzentadas | patrulha aérea ondulante |
+| Porco-espinho | coroa volumosa de espinhos | obstáculo defensivo; rejeita caudada |
+| Corvo patrulheiro | plumagem azul-escura e bico dourado | patrulha e persegue por curta distância |
 
-Lesma
-   ↓
-Besouro
-   ↓
-Aranha
-   ↓
-Morcego
-   ↓
-Porco-espinho
-   ↓
-Corvo patrulheiro
+Introdução atual:
 
-Cada inimigo deverá introduzir um comportamento.
+- **1-1:** somente lesmas;
+- **1-2:** besouro e porco-espinho, separados por trechos seguros;
+- **1-3:** aranha depois da apresentação da cooperação;
+- **Montanha:** morcego antes do corvo patrulheiro;
+- combinações mais densas ficam para a reestruturação das fases posteriores.
 
-Depois combinar inimigos.
-
-Exemplo:
-
-BESOURO + MORCEGO
-
-posteriormente:
-
-CORVO + OBSTÁCULO + PLATAFORMA
+Todas as artes usam fundo transparente e uma tela padronizada de 512 × 384. A
+colisão permanece independente da ilustração, evitando que o ganho visual mude o
+alcance de dano. A direção, o movimento e os estados de alerta animam a arte sem
+exigir pranchas pesadas para cada inimigo.
 
 ## Resultado esperado
 
-O desafio aumenta através da variedade.
+O desafio aumenta através da variedade, e cada inimigo pode ser reconhecido por
+silhueta, cor e movimento antes do contato.
 
 ---
 

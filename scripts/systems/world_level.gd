@@ -69,6 +69,7 @@ func _build_gameplay() -> void:
 			if actor.has_method("reset_enemy") and actor.position.x<700:
 				actor.position.x = 2550
 				actor.origin = actor.position
+		_spider(Vector2(2050,535),90)
 		rescue_lock = _block(Vector2(490,610),1,"RescueLock")
 		rescue_gate = _solid("Vines",Rect2(695,450,32,310),Color("5c7949"))
 		for child in rescue_gate.get_children():
@@ -164,7 +165,7 @@ func _build_solo_or_arena() -> void:
 		actors.add_child(secret)
 		secret.collected.connect(_on_collected)
 		total_nuts += 1
-		_slug(Vector2(1040,760),45)
+		_beetle(Vector2(1040,760),90)
 		var hedgehog = preload("res://scripts/enemies/hedgehog.gd").new()
 		hedgehog.name = "Hedgehog"
 		hedgehog.level = self
@@ -232,12 +233,31 @@ func _block(point: Vector2, kind: int, node_name: String) -> StaticBody2D:
 	if kind==2: total_nuts += 1
 	return block
 
-func _slug(point: Vector2, distance: float) -> void:
+func _slug(point: Vector2, distance: float) -> Node2D:
 	var slug = SLUG.instantiate()
 	slug.position = point
 	slug.patrol_distance = distance
 	actors.add_child(slug)
 	slug.stomped.connect(_on_stomp)
+	return slug
+
+func _beetle(point: Vector2, distance: float = 110.0) -> Node2D:
+	var beetle = preload("res://scripts/enemies/beetle.gd").new()
+	beetle.position = point
+	beetle.level = self
+	beetle.patrol_distance = distance
+	actors.add_child(beetle)
+	beetle.stomped.connect(_on_stomp)
+	return beetle
+
+func _spider(point: Vector2, travel: float = 105.0) -> Node2D:
+	var spider = preload("res://scripts/enemies/spider.gd").new()
+	spider.position = point
+	spider.level = self
+	spider.travel = travel
+	actors.add_child(spider)
+	spider.stomped.connect(_on_stomp)
+	return spider
 
 func _markers(flag: Vector2, finish: Vector2) -> void:
 	checkpoint = CHECKPOINT.instantiate()

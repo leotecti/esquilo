@@ -9,6 +9,10 @@ var _defeat_time: float = 0.0
 
 func _ready() -> void:
 	origin = position
+	var art := preload("res://scripts/presentation/enemy_art.gd").new()
+	art.name = "EnemyArt"
+	art.kind = "slug"
+	add_child(art)
 
 func _physics_process(delta: float) -> void:
 	if defeated:

@@ -1,14 +1,41 @@
 # Status do projeto
 
 **Data:** 2026-10-04
-**Etapa atual:** Validação intermediária 2 — aventura completa em miniatura,
-versão 0.25.1.
+**Versão atual:** 0.27.0, baseada na Validação intermediária 2 — aventura
+completa em miniatura.
 
 **Correção visual atual:** a caudada foi refeita como giro corporal completo em
 seis poses, com o impacto sincronizado à passagem frontal da cauda.
 
-**Próximo trabalho previsto:** validar o fluxo completo do Mundo 1 no aparelho
-do usuário e, após o aceite, seguir para a progressão de dificuldade da E16.
+**Etapa atual:** E17 — famílias de inimigos. Lesma, besouro, aranha, morcego,
+porco-espinho e corvo patrulheiro possuem arte e comportamento próprios.
+
+**Próximo trabalho previsto:** validar aparência, leitura e comportamento das
+famílias no aparelho antes de aumentar a quantidade ou criar combinações densas.
+
+## Evolução E17 — Entrega atual
+
+- Seis inimigos receberam ilustrações comerciais com fundo transparente.
+- O porco-espinho ganhou espinhos volumosos e silhueta defensiva legível.
+- Besouro acelera, aranha move-se verticalmente e corvo persegue a curta distância.
+- Lesma e morcego preservam seus papéis, agora no mesmo padrão artístico.
+- Primeiros Passos continua ensinando somente a lesma.
+- 27 verificações específicas, 20 da E16, 10 de regras e 35 da aventura completa
+  foram aprovadas.
+
+[Implementação e roteiro de playtest](../tests/evolucao_e17.md).
+
+## Evolução E16 — Entrega atual
+
+- Primeiros Passos foi dividida em Aprender, Praticar, Combinar e Desafiar.
+- Cada faixa mantém duas lesmas isoladas; a velocidade progride de 45 para 50 e 55.
+- A chegada permanece sem inimigos para encerrar a fase com clareza.
+- Geometria, recompensas, copa, bandeira, Save V2 e duração foram preservados.
+- 20 verificações específicas, 24 da fase modelo, 4 de navegação e 35 da aventura
+  completa foram aprovadas.
+- Fácil, Médio e Difícil serão definidos depois do aceite final desta fase.
+
+[Implementação e roteiro de playtest](../tests/evolucao_e16.md).
 
 ## Validação intermediária 2 — Entrega atual
 
@@ -37,7 +64,7 @@ do usuário e, após o aceite, seguir para a progressão de dificuldade da E16.
 ## Evolução E14 — Entrega atual
 
 - Tico usa **E/CAUDADA** no chão contra inimigos comuns.
-- Quatro poses mostram preparação, movimento da cauda e recuperação.
+- Seis poses mostram preparação, giro corporal, impacto e recuperação.
 - Alcance frontal curto, bloqueio por paredes e um acerto por alvo em cada golpe.
 - Dano, derrota, retorno e conclusão cancelam a ação com segurança.
 - Lesmas e inimigos voadores recebem o golpe; espinhos e chefes não recebem.

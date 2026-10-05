@@ -3,14 +3,22 @@ extends Node2D
 var level: Node2D
 var origin := Vector2.ZERO
 var time := 0.0
+var facing := 1.0
+var defeated := false
 
 func _ready() -> void:
 	origin = position
+	add_to_group("enemies")
+	var art := preload("res://scripts/presentation/enemy_art.gd").new()
+	art.name = "EnemyArt"
+	art.kind = "hedgehog"
+	add_child(art)
 
 func _physics_process(delta: float) -> void:
 	if level.completed or level.respawning: return
 	time += delta
 	position.x = origin.x + sin(time * 0.7) * 45
+	facing = signf(cos(time*0.7))
 	var player: CharacterBody2D = level.tico
 	if player.controls_enabled and absf(player.position.x-position.x)<43 and player.position.y>position.y-45 and player.position.y<position.y+30:
 		player.take_damage(global_position)
@@ -19,6 +27,7 @@ func _physics_process(delta: float) -> void:
 func reset_enemy() -> void:
 	time = 0
 	position = origin
+	facing = 1.0
 
 func receive_tail(_character: Node2D) -> bool:
 	return false

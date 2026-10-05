@@ -108,7 +108,7 @@ func _mountain() -> void:
 		wind_zones = [Rect2(1140,100,560,700),Rect2(2650,-80,600,860)]
 		_mover(Vector2(1470,510),Vector2(0,-100),160,5)
 		_sky_enemy(Vector2(1860,345))
-		_sky_enemy(Vector2(2890,175))
+		_crow_enemy(Vector2(2890,175))
 		for point in [Vector2(350,715),Vector2(680,645),Vector2(1080,505),Vector2(1400,385),Vector2(1770,385),Vector2(2090,315),Vector2(2340,245),Vector2(2600,175),Vector2(2960,100),Vector2(3440,175)]: _nut(point)
 		_markers(Vector2(1780,430),Vector2(3600,220))
 		_sign(Vector2(270,510),"Suba até o ninho • Siga as penas")
@@ -264,6 +264,13 @@ func _apply_device(id: String, announce: bool) -> void:
 
 func _sky_enemy(point: Vector2) -> void:
 	var enemy = preload("res://scripts/enemies/sky_enemy.gd").new()
+	enemy.position = point
+	enemy.level = self
+	actors.add_child(enemy)
+	enemy.stomped.connect(_on_stomp)
+
+func _crow_enemy(point: Vector2) -> void:
+	var enemy = preload("res://scripts/enemies/crow.gd").new()
 	enemy.position = point
 	enemy.level = self
 	actors.add_child(enemy)

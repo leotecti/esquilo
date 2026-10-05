@@ -3133,7 +3133,7 @@ de recompensa da E09.
 ---
 
 **FIM DO DOCUMENTO**
-## DEC-117 — Backtracking curto, cooperativo e opcional
+## DEC-122 — Backtracking curto, cooperativo e opcional
 
 **Decisão:** a E15 usa as fases 1-1 e 1-2 para introduzir revisitas após o
 resgate global de Pipo. Cada desvio combina pedra, marca, grade e passagem baixa:
@@ -3142,3 +3142,34 @@ livre e o estado aberto é permanente na aventura.
 
 **Motivo:** novas habilidades passam a dar valor ao conteúdo anterior sem obrigar
 o jogador a repetir fases nem alterar a progressão principal.
+
+---
+
+## DEC-123 — Curva única antes dos modos de dificuldade
+
+**Decisão:** a E16 conclui primeiro a curva interna de 1-1 — Primeiros Passos,
+com as faixas Aprender, Praticar, Combinar, Desafiar e uma chegada tranquila.
+Os modos Fácil, Médio e Difícil serão retomados após o aceite final da fase.
+
+A implementação atual não muda save, HUD, vidas, física ou recompensas. A pressão
+aumenta moderadamente pela combinação do terreno com lesmas um pouco mais rápidas,
+sem aumentar a saúde nem colocar vários inimigos no mesmo espaço.
+
+**Motivo:** validar uma referência de fase bem balanceada reduz o risco de criar
+três variações sobre encontros que ainda precisariam ser refeitos.
+
+---
+
+## DEC-124 — Famílias de inimigos com arte e comportamento próprios
+
+**Decisão:** a E17 estabelece lesma, besouro, aranha, morcego, porco-espinho e
+corvo patrulheiro. Cada família possui uma ilustração transparente independente
+da colisão e introduz um comportamento observável antes de ser combinada com
+outras ameaças.
+
+Primeiros Passos continua usando apenas lesmas. Besouro e porco-espinho aparecem
+em 1-2, aranha em 1-3, e os inimigos aéreos evoluem de morcego para corvo na
+Montanha. O porco-espinho permanece defensivo e não recebe dano da caudada.
+
+**Motivo:** variedade visual e mecânica aumenta o desafio sem depender de mais
+saúde, e a introdução gradual preserva a compreensão do público infantil.

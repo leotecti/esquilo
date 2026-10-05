@@ -3,6 +3,24 @@ extends RefCounted
 const WIDTH := 42000
 const FINISH := Vector2(41780,550)
 const COPA_X := 21000
+const DIFFICULTY_CURVE := [
+	{"id":"learn","label":"Aprender","start":0.0,"end":5200.0,"slug_speed":45.0},
+	{"id":"practice","label":"Praticar","start":5200.0,"end":14800.0,"slug_speed":45.0},
+	{"id":"combine","label":"Combinar","start":14800.0,"end":27600.0,"slug_speed":50.0},
+	{"id":"challenge","label":"Desafiar","start":27600.0,"end":40500.0,"slug_speed":55.0},
+	{"id":"recover","label":"Chegada","start":40500.0,"end":42000.0,"slug_speed":0.0}
+]
+
+static func difficulty_phase(x: float) -> Dictionary:
+	for segment: Dictionary in DIFFICULTY_CURVE:
+		if x>=float(segment.start) and x<float(segment.end): return segment
+	return DIFFICULTY_CURVE[-1]
+
+static func _configure_slug(slug: Node2D) -> void:
+	var segment := difficulty_phase(slug.position.x)
+	slug.speed = float(segment.slug_speed)
+	slug.set_meta("difficulty_phase",segment.id)
+	slug.set_meta("difficulty_label",segment.label)
 
 static func build(level) -> void:
 	level.main_right = WIDTH
@@ -15,6 +33,11 @@ static func build(level) -> void:
 	# As duas lesmas antigas nas escadas foram removidas: o espaço estreito entre
 	# paredes prejudicava a patrulha e a leitura da animação. Os trechos ampliados
 	# mantêm os encontros em plataformas abertas.
+	# As duas lesmas da introdução ensinam o contato e o salto com a velocidade
+	# base. Os encontros seguintes avançam pela curva formal da E16.
+	for actor in level.actors.get_children():
+		if actor.get_script()==preload("res://scripts/enemies/slug.gd"):
+			_configure_slug(actor)
 	var profiles := [[760,680,590,500,590,680,760,760],
 		[760,760,680,590,500,590,680,760],
 		[760,680,600,600,680,600,680,760]]
@@ -32,7 +55,9 @@ static func build(level) -> void:
 				for offset in [115,215]:
 					level._nut(Vector2(x+offset,y-44))
 					level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","%d:%d" % [x+offset,old_profiles[section%3][step]-44])
-			if step==4 and section%2==0: level._slug(Vector2(x+270,y),65)
+			if step==4 and section%2==0:
+				var slug: Node2D = level._slug(Vector2(x+270,y),65)
+				_configure_slug(slug)
 		# Um arco recompensa o salto sem transformar o caminho em uma linha contínua.
 		var arc_y: int = heights[3]
 		for reward in [[1265,75],[1400,115],[1535,75]]:
