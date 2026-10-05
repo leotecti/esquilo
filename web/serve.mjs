@@ -4,7 +4,7 @@ import {stat} from 'node:fs/promises';
 import {resolve, extname, sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-const folder = ['7','8','9'].includes(process.env.TICO_WEB_STAGE) ? `etapa_${process.env.TICO_WEB_STAGE}` : 'evolucao_e13';
+const folder = ['7','8','9'].includes(process.env.TICO_WEB_STAGE) ? `etapa_${process.env.TICO_WEB_STAGE}` : 'validacao_intermediaria_2';
 const root = resolve(fileURLToPath(new URL(`../builds/web/${folder}/`, import.meta.url)));
 const port = Number(process.env.PORT || 8080);
 const host = process.env.HOST || '127.0.0.1';

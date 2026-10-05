@@ -8,6 +8,12 @@ Para configurar outra máquina após clonar o repositório, consulte o
 
 ## Estado atual
 
+**Validação intermediária 2 — aventura completa em miniatura (0.25.0):** o
+Mundo 1 agora é a referência integrada da campanha, da abertura ao chefe e à
+próxima pista de Valda. Mapa, três fases, copa opcional, coletáveis, Pipo,
+progressão e Save V2 foram validados em um fluxo contínuo.
+[Relatório da validação](tests/validacao_intermediaria_2.md).
+
 **Evolução E13 — introdução de Pipo (0.22.0):** Pipo agora recebe uma apresentação
 narrativa dentro da fase 1-3. Tico descobre que ele também procura comida, realiza
 o resgate jogável e o convida para a missão. A cena demonstra força e agilidade
@@ -198,10 +204,10 @@ documentados em [testes da etapa 7](tests/etapa_7.md).
 
 As cenas das etapas anteriores continuam disponíveis para abrir com F6.
 
-## Web/PWA — evolução E13
+## Web/PWA — validação intermediária 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-evolucao-E13-web.zip`. Consulte [publicação e teste no celular](web/deployment.md).
+`builds/web/Tico-validacao-intermediaria-2-web-corrigido.zip`. Consulte [publicação e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuário confirmou o teste e a aprovação da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponíveis:
@@ -217,10 +223,10 @@ também prepara o manifesto, os ícones e a versão do cache offline. Em outra
 máquina, configure `GODOT_BIN` com o caminho do executável console da Godot.
 Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instalado.
 
-## Build Windows da evolução E13
+## Build Windows da validação intermediária 2
 
-Abra `builds/windows/evolucao_e13/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-evolucao-E13-windows.zip` contém os dois arquivos.
+Abra `builds/windows/validacao_intermediaria_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
+O pacote `builds/windows/Tico-validacao-intermediaria-2-windows-corrigido.zip` contém os dois arquivos.
 As ilustrações em `assets/slice/` seguem as pranchas de `img/`, com aprovação
 artística ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 
@@ -230,8 +236,8 @@ x86_64 já estão em `%APPDATA%\Godot\export_templates\4.7.2.stable`.
 
 ```powershell
 $engine = 'D:\Godot\Godot_v4.7.2-stable\Godot_v4.7.2-stable_win64_console.exe'
-New-Item -ItemType Directory -Force builds/windows/evolucao_e13 | Out-Null
-& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/evolucao_e13/Tico.exe'
+New-Item -ItemType Directory -Force builds/windows/validacao_intermediaria_2 | Out-Null
+& $engine --headless --path . --export-release 'Windows Desktop' 'builds/windows/validacao_intermediaria_2/Tico.exe'
 ```
 
 O preset está em `export_presets.cfg`; os binários gerados ficam fora do Git.
@@ -326,8 +332,10 @@ e [verificações executadas](tests/evolucao_e00.md).
 
 **E09 implementada:** [recompensas e coletáveis](tests/evolucao_e09.md).
 **E10 implementada:** [estrutura narrativa](tests/evolucao_e10.md).
-**E13 implementada:** [introdução narrativa de Pipo](tests/evolucao_e13.md).
-Próximo passo: melhorar a introdução narrativa de Pipo na E13.
+**E14 implementada:** [mecânicas de Tico e Pipo](tests/evolucao_e14.md).
+**E15 implementada:** [backtracking controlado](tests/evolucao_e15.md).
+**Validação intermediária 2 concluída:** [aventura completa em miniatura](tests/validacao_intermediaria_2.md).
+Próximo passo: validar o fluxo completo no aparelho e seguir para a E16.
 
 As próximas melhorias seguem [13_evolucao.md](arquivos_projeto/13_evolucao.md) e
 [14_etapas_evolucao.md](arquivos_projeto/14_etapas_evolucao.md), com etapas E00–E30.

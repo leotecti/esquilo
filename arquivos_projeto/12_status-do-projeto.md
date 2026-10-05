@@ -1,10 +1,49 @@
 # Status do projeto
 
-**Data:** 2026-10-02
-**Etapa atual:** Evolução E13 — introdução de Pipo, versão 0.22.0.
+**Data:** 2026-10-04
+**Etapa atual:** Validação intermediária 2 — aventura completa em miniatura,
+versão 0.25.0.
 
-**Próximo trabalho previsto:** validar a apresentação e o resgate de Pipo no
-aparelho do usuário e, após o aceite, seguir para as mecânicas da E14.
+**Próximo trabalho previsto:** validar o fluxo completo do Mundo 1 no aparelho
+do usuário e, após o aceite, seguir para a progressão de dificuldade da E16.
+
+## Validação intermediária 2 — Entrega atual
+
+- O Mundo 1 representa a campanha completa em escala reduzida.
+- Abertura, Valda, mapa, três fases e confronto final formam um fluxo contínuo.
+- A Copa dos Segredos valida exploração opcional e conquistas permanentes.
+- Pipo é apresentado, resgatado, usado em cooperação e preservado globalmente.
+- O chefe impede a saída até ser resolvido e libera a próxima pista narrativa.
+- O Rio é desbloqueado no mapa ao concluir o arco.
+- Save V2 preserva cenas, fases, Pipo e Noz Dourada ao reabrir.
+- 35 verificações integradas foram aprovadas.
+
+[Relatório e roteiro](../tests/validacao_intermediaria_2.md).
+
+## Evolução E15 — Entrega atual
+
+- Fases 1-1 e 1-2 ganham trechos cooperativos somente nas revisitas após o resgate.
+- Pipo empurra a pedra até a marca e abre uma passagem estreita para Tico.
+- Cada trecho entrega uma Noz Dourada permanente e não bloqueia a saída da fase.
+- Abertura do mecanismo, recompensa e desbloqueio de Pipo persistem no Save V2.
+- Primeira passagem, morte, Game Over, mapa e recompensas existentes foram preservados.
+- 13 verificações específicas cobrem disponibilidade, puzzle, coleta e persistência.
+
+[Implementação e validação da E15](../tests/evolucao_e15.md).
+
+## Evolução E14 — Entrega atual
+
+- Tico usa **E/CAUDADA** no chão contra inimigos comuns.
+- Quatro poses mostram preparação, movimento da cauda e recuperação.
+- Alcance frontal curto, bloqueio por paredes e um acerto por alvo em cada golpe.
+- Dano, derrota, retorno e conclusão cancelam a ação com segurança.
+- Lesmas e inimigos voadores recebem o golpe; espinhos e chefes não recebem.
+- Pedras, paredes pesadas e mecanismos continuam exclusivos de Pipo.
+- Pipo mantém **INVESTIR**, empurrão, faro e mecanismos de peso.
+- Nova dica contextual é migrada para saves existentes.
+- 15 verificações específicas cobrem os alvos, cancelamentos e controles.
+
+[Implementação e validação da E14](../tests/evolucao_e14.md).
 
 ## Evolução E13 — Entrega atual
 

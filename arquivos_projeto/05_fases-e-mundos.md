@@ -1880,3 +1880,10 @@ Ao final da aventura, o jogador deverá perceber que Tico e Pipo começaram util
 ---
 
 **FIM DO DOCUMENTO**
+## REVISITAS COOPERATIVAS — E15
+
+As fases 1-1 e 1-2 são o primeiro padrão de backtracking controlado. Depois de
+concluí-las e resgatar Pipo, voltar pelo mapa acrescenta um pequeno percurso acima
+da rota principal. A pedra e a marca comunicam a ação de Pipo; a altura da
+passagem comunica a troca para Tico. Cada percurso concede uma Noz Dourada
+permanente, sem criar requisito para avançar na campanha.

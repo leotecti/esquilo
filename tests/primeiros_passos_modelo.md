@@ -15,6 +15,9 @@ da fase em 2026-10-02. Esta revisão mantém o comprimento.
 - Apoios permitem voltar pelos desníveis e acessar a árvore pela direita.
   Galhos da entrada permitem saltar por baixo e sustentam o jogador ao pousar.
 - Desníveis da extensão ajustados para o salto menor de Pipo.
+- Depois do resgate de Pipo, uma revisita acrescenta uma plataforma opcional em
+  x=14.350. Pipo move a pedra até a marca; Tico entra na passagem estreita e
+  encontra a Noz Dourada `retorno_01`. O caminho principal passa por baixo.
 - 198 nozes principais e 26 na copa: **224 nozes** ao todo.
 - Três corações na copa e quatro pontos de recuperação no caminho principal.
   Corações recuperam saúde; com três corações, concedem uma vida extra.

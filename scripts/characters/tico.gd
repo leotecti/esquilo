@@ -5,6 +5,8 @@ signal landed
 signal health_changed(current: int)
 signal hurt
 signal defeated
+signal tail_attack_started
+signal tail_window(attack_id: int)
 
 @export_group("Vida")
 @export var max_health: int = 3
@@ -31,6 +33,11 @@ var _hurt_left: float = 0.0
 @export var glide_duration: float = 2.0
 @export var glide_fall_speed: float = 100.0
 @export var glide_gravity_multiplier: float = 0.18
+@export_group("Caudada")
+@export var tail_enabled: bool = true
+@export var tail_prepare_duration: float = 0.10
+@export var tail_active_duration: float = 0.14
+@export var tail_recovery_duration: float = 0.28
 
 var facing: float = 1.0
 var state: StringName = &"idle"
@@ -42,6 +49,9 @@ var _jump_cut_applied: bool = false
 var _gliding: bool = false
 var _reset_pending: bool = false
 var wind_acceleration := Vector2.ZERO
+var tail_phase := "ready"
+var tail_phase_left := 0.0
+var tail_attack_id := 0
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
@@ -52,8 +62,47 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if tail_enabled and tail_phase=="ready" and controls_enabled and is_on_floor() and not _reset_pending and _hurt_left<=0.0 and Input.is_action_just_pressed("action"):
+		_start_tail_attack()
+	if tail_phase!="ready":
+		_process_tail_attack(delta)
+		return
 	_tick_status(delta)
 	_move_character(delta)
+
+func _start_tail_attack() -> void:
+	tail_attack_id += 1
+	tail_phase = "prepare"
+	tail_phase_left = tail_prepare_duration
+	velocity.x = 0
+	_buffer_left = 0
+	_coyote_left = 0
+	tail_attack_started.emit()
+
+func _process_tail_attack(delta: float) -> void:
+	_tick_status(delta)
+	tail_phase_left -= delta
+	velocity.x = 0
+	velocity.y = minf(velocity.y+get_gravity().y*delta,max_fall_speed)
+	move_and_slide()
+	if tail_phase=="active": tail_window.emit(tail_attack_id)
+	if tail_phase_left<=0:
+		if tail_phase=="prepare":
+			tail_phase = "active"
+			tail_phase_left = tail_active_duration
+			tail_window.emit(tail_attack_id)
+		elif tail_phase=="active":
+			tail_phase = "recover"
+			tail_phase_left = tail_recovery_duration
+		else: cancel_tail_attack()
+	_update_animation()
+
+func cancel_tail_attack() -> void:
+	tail_phase = "ready"
+	tail_phase_left = 0
+
+func action_ready() -> bool:
+	return tail_phase=="ready"
 
 
 func _tick_status(delta: float) -> void:
@@ -134,6 +183,10 @@ func _move_character(delta: float) -> void:
 
 
 func _update_animation() -> void:
+	if tail_phase!="ready":
+		state = StringName("tail_"+tail_phase)
+		sprite.flip_h = facing<0
+		return
 	if is_on_floor():
 		if _landing_left > 0.0:
 			state = &"land"
@@ -149,6 +202,7 @@ func _update_animation() -> void:
 
 
 func reset_at(point: Vector2) -> void:
+	cancel_tail_attack()
 	wind_acceleration = Vector2.ZERO
 	global_position = point
 	force_update_transform()
@@ -174,6 +228,7 @@ func take_damage(source: Vector2) -> bool:
 	if health <= 0 or invulnerability_left > 0.0 or not controls_enabled:
 		return false
 	health -= 1
+	cancel_tail_attack()
 	_gliding = false
 	invulnerability_left = invulnerability_duration
 	_hurt_left = 0.2

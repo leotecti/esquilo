@@ -1627,4 +1627,14 @@ Quando trabalham juntos, conseguem superar desafios que nenhum deles conseguiria
 
 ---
 
+## DIFERENÇAS VALIDADAS NA E14
+
+Tico combina corrida, salto, planagem, espaços estreitos e caudada. A caudada é
+um ataque terrestre frontal contra inimigos comuns, com quatro poses próprias e
+sem efeito sobre obstáculos de força.
+
+Pipo combina corpo maior, salto menor, empurrão, investida, faro e mecanismos de
+peso. Ele não herda a caudada do controlador compartilhado. Assim, o botão de
+ação expressa agilidade e defesa rápida com Tico, e força com Pipo.
+
 **FIM DO DOCUMENTO**

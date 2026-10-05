@@ -80,3 +80,9 @@ func reset_enemy() -> void:
 	_defeat_time = 0.0
 	modulate.a = 1.0
 	queue_redraw()
+
+func receive_tail(_character: Node2D) -> bool:
+	if defeated: return false
+	defeated = true
+	stomped.emit(self)
+	return true

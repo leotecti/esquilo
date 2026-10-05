@@ -1,6 +1,6 @@
 extends Node
 ## Uma dica por vez, sem pausar nem capturar os controles do jogador.
-const KEYS = ["tutorial_enemy_seen","tutorial_heart_seen","tutorial_life_seen","tutorial_glide_seen","tutorial_secret_seen"]
+const KEYS = ["tutorial_enemy_seen","tutorial_heart_seen","tutorial_life_seen","tutorial_glide_seen","tutorial_secret_seen","tutorial_tail_seen"]
 var level: Node2D
 var panel: Panel
 var caption: Label
@@ -127,7 +127,7 @@ func _process(delta: float) -> void:
 			return
 
 func _seen(id: String) -> bool:
-	if id in KEYS: return level.campaign.data.tutorials[id]
+	if id in KEYS: return bool(level.campaign.data.tutorials.get(id,false))
 	return id in level.campaign.data.context_hints_seen
 
 func _candidate() -> Array:
@@ -140,9 +140,11 @@ func _candidate() -> Array:
 			return [KEYS[2],"Uma vida extra! Pule para pegar o medalhão.","life",target]
 		if target.has_method("reset_item") and target.healing and not target.taken and player.health<player.max_health and not _seen(KEYS[1]):
 			return [KEYS[1],"Pegue o coração para recuperar sua saúde.","heart",target]
-		if target.has_method("reset_enemy") and target!=level.guardian and not target.get("defeated") and not _seen(KEYS[0]):
+		if target.has_method("reset_enemy") and target!=level.guardian and not target.get("defeated"):
 			var spiky: bool = target.get_script()==preload("res://scripts/enemies/hedgehog.gd")
-			return [KEYS[0],"Tem espinhos! Passe por cima sem encostar." if spiky else "Dê um salto sobre ele!","enemy",target]
+			if not spiky and player==level.squirrel and not _seen(KEYS[5]):
+				return [KEYS[5],"Use %s perto do inimigo para dar uma caudada." % ("CAUDADA" if level.touch.touch_enabled else "E"),"tail",target]
+			if not _seen(KEYS[0]): return [KEYS[0],"Tem espinhos! Passe por cima sem encostar." if spiky else "Dê um salto sobre ele!","enemy",target]
 	if not _seen(KEYS[3]) and player==level.squirrel and player.state==&"fall" and not player.is_on_floor():
 		var ray := PhysicsRayQueryParameters2D.create(player.position+Vector2(0,2),player.position+Vector2(0,140),1)
 		if level.get_world_2d().direct_space_state.intersect_ray(ray).is_empty():
@@ -157,6 +159,7 @@ func _interacted() -> bool:
 	if not is_instance_valid(active_target): return active_kind not in ["notice","walk","glide"]
 	if active_kind in ["life","heart"] and active_target.taken: return true
 	if active_kind=="enemy" and active_target.get("defeated"): return true
+	if active_kind=="tail": return active_target.get("defeated") or level.squirrel.tail_phase!="ready"
 	if active_kind=="secret" and (active_target.revealed or level.tico==level.pipo and level.tico.position.distance_to(_origin)>30): return true
 	return absf(level.tico.position.x-active_target.position.x)>350 or level.tico.position.x>active_target.position.x+100
 

@@ -3133,3 +3133,12 @@ de recompensa da E09.
 ---
 
 **FIM DO DOCUMENTO**
+## DEC-117 — Backtracking curto, cooperativo e opcional
+
+**Decisão:** a E15 usa as fases 1-1 e 1-2 para introduzir revisitas após o
+resgate global de Pipo. Cada desvio combina pedra, marca, grade e passagem baixa:
+Pipo abre o caminho e Tico alcança a Noz Dourada. A rota principal permanece
+livre e o estado aberto é permanente na aventura.
+
+**Motivo:** novas habilidades passam a dar valor ao conteúdo anterior sem obrigar
+o jogador a repetir fases nem alterar a progressão principal.

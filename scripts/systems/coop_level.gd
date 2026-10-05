@@ -111,15 +111,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("switch_character") and not event.is_echo():
 		switch_character()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("action") and tico == squirrel:
-		_say("Chame Pipo com Q ou Trocar para usar a força.")
 	else:
 		super._unhandled_input(event)
 
 func switch_character() -> bool:
 	if not is_instance_valid(pipo) or get_tree().paused or completed or respawning or _switch_left > 0:
 		return false
-	if not tico.is_on_floor() or (tico == pipo and pipo.ability != "ready"):
+	if not tico.is_on_floor() or not tico.action_ready():
 		_say("Pouse e termine a ação antes de trocar.")
 		return false
 	var next: CharacterBody2D = pipo if tico == squirrel else squirrel
@@ -142,7 +140,7 @@ func switch_character() -> bool:
 	_activate(next,point)
 	_switch_left = 0.25
 	touch.release_all()
-	_say("Pipo: empurre, invista e siga seu faro!" if tico == pipo else "Tico: pule, plane e passe por lugares estreitos!")
+	_say("Pipo: empurre, invista e siga seu faro!" if tico == pipo else "Tico: pule, plane e use a caudada contra inimigos comuns!")
 	sounds.play_notes([523,784] if tico == pipo else [784,1047],0.07)
 	return true
 
@@ -224,7 +222,7 @@ func _process(delta: float) -> void:
 		_feedback(secret.position,"Segredo encontrado!")
 		sounds.play_notes([784,988,1175])
 	if _message_time <= 0:
-		status.text = "Pipo · AÇÃO/E: investir · Faro automático" if tico == pipo else "Tico · Segure PULO para planar · Q/Trocar: Pipo"
+		status.text = "Pipo · AÇÃO/E: investir · Faro automático" if tico == pipo else "Tico · AÇÃO/E: caudada · Segure PULO para planar"
 
 func _update_layout() -> void:
 	super._update_layout()
@@ -234,7 +232,7 @@ func _update_layout() -> void:
 	switch_button.text = "Trocar" if touch.touch_enabled else "Trocar (Q)"
 	switch_button.custom_minimum_size.y = 88 if touch.touch_enabled else 44
 	$Interface/HUD/TopBar/Title.text = "Pipo · Força" if tico == pipo else "Tico · Agilidade"
-	touch.set_action_caption("INVESTIR" if tico == pipo else "AÇÃO")
+	touch.set_action_caption("INVESTIR" if tico == pipo else "CAUDADA")
 
 func _on_exit(marker: Node2D) -> void:
 	super._on_exit(marker)
@@ -242,6 +240,7 @@ func _on_exit(marker: Node2D) -> void:
 
 func _respawn() -> void:
 	_switch_left = 0
+	squirrel.cancel_tail_attack()
 	if tico == pipo:
 		pipo.cancel_ability()
 	super._respawn()
@@ -270,7 +269,7 @@ func _test_details() -> Dictionary:
 		"stone_x":stone.position.x if is_instance_valid(stone) else 850,
 		"heavy_broken":is_instance_valid(heavy) and heavy.destroyed,
 		"secret_revealed":is_instance_valid(secret) and secret.revealed,
-		"ability":pipo.ability if is_instance_valid(pipo) else "ready",
+		"ability":pipo.ability if is_instance_valid(pipo) else "ready", "tail_phase":squirrel.tail_phase,
 		"grounded":tico.is_on_floor()})
 	if is_instance_valid(switch_button):
 		var rect := switch_button.get_global_rect()

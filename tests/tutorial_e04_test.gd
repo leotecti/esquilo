@@ -27,7 +27,7 @@ func run() -> void:
 	root.content_scale_size = Vector2i(1280,720)
 	DirAccess.remove_absolute(TUTORIAL_LEGACY)
 	await start(0)
-	check(campaign.data.tutorials.size()==5 and campaign.store.valid(campaign.data),"Save anterior recebe cinco registros válidos de tutorial")
+	check(campaign.data.tutorials.size()==6 and campaign.store.valid(campaign.data),"Save anterior recebe seis registros válidos de tutorial")
 	check(not level.status.visible and not level.get_node("Interface/HUD/TopBar/Title").visible,"HUD remove texto de estado e título permanente")
 	check(level.contextual_help.details().hud_controls_clear,"Controles não sobrepõem corações e contadores")
 	var hidden := true
@@ -51,7 +51,7 @@ func run() -> void:
 	await scan_at(Vector2(300,760))
 	check(level.contextual_help.active_id!="tutorial_life_seen","Dica vista não se repete ao reabrir")
 	await scan_at(Vector2(1700,755))
-	check(level.contextual_help.active_id=="tutorial_enemy_seen","Primeiro inimigo mostra dica de salto")
+	check(level.contextual_help.active_id=="tutorial_tail_seen","Primeiro inimigo apresenta a nova dica de caudada")
 	var enemy: Node2D = level.contextual_help.active_target
 	enemy.defeated = true
 	await frames(2)
@@ -100,7 +100,7 @@ func run() -> void:
 	campaign.new_adventure()
 	await frames(35)
 	level = campaign.level
-	check(not true in campaign.data.tutorials.values(),"Nova aventura reinicia os cinco tutoriais")
+	check(not true in campaign.data.tutorials.values(),"Nova aventura reinicia os seis tutoriais")
 	await close_world()
 	var invalid := fixture(0)
 	invalid.tutorials = {"tutorial_enemy_seen":"sim"}

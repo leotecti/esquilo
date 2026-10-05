@@ -29,6 +29,13 @@ func reset_enemy() -> void:
 	clock = 0
 	show()
 
+func receive_tail(_character: Node2D) -> bool:
+	if defeated: return false
+	defeated = true
+	hide()
+	stomped.emit(self)
+	return true
+
 func _draw() -> void:
 	var tip := sin(clock*8)*12
 	for direction in [-1,1]:

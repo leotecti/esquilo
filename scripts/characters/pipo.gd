@@ -12,6 +12,13 @@ var sniffing: bool = false
 var pushing: bool = false
 var _push_speed: float = 0.0
 
+func _ready() -> void:
+	tail_enabled = false
+	super._ready()
+
+func action_ready() -> bool:
+	return ability=="ready"
+
 func _physics_process(delta: float) -> void:
 	if not controls_enabled:
 		cancel_ability()

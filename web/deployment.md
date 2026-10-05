@@ -9,19 +9,18 @@ controles, faro e percurso completo.
 
 ## Pacote
 
-Versão atual: **Evolução E13 — introdução de Pipo (0.22.0)**. Inclui
-a abertura, os encontros recorrentes de Valda após os confrontos decisivos e
-preserva o Save V2.
+Versão atual: **Validação intermediária 2 — aventura completa em miniatura
+(0.25.0)**. Consolida o Mundo 1 como fluxo completo e preserva o Save V2.
 
 Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientação
 horizontal. A PWA instalada abre diretamente no modo `fullscreen`; não há botão
 flutuante sobre o jogo para alternar esse estado.
-[Alterações e roteiro da E13](../tests/evolucao_e13.md).
+[Relatório e roteiro da validação](../tests/validacao_intermediaria_2.md).
 
-`builds/web/Tico-evolucao-E13-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-validacao-intermediaria-2-web-corrigido.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
-Não coloque outra pasta `evolucao_e13` entre `/tico/` e os arquivos.
+Não coloque outra pasta `validacao_intermediaria_2` entre `/tico/` e os arquivos.
 O usuário confirmou o teste e a aprovação da etapa 8 em 2026-09-30.
 As instruções abaixo ficam disponíveis para publicação e futuras atualizações.
 

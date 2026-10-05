@@ -809,11 +809,16 @@ A criança entende quem é Pipo e por que ele entrou na aventura.
 
 # 19. EVOLUÇÃO E14 — MECÂNICAS DE TICO E PIPO
 
+**Status:** implementada na versão 0.23.0. Tico recebeu uma caudada terrestre com
+animação própria, alcance frontal curto, preparação, janela ativa e recuperação.
+Lesmas e inimigos voadores podem ser atingidos; espinhos, guardiões, pedras e
+mecanismos continuam seguindo suas regras. Pipo preserva empurrão, investida,
+faro e peso. A dica contextual, a migração de save e os controles de toque foram
+atualizados. [Execução e testes](../tests/evolucao_e14.md).
+
 Manter as diferenças já implementadas e melhorar os trechos que precisarem de ajuste.
 
-**Planejamento atualizado:** incluir o golpe de cauda de Tico nesta evolução.
-A habilidade está prevista para implementação futura; este registro não indica
-que ela já esteja disponível no jogo.
+**Planejamento executado:** o golpe de cauda de Tico foi incluído nesta evolução.
 
 ## Tico
 
@@ -927,6 +932,13 @@ exigindo Pipo. As habilidades e os percursos existentes permanecem funcionais.
 
 # 20. EVOLUÇÃO E15 — BACKTRACKING CONTROLADO
 
+**Status:** implementada na versão 0.24.0. Depois do resgate global de Pipo, as
+revisitas às fases 1-1 e 1-2 recebem pequenos trechos cooperativos opcionais.
+Pipo empurra uma pedra até uma marca, abre uma passagem compatível apenas com o
+corpo menor de Tico e revela uma Noz Dourada permanente. Abertura, recompensa e
+desbloqueio da dupla persistem; o caminho principal continua livre.
+[Execução e testes](../tests/evolucao_e15.md).
+
 Após o desbloqueio global de Pipo, permitir revisitar fases iniciais com a dupla e adicionar pequenos segredos. Antes do resgate, Pipo permanece indisponível. Preservar o desbloqueio em morte, Game Over, troca de fase e reabertura.
 
 Exemplo:
@@ -952,6 +964,13 @@ Novas habilidades aumentam a utilidade das fases anteriores.
 ---
 
 # 21. VALIDAÇÃO INTERMEDIÁRIA 2 — AVENTURA COMPLETA EM MINIATURA
+
+**Status:** concluída na versão 0.25.0. O Mundo 1 foi consolidado como a aventura
+completa em miniatura: abertura e Valda, mapa, três fases, área opcional,
+coletáveis, resgate e cooperação de Pipo, encontro com chefe, progressão para o
+Rio e Save V2 persistente. O fluxo contínuo passou em 35 verificações e serve
+como referência antes da ampliação dos demais mundos.
+[Relatório e roteiro de validação](../tests/validacao_intermediaria_2.md).
 
 Neste momento criar uma pequena sequência contendo:
 

@@ -2876,3 +2876,10 @@ da E11 acrescentará a validação visual em celular.
 Teste automatizado atual: `tests/narrative_e10_test.gd`, com 14 verificações.
 
 **FIM DO DOCUMENTO**
+## TESTES DA EVOLUÇÃO E15
+
+Validar que o segredo não existe antes do resgate, aparece apenas na revisita de
+uma fase concluída, exige o empurrão de Pipo e permite somente Tico na passagem.
+Coletar a Noz Dourada, morrer, trocar de fase e reabrir devem preservar o estado.
+Também concluir a fase sem explorar o desvio deve continuar possível. O teste
+automatizado de referência é `tests/backtracking_e15_test.gd`.

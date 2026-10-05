@@ -1,6 +1,7 @@
 extends Node2D
 const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
 const CHROMA = preload("res://scripts/presentation/chroma_key.gdshader")
+const TAIL_STRIKE = preload("res://assets/slice/tico_tail_strike.png")
 var character: CharacterBody2D
 var level: Node2D
 var pig := false
@@ -15,6 +16,7 @@ var _push_distance := 0.0
 var _last_position := Vector2.ZERO
 var run_frame := 0
 var _run_distance := 0.0
+var _tail_frames: Array[Texture2D] = []
 
 func _ready() -> void:
 	character = get_parent()
@@ -23,6 +25,11 @@ func _ready() -> void:
 	material = ShaderMaterial.new()
 	material.shader = CHROMA
 	_last_position = character.global_position
+	for index in 4:
+		var frame := AtlasTexture.new()
+		frame.atlas = TAIL_STRIKE
+		frame.region = Rect2(TAIL_STRIKE.get_width()/4.0*index,0,TAIL_STRIKE.get_width()/4.0,TAIL_STRIKE.get_height())
+		_tail_frames.append(frame)
 
 func _process(delta: float) -> void:
 	if not character.visible:
@@ -95,6 +102,10 @@ func _draw() -> void:
 	if pig:
 		maps.merge({"push":5,"charge":6,"sniff":7,"hurt":8,"celebrate":9,"prepare":10,"recover":11},true)
 	var texture := ATLAS.frame("pipo" if pig else "tico",maps.get(pose,0))
+	if not pig and pose.begins_with("tail_"):
+		var tail_frame: int = int({"tail_prepare":0,"tail_recover":3}.get(pose,0))
+		if pose=="tail_active": tail_frame = 1 if character.tail_phase_left>character.tail_active_duration*0.5 else 2
+		texture = _tail_frames[tail_frame]
 	if pose == "run":
 		texture = ATLAS.frame("run",(4 if pig else 0)+run_frame)
 	if pose in ["push", "push_attempt"]:
@@ -105,6 +116,7 @@ func _draw() -> void:
 	if pose == "charge": height = 58
 	if pose == "prepare": height = 65
 	if pose in ["push", "push_attempt"]: height = 72
+	if pose.begins_with("tail_"): height = 78
 	var size := texture.get_size() * (height / texture.get_height())
 	var bob := sin(_time*3)*1.0
 	var angle := 0.0

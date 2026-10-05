@@ -21,6 +21,12 @@ var route_checkpoint := 0
 var route_flags := {}
 var foods := 0
 var total_foods := 0
+var backtrack_stone: CharacterBody2D
+var backtrack_gate: StaticBody2D
+var backtrack_reward: Area2D
+var backtrack_open := false
+var backtrack_plate_x := 0.0
+var backtrack_event_id := ""
 const FOOD = preload("res://scenes/objects/food.tscn")
 const GOLDEN_NUT = preload("res://scenes/objects/golden_nut.tscn")
 
@@ -76,10 +82,64 @@ func _build_gameplay() -> void:
 		optional_area.z_index = -2
 		add_child(optional_area)
 		optional_area.build()
+	_build_backtracking_secret()
 	for actor in actors.get_children():
 		if actor.has_method("reset_item") and is_instance_valid(campaign) and campaign.has_method("survival_details"): actor.campaign = campaign
 		if actor.has_method("reset_item") or actor.has_method("reset_block"):
 			if not actor.has_meta("save_id"): actor.set_meta("save_id","%d:%d" % [actor.position.x,actor.position.y])
+
+func _build_backtracking_secret() -> void:
+	if world_stage>1 or not is_instance_valid(campaign): return
+	var survival: Dictionary = campaign.data.get("survival",{})
+	# O segredo pertence à revisita: não antecipa Pipo nem altera a primeira passagem.
+	if not bool(survival.get("pipo_unlocked",false)) or not bool(survival.get("replay",false)): return
+	var origin := Vector2(14350,660) if world_stage==0 else Vector2(2130,660)
+	var width := 900.0 if world_stage==0 else 540.0
+	var stone_offset := 105.0 if world_stage==0 else 55.0
+	var plate_offset := 315.0 if world_stage==0 else 185.0
+	var gate_offset := 500.0 if world_stage==0 else 310.0
+	var tunnel_width := 390.0 if world_stage==0 else 220.0
+	var reward_offset := 775.0 if world_stage==0 else 465.0
+	backtrack_event_id = "backtrack_cache_%d_open" % world_stage
+	backtrack_plate_x = origin.x+plate_offset+40
+	_platform(Rect2(origin.x,origin.y,width,24))
+	# A rota principal passa sob a plataforma. A passagem superior tem 64 px:
+	# Tico entra; Pipo, mais alto, precisa aguardar do lado de fora.
+	var roof := _solid("BacktrackRoof",Rect2(origin.x+gate_offset,origin.y-126,tunnel_width,62),Color("46633f"))
+	for child in roof.get_children():
+		if child is Polygon2D: child.hide()
+	backtrack_stone = PUSHABLE.instantiate()
+	backtrack_stone.name = "BacktrackStone"
+	backtrack_stone.position = origin+Vector2(stone_offset,0)
+	backtrack_stone.max_travel = 290 if world_stage==0 else 190
+	actors.add_child(backtrack_stone)
+	var plate := _solid("BacktrackPlate",Rect2(origin.x+plate_offset,origin.y-4,80,4),Color("e4c86e"))
+	plate.collision_layer = 0
+	backtrack_gate = _solid("BacktrackGate",Rect2(origin.x+gate_offset,origin.y-64,24,64),Color("8a6a42"))
+	_golden_nut(origin+Vector2(reward_offset,-31),"retorno_%02d" % (world_stage+1))
+	backtrack_reward = actors.get_child(actors.get_child_count()-1)
+	backtrack_reward.set_meta("save_id","golden:retorno_%02d" % (world_stage+1))
+	_sign(origin+Vector2(55,-145),"Pipo move a pedra • Tico explora")
+	var events: Array = campaign.data.story.get("events",[])
+	if backtrack_event_id in events:
+		backtrack_stone.position.x = backtrack_plate_x
+		_open_backtracking_secret(false)
+	var collected: Array = campaign.data.collectibles.golden_nuts.get(str(int(campaign.data.stage)),[])
+	if backtrack_reward.reward_id in collected:
+		backtrack_reward.taken = true
+		backtrack_reward.hide()
+		backtrack_reward.get_node("Collision").set_deferred("disabled",true)
+
+func _open_backtracking_secret(announce := true) -> void:
+	if backtrack_open or not is_instance_valid(backtrack_gate): return
+	backtrack_open = true
+	backtrack_gate.hide()
+	backtrack_gate.get_node("Collision").set_deferred("disabled",true)
+	if not announce: return
+	_feedback(backtrack_stone.position,"Passagem de Tico aberta!",Color("ffe39a"))
+	_say("Muito bem, Pipo! Agora Tico pode entrar na passagem.")
+	sounds.play_notes([523,659,784],.08)
+	if is_instance_valid(campaign): campaign.record_story_event(backtrack_event_id)
 
 func _build_solo_or_arena() -> void:
 	if world_stage==0:
@@ -234,6 +294,8 @@ func _say(message: String) -> void:
 func _process(delta: float) -> void:
 	super._process(delta)
 	if not world_ready: return
+	if is_instance_valid(backtrack_stone) and not backtrack_open and backtrack_stone.position.x>=backtrack_plate_x:
+		_open_backtracking_secret()
 	if not rescued:
 		switch_button.hide()
 		if _message_time<=0 and not get_tree().paused:
@@ -453,6 +515,9 @@ func _test_details() -> Dictionary:
 			var point := rect.position+Vector2(phase_restart_dialog.position)
 			data[entry[0]] = [point.x,point.y,rect.size.x,rect.size.y]
 	data.merge({"stage":8,"world_stage":world_stage,"rescued":rescued,"world_title":TITLES[world_stage]},true)
+	data.merge({"backtrack_available":is_instance_valid(backtrack_stone),"backtrack_open":backtrack_open,
+		"backtrack_stone_x":backtrack_stone.position.x if is_instance_valid(backtrack_stone) else 0.0,
+		"backtrack_reward_taken":backtrack_reward.taken if is_instance_valid(backtrack_reward) else false})
 	var restart_rect: Rect2 = $Interface/HUD/TopBar/Restart.get_global_rect()
 	data["restart_rect"] = [restart_rect.position.x,restart_rect.position.y,restart_rect.size.x,restart_rect.size.y]
 	if is_instance_valid(campaign):

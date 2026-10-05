@@ -25,6 +25,8 @@ var result_text: Label
 var sounds: Node
 var checkpoint: Area2D
 var exit_marker: Area2D
+var _tail_attack_id := -1
+var _tail_hits := {}
 
 func _ready() -> void:
 	super._ready()
@@ -40,6 +42,8 @@ func _ready() -> void:
 	tico.health_changed.connect(_health_changed)
 	tico.hurt.connect(_on_hurt)
 	tico.defeated.connect(_on_defeat)
+	tico.tail_attack_started.connect(_on_tail_attack_started)
+	tico.tail_window.connect(_on_tail_window)
 	$Interface/HUD/TopBar/Title.text = "Trilha das Nozes"
 	_update_layout()
 	_health_changed(tico.health)
@@ -208,11 +212,35 @@ func _on_stomp(enemy: Node2D) -> void:
 	_feedback(enemy.position,"Até logo!",Color("f7dc91"))
 	sounds.play_notes([392,523],0.1)
 
+func _on_tail_attack_started() -> void:
+	_tail_hits.clear()
+	sounds.play_notes([330,494],0.045)
+
+func _on_tail_window(attack_id: int) -> void:
+	if tico.tail_phase!="active" or completed or respawning: return
+	if attack_id!=_tail_attack_id:
+		_tail_attack_id = attack_id
+		_tail_hits.clear()
+	for enemy in get_tree().get_nodes_in_group("enemies"):
+		if not is_instance_valid(enemy) or not is_ancestor_of(enemy) or not enemy.has_method("receive_tail"): continue
+		var enemy_id := enemy.get_instance_id()
+		if _tail_hits.has(enemy_id): continue
+		var offset: Vector2 = enemy.global_position-tico.global_position
+		if offset.x*tico.facing<12 or offset.x*tico.facing>112 or absf(offset.y)>76: continue
+		var ray := PhysicsRayQueryParameters2D.create(tico.global_position+Vector2(0,-28),enemy.global_position+Vector2(0,-20),1)
+		ray.exclude = [tico.get_rid()]
+		if not get_world_2d().direct_space_state.intersect_ray(ray).is_empty(): continue
+		_tail_hits[enemy_id] = true
+		if enemy.receive_tail(tico):
+			_feedback(enemy.position,"Caudada!",Color("f7c96f"))
+			sounds.play_notes([294,587,784],0.055)
+
 func _on_hurt() -> void:
 	_say("Tudo bem! Você está protegido por um instante.")
 	sounds.play_notes([262,196],0.08)
 
 func _on_defeat() -> void:
+	tico.cancel_tail_attack()
 	respawning = true
 	_transition = 0
 	touch.set_controls_active(false)
@@ -238,6 +266,7 @@ func _restore_returning_player() -> void:
 	tico.invulnerability_left = tico.invulnerability_duration
 
 func _on_checkpoint(marker: Node2D) -> void:
+	tico.cancel_tail_attack()
 	checkpoint_active = true
 	checkpoint_position = marker.position + Vector2(0,-5)
 	tico.recover(tico.max_health)
@@ -246,6 +275,7 @@ func _on_checkpoint(marker: Node2D) -> void:
 	sounds.play_notes([523,659,784,1047])
 
 func _on_exit(_marker: Node2D) -> void:
+	tico.cancel_tail_attack()
 	completed = true
 	_transition = 0
 	tico.controls_enabled = false
@@ -269,6 +299,7 @@ func restart() -> void:
 		super.restart()
 		return
 	completed = false
+	tico.cancel_tail_attack()
 	respawning = false
 	nuts = 0
 	checkpoint_active = false

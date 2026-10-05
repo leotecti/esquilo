@@ -2404,3 +2404,10 @@ Conteúdo narrativo pertence aos arquivos e etapas de história; a infraestrutur
 não conhece fases, falas ou eventos específicos.
 
 **FIM DO DOCUMENTO**
+## PERSISTÊNCIA DO BACKTRACKING — E15
+
+O conteúdo de revisita consulta `survival.pipo_unlocked` e `survival.replay` ao
+construir a fase. Grades abertas usam IDs estáveis `backtrack_cache_*_open` em
+`story.events`; Nozes Douradas usam `retorno_*` em
+`collectibles.golden_nuts[stage]`. Esses dados já pertencem ao Save V2, portanto
+a E15 não altera o schema nem exige migração.

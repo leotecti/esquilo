@@ -64,6 +64,29 @@ test('E12: inicia em tela cheia sem botão flutuante',async({page})=>{
   expect(manifest.display).toBe('fullscreen');expect(manifest.orientation).toBe('landscape');
 });
 
+test('E14: caudada responde no navegador e respeita a recuperação',async({page})=>{
+  await seed(page,fixture(0));const errors=errorsFor(page);await boot(page);await ground(page);
+  await page.keyboard.down('KeyE');
+  await expect.poll(async()=>(await snapshot(page)).tail_phase,{intervals:[20,30,40]}).not.toBe('ready');
+  const attack=(await snapshot(page)).tail_phase;expect(['prepare','active','recover']).toContain(attack);
+  await page.keyboard.up('KeyE');
+  await expect.poll(async()=>(await snapshot(page)).tail_phase,{timeout:3000}).toBe('ready');
+  expect(errors).toEqual([]);
+});
+
+test('E15: revisita libera segredo cooperativo sem alterar o save',async({page})=>{
+  const data=fixture(3);data.stage=0;
+  await seed(page,data);const errors=errorsFor(page);await boot(page);
+  expect((await snapshot(page)).backtrack_available).toBe(false);
+  await page.evaluate(()=>{const data=JSON.parse(localStorage.getItem('tico.campaign.v1'));data.survival.replay=true;data.survival.pipo_unlocked=true;localStorage.setItem('tico.campaign.v1',JSON.stringify(data));});
+  await page.reload();await startGame(page);
+  const state=await snapshot(page);
+  expect(state.pipo_unlocked).toBe(true);
+  expect(state.backtrack_available).toBe(true);
+  expect(state.backtrack_open).toBe(false);
+  expect(errors).toEqual([]);
+});
+
 test('E11: abertura, resgate de Valda, mapa e reabertura offline',async({page,context})=>{
   test.setTimeout(90000);
   const errors=errorsFor(page);await page.goto('./?test=1');await page.locator('#play').click();

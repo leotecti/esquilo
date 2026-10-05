@@ -1324,4 +1324,23 @@ A principal característica do gameplay de **Tico e a Floresta das Nozes** dever
 
 ---
 
+## MECÂNICAS IMPLEMENTADAS NA E14
+
+Na versão 0.23.0, o botão de ação de Tico executa uma caudada curta quando ele
+está no chão. O golpe possui preparação, janela ativa e recuperação; não desloca
+o personagem, não atravessa paredes e não substitui a necessidade de Pipo em
+pedras, mecanismos e obstáculos resistentes. Lesmas e inimigos voadores podem
+ser derrotados. Espinhos e guardiões preservam as regras anteriores.
+
+Pipo continua usando o mesmo botão para a investida. A troca é bloqueada enquanto
+qualquer uma das ações está em andamento.
+
 **FIM DO DOCUMENTO**
+## BACKTRACKING IMPLEMENTADO NA E15
+
+Após o resgate global de Pipo, revisitas às fases 1-1 e 1-2 oferecem um desvio
+cooperativo opcional. Pipo empurra uma pedra até a marca para abrir a grade; a
+passagem de 64 unidades exige o corpo menor de Tico e termina em uma Noz Dourada.
+O caminho principal passa sob o desvio, portanto a exploração nunca é necessária
+para concluir a fase. Antes do resgate ou durante a primeira passagem, o conjunto
+não é criado.

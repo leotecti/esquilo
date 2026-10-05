@@ -86,7 +86,10 @@ func valid_ids(ids: Variant, limit: int) -> bool:
 
 func migrate(source: Dictionary) -> Dictionary:
 	var result := source.duplicate(true)
-	if result.get("save_version",1)==2: return result
+	if result.get("save_version",1)==2:
+		for key in preload("res://scripts/ui/contextual_help.gd").KEYS:
+			if not result.tutorials.has(key): result.tutorials[key] = false
+		return result
 	result.save_version = 2
 	if not result.has("survival"):
 		result.survival = {"lives":3,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":false,"claimed":[]}

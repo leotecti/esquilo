@@ -20,6 +20,9 @@ func reset_enemy() -> void:
 	time = 0
 	position = origin
 
+func receive_tail(_character: Node2D) -> bool:
+	return false
+
 func _draw() -> void:
 	for i in 7:
 		var x := -28.0+i*8
