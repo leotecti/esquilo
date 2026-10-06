@@ -90,6 +90,24 @@ descoberta opcional. Ela oferece percurso próprio, inimigos, nozes, alimentos,
 corações e uma recompensa especial, mas o jogador pode terminar a fase sem
 explorá-la. Preserve uma rota clara de entrada e retorno para a trilha principal.
 
+A entrada precisa ser reconhecida antes do contato: use uma árvore completa,
+com raízes apoiadas no terreno, tronco, galhos e copa, e destaque o vão com
+névoa suave em movimento e luz integrada à natureza.
+Ao se aproximar, mostre o nome do destino e o comando de entrada. O brilho deve
+chamar atenção sem competir com o personagem ou parecer um portal tecnológico.
+
+## Ensino contextual de mecanismos
+
+Mecanismos novos combinam três sinais: aparência que sugere sua função, indicação
+visual do objetivo e uma mensagem curta quando o jogador se aproxima. Na pedra
+da fase modelo, Tico recebe a orientação para trocar para Pipo; Pipo recebe a
+instrução de segurar a direção; uma seta sobre a pedra e uma marca dourada no
+chão indicam o movimento e o destino. A orientação não pausa o jogo e aparece
+uma vez por tentativa.
+
+Colisões devem seguir a silhueta visível. Copas, túneis e galhos não podem criar
+apoios invisíveis, bloquear espaço aparentemente livre ou permitir que o jogador
+fique em pé fora da arte.
 ## Segurança de navegação
 
 - Degraus devem permitir avanço e retorno, inclusive com o salto menor de Pipo.

@@ -28,13 +28,18 @@ func _draw() -> void:
 
 func _draw_coop() -> void:
 	for i in 3: ground(Rect2(3260+i*160,690-i*70,180,300))
-	# O volume visual termina exatamente no teto físico de 696 px.
-	draw_rect(Rect2(1350,0,400,696),Color("5f4930"))
+	# Copa baixa: arte e colisão compartilham o mesmo volume.
+	draw_rect(Rect2(1350,560,400,136),Color("5f4930"))
 	for x in range(1360,1740,34):
-		draw_line(Vector2(x,0),Vector2(x+sin(x)*16,683),Color("88643b"),12)
-		draw_line(Vector2(x+10,0),Vector2(x+17,675),Color("ac8250"),3)
+		draw_line(Vector2(x,560),Vector2(x+sin(x)*16,683),Color("88643b"),12)
+		draw_line(Vector2(x+10,562),Vector2(x+17,675),Color("ac8250"),3)
 	for x in range(1300,1740,95):
 		draw_texture_rect(ATLAS.frame("props",7),Rect2(x,475,155,135),false,Color("bacb89"))
+	# Marca de destino legível: o desenho dourado reforça a instrução contextual.
+	draw_colored_polygon(PackedVector2Array([Vector2(1068,754),Vector2(1082,740),Vector2(1158,740),Vector2(1172,754),Vector2(1158,760),Vector2(1082,760)]),Color("d9b85d"))
+	draw_line(Vector2(1090,748),Vector2(1150,748),Color("fff0ae"),4,true)
+	for x in [1092,1120,1148]:
+		draw_polyline(PackedVector2Array([Vector2(x-7,742),Vector2(x+2,748),Vector2(x-7,754)]),Color("79572c"),3,true)
 
 func ground(rect: Rect2) -> void:
 	draw_rect(rect,Color("53412d"))

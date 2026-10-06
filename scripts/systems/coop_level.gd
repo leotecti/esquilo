@@ -15,6 +15,8 @@ var gate_open: bool = false
 var switch_button: Button
 var _scent_announced: bool = false
 var _switch_left: float = 0.0
+var _stone_tico_hint := false
+var _stone_pipo_hint := false
 
 func _ready() -> void:
 	super._ready()
@@ -48,10 +50,13 @@ func _build_gameplay() -> void:
 	stone = PUSHABLE.instantiate()
 	stone.name = "Stone"
 	stone.position = Vector2(850,760)
+	stone.guide_target_x = 1110
 	actors.add_child(stone)
 	var plate := _solid("Plate",Rect2(1070,756,100,4),Color("e2bf66"))
 	plate.collision_layer = 0
-	_solid("Tunnel",Rect2(1350,0,400,696),Color("80613f"))
+	# A colisão acompanha a copa visível. O antigo retângulo começava no topo da
+	# fase e criava uma plataforma invisível acima da passagem.
+	_solid("Tunnel",Rect2(1350,560,400,136),Color("80613f"))
 	var leaf := Polygon2D.new()
 	leaf.polygon = PackedVector2Array([Vector2(1310,610),Vector2(1330,560),Vector2(1500,530),Vector2(1690,555),Vector2(1800,610)])
 	leaf.color = Color("5e8551")
@@ -201,6 +206,13 @@ func _process(delta: float) -> void:
 	if get_tree().paused or completed or respawning:
 		return
 	_switch_left = maxf(0,_switch_left - delta)
+	if is_instance_valid(stone) and not gate_open and tico.position.distance_to(stone.position)<260:
+		if tico == squirrel and not _stone_tico_hint:
+			_stone_tico_hint = true
+			_say("Pedra pesada • Troque para Pipo e empurre até a marca dourada.")
+		elif tico == pipo and not _stone_pipo_hint:
+			_stone_pipo_hint = true
+			_say("Segure a direção para empurrar a pedra até a marca dourada.")
 	if is_instance_valid(stone) and not gate_open and stone.position.x >= 1110:
 		gate_open = true
 		gate.hide()
@@ -254,6 +266,8 @@ func restart() -> void:
 	pipo.sniffing = false
 	_switch_left = 0
 	_scent_announced = false
+	_stone_tico_hint = false
+	_stone_pipo_hint = false
 	gate_open = false
 	gate.show()
 	gate.get_node("Collision").set_deferred("disabled",false)

@@ -1,4 +1,4 @@
-# Primeiros Passos — fase modelo (0.17.2)
+# Primeiros Passos — fase modelo (0.29.3)
 
 Referência de duração aprovada: **5 a 8 minutos na primeira exploração tranquila,
 incluindo a copa e sem contar mortes**. O usuário aprovou o tamanho e o tempo
@@ -50,6 +50,18 @@ Nozes Douradas mantêm o registro permanente; corações seguem a regra de cura 
 vida conforme a saúde.
 O limite de 99 vidas permanece; atingir um marco nesse limite não acumula uma
 vida para receber depois. Nova aventura reinicia o contador.
+
+## Comunicação dos mecanismos — 0.29.3
+
+A pedra cooperativa ganhou acabamento ilustrado, seta de direção e destino
+marcado no chão. Ao aproximar Tico, a fase recomenda chamar Pipo; ao aproximar
+Pipo, ensina a segurar a direção. O teto após o mecanismo agora possui colisão
+somente na copa baixa visível, eliminando o apoio invisível.
+
+A entrada da copa usa uma árvore completa com raízes apoiadas no terreno,
+tronco, galhos e folhas. O vão tem névoa verde clara em movimento, brilho
+natural e uma chamada contextual maior: **Portal da Copa — AÇÃO para entrar**.
+A geometria de acesso e os pontos de viagem permanecem.
 
 ## Compatibilidade
 

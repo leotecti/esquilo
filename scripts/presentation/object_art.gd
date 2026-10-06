@@ -1,6 +1,7 @@
 extends Node2D
 const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
 const HEART = preload("res://assets/slice/heart.svg")
+const PUSHABLE_BOULDER = preload("res://assets/objects/pushable_boulder.png")
 var kind := "nut"
 var object: Node2D
 var _time := 0.0
@@ -68,7 +69,10 @@ func _draw() -> void:
 				draw_line(Vector2(2,-17+y),Vector2(2,-27+y),Color("8eac5a"),2,true)
 		"block":
 			prop([2,3,4][object.kind],Rect2(-28,-28,56,56),Color("b4a98d") if object.used else Color.WHITE)
-		"stone": prop(6,Rect2(-38,-64,76,64))
+		"stone":
+			# A silhueta larga, o musgo e a base pesada deixam claro que esta pedra
+			# pertence ao cenário, mas pode ser empurrada.
+			draw_texture_rect(PUSHABLE_BOULDER,Rect2(-52,-80,104,80),false)
 		"heavy": prop(5,Rect2(-45,-140,90,140))
 		"slug":
 			draw_set_transform(Vector2.ZERO,0,Vector2(object.direction,0.35 if object.defeated else 1.0))

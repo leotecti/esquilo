@@ -2,14 +2,18 @@ extends CharacterBody2D
 @export var push_speed: float = 95.0
 @export var max_travel: float = 340.0
 var origin: Vector2
+var guide_target_x: float = INF
+var _time := 0.0
 
 func _ready() -> void:
 	origin = position
 
 func _physics_process(delta: float) -> void:
+	_time += delta
 	velocity = Vector2(0, minf(velocity.y + 1200 * delta,900))
 	move_and_slide()
 	force_update_transform()
+	queue_redraw()
 
 func push_by(character: Node2D, direction: float, delta: float) -> bool:
 	if not character.is_in_group("pipo") or not character.controls_enabled:
@@ -27,6 +31,11 @@ func _draw() -> void:
 	draw_colored_polygon(PackedVector2Array([Vector2(-38,0),Vector2(-38,-44),Vector2(-25,-64),Vector2(22,-64),Vector2(38,-43),Vector2(38,0)]),Color("73817a"))
 	draw_polyline(PackedVector2Array([Vector2(-29,-12),Vector2(-23,-47),Vector2(14,-51)]),Color("a9b5a0"),5)
 	draw_line(Vector2(-5,-20),Vector2(18,-20),Color("d7dec6"),4)
+	if position.x < guide_target_x:
+		var lift := sin(_time*4.0)*3.0
+		var arrow := PackedVector2Array([Vector2(-20,-100+lift),Vector2(8,-100+lift),Vector2(8,-109+lift),Vector2(27,-94+lift),Vector2(8,-79+lift),Vector2(8,-88+lift),Vector2(-20,-88+lift)])
+		draw_colored_polygon(arrow,Color("ffe09a"))
+		draw_polyline(arrow,Color("6b4d2e"),3.0,true)
 
 func reset_puzzle() -> void:
 	position = origin

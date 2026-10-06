@@ -8,6 +8,11 @@ const EXIT := Vector2(7350,360)+SIDE_OFFSET
 const FAR_EXIT := Vector2(9580,460)+SIDE_OFFSET
 const RIGHT_EDGE := 64000
 const LIFE_ID := "copa_life"
+const PORTAL_TREE = preload("res://assets/environment/canopy_portal_tree.png")
+# A imagem possui uma pequena margem transparente sob as raízes. O deslocamento
+# abaixo apoia a parte visível da árvore exatamente na plataforma de y=680.
+const PORTAL_TREE_RECT := Rect2(20340,-565,1230,1278)
+const PORTAL_MIST_CENTER := Vector2(20955,385)
 const BRANCHES := [Rect2(1250,540,240,24),Rect2(1390,450,220,24),Rect2(1220,360,280,28),
 	Rect2(6400,660,300,28),Rect2(6700,560,230,28),Rect2(6940,460,230,28),Rect2(7190,360,360,32),
 	Rect2(7600,450,400,30),Rect2(8040,560,380,30),Rect2(8460,460,280,28),
@@ -62,11 +67,11 @@ func build() -> void:
 		bonus_life.reward_id = LIFE_ID
 		bonus_life.position = location(Vector2(9240,412))
 		level.actors.add_child(bonus_life)
-	for entry in [[ENTRY,"Explorar a copa"],[START+Vector2(0,5),"Voltar à trilha"],[EXIT,"Voltar à trilha"],[FAR_EXIT,"Voltar à trilha"]]:
+	for entry in [[ENTRY,"Portal da Copa\nAÇÃO para entrar"],[START+Vector2(0,5),"Voltar à trilha"],[EXIT,"Voltar à trilha"],[FAR_EXIT,"Voltar à trilha"]]:
 		var label := Label.new()
-		label.text = "%s • Ação" % entry[1]
-		label.position = entry[0]+Vector2(-125,-120)
-		label.size.x = 250
+		label.text = entry[1] if entry[0]==ENTRY else "%s • Ação" % entry[1]
+		label.position = entry[0]+Vector2(-165,-145 if entry[0]==ENTRY else -120)
+		label.size.x = 330
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		label.add_theme_font_size_override("font_size",19)
 		label.add_theme_color_override("font_color",Color("244b37"))
@@ -77,6 +82,7 @@ func build() -> void:
 		style.content_margin_bottom = 7
 		label.add_theme_stylebox_override("normal",style)
 		label.set_meta("portal_point",entry[0])
+		label.set_meta("entry_portal",entry[0]==ENTRY)
 		label.hide()
 		add_child(label)
 		hints.append(label)
@@ -92,8 +98,10 @@ func build() -> void:
 	queue_redraw()
 
 func _physics_process(_delta: float) -> void:
+	queue_redraw()
 	for hint in hints:
-		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<115
+		var radius := 250.0 if hint.get_meta("entry_portal",false) else 115.0
+		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<radius
 	if transitioning or level.completed or level.respawning: return
 	if active and level.tico.position.y>980:
 		level.tico.take_damage(level.tico.position+Vector2(0,30))
@@ -144,8 +152,22 @@ func restore(state: Dictionary) -> void:
 
 func _draw() -> void:
 	var atlas := preload("res://scripts/presentation/atlas_library.gd")
+	draw_texture_rect(PORTAL_TREE,PORTAL_TREE_RECT,false)
+	# Névoa orgânica dentro do vão: comunica passagem sem parecer um aro de
+	# tecnologia. Camadas lentas preservam a leitura da arte e do personagem.
+	var mist_time := Time.get_ticks_msec()*.001
+	for i in 6:
+		var phase := mist_time*(.28+i*.035)+i*1.17
+		var center := PORTAL_MIST_CENTER+Vector2(sin(phase)*34,cos(phase*.73)*24+i*5-13)
+		draw_set_transform(center,0,Vector2(1.65+i*.08,.42+i*.035))
+		draw_circle(Vector2.ZERO,34+i*3,Color(0.72,0.92,0.79,.075+i*.012))
+		draw_set_transform(Vector2.ZERO)
+	for i in 7:
+		var phase := mist_time*.55+i*.9
+		var mote := PORTAL_MIST_CENTER+Vector2(sin(phase)*95,55-fmod(mist_time*18+i*29,150))
+		draw_circle(mote,2.5+sin(phase)*.8,Color("dff6c7aa"))
 	# Silhuetas orgânicas e galhos finos; as superfícies jogáveis não mudam.
-	for trunk in [Rect2(1300,280,80,480),Rect2(6520,370,100,390),Rect2(7210,140,110,620),
+	for trunk in [Rect2(6520,370,100,390),Rect2(7210,140,110,620),
 		Rect2(7770,200,100,560),Rect2(8620,270,110,490),Rect2(9400,170,125,590)]:
 		trunk = Rect2(location(trunk.position),trunk.size)
 		var x: float = trunk.position.x
@@ -165,6 +187,10 @@ func _draw() -> void:
 		for x in range(int(branch.position.x)+12,int(branch.end.x)-25,65):
 			draw_texture_rect(atlas.frame("props",8),Rect2(x,branch.position.y-9,38,15),false,Color("bfcea9"))
 	for point in [ENTRY,START+Vector2(0,5),EXIT,FAR_EXIT]:
+		if point==ENTRY:
+			var pulse := 42.0+sin(Time.get_ticks_msec()*.004)*4.0
+			draw_arc(PORTAL_MIST_CENTER,pulse*1.9,PI*.12,PI*.88,40,Color("ffe7a088"),4,true)
+			continue
 		draw_set_transform(point+Vector2(0,-40),0,Vector2(.66,1))
 		draw_circle(Vector2.ZERO,42,Color("72583e"))
 		draw_circle(Vector2(0,2),34,Color("314d40"))

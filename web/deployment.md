@@ -10,14 +10,14 @@ controles, faro e percurso completo.
 ## Pacote
 
 Versão atual: **Validação intermediária 2 — aventura completa em miniatura
-(0.29.2)**. Finaliza a derrota do Periquito e preserva o vilarejo evolutivo e o Save V2.
+(0.29.3)**. Refina a pedra cooperativa e o portal da copa da fase modelo, preservando o vilarejo evolutivo e o Save V2.
 
 Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientação
 horizontal. A PWA instalada abre diretamente no modo `fullscreen`; não há botão
 flutuante sobre o jogo para alternar esse estado.
 [Relatório e roteiro da validação](../tests/validacao_intermediaria_2.md).
 
-`builds/web/Tico-0.29.2-derrota-periquito-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-0.29.3-fase-modelo-refinada-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
 Não coloque outra pasta `validacao_intermediaria_2` entre `/tico/` e os arquivos.
