@@ -47,13 +47,23 @@ func _physics_process(delta: float) -> void:
 			defeated = true
 			stomped.emit(self)
 			break
-		if body.velocity.y > 0.0 and body.previous_position.y <= global_position.y - 22.0:
+		if _is_stomp(body,player_rect,contact_rect):
 			defeated = true
 			body.bounce()
 			stomped.emit(self)
 			break
 		body.take_damage(global_position)
 	queue_redraw()
+
+func _is_stomp(body: CharacterBody2D, player_rect: Rect2, contact_rect: Rect2) -> bool:
+	# A Area2D pode ser processada um quadro depois do cruzamento. Nesse quadro a
+	# física já pode ter reduzido a velocidade vertical; usa também a trajetória
+	# anterior e exige que os pés estejam na metade superior da lesma.
+	if body.velocity.y < -20.0: return false
+	var feet_y := player_rect.end.y
+	var came_from_above: bool = body.previous_position.y <= global_position.y-14.0
+	var still_above: bool = feet_y <= contact_rect.get_center().y+5.0 and body.global_position.y < global_position.y-6.0
+	return came_from_above or still_above
 
 func _draw() -> void:
 	var h: float = 0.45 if defeated else 1.0

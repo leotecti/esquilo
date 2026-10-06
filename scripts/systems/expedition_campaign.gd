@@ -305,11 +305,12 @@ func _load_stage(index: int) -> void:
 	level.save_label.position.x = 515
 	_refresh_lives()
 	if index in extra_life_stages and index not in data.survival.claimed:
-		var pickup := preload("res://scripts/objects/extra_life.gd").new()
-		pickup.campaign = self
-		pickup.stage_id = index
-		pickup.position = Vector2(450,660)
-		level.actors.add_child(pickup)
+		var life_cache := preload("res://scripts/objects/life_cache.gd").new()
+		life_cache.name = "LifeCache"
+		life_cache.campaign = self
+		life_cache.stage_id = index
+		life_cache.position = Vector2(450,660)
+		level.actors.add_child(life_cache)
 	level.contextual_help = preload("res://scripts/ui/contextual_help.gd").new()
 	level.contextual_help.level = level
 	level.add_child(level.contextual_help)

@@ -139,6 +139,9 @@ func _draw() -> void:
 	if pose == "push": bob = 0
 	if pose == "push_attempt": bob = -absf(sin(_push_time*5))*0.6
 	if pose == "celebrate": bob = -absf(sin(_time*5))*7
+	# O giro já possui deslocamento desenhado em cada quadro. Um segundo balanço
+	# vertical fazia Tico parecer flutuar sobretudo no quadro visto de costas.
+	if pose.begins_with("tail_"): bob = 0
 	if pose == "sniff": angle = sin(_time*6)*0.035
 	if pose == "hurt": angle = -0.12
 	draw_set_transform(Vector2(0,bob),angle,Vector2(character.facing,1))

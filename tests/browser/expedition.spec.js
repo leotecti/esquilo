@@ -209,26 +209,36 @@ test('E08: subida à copa, recompensa, portal e reabertura offline',async({page,
   expect(saved.levels['0'].items).toEqual(expect.arrayContaining(['6500:615','6810:515','7060:415','7290:315']));
   const livesBefore=(await snapshot(page)).lives;
   await jumpTo(62000);await jumpTo(62360);await jumpTo(62680);await jumpTo(63020);await jumpTo(63340);
-  if(!await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).story.events.includes('copa_life'))) await page.keyboard.down('ArrowLeft');
+  if(!await page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).story.events.includes('copa_life'))) {
+    if((await snapshot(page)).x>63350) {
+      await page.keyboard.down('ArrowLeft');
+      await expect.poll(async()=>(await snapshot(page)).x,{intervals:[30]}).toBeLessThanOrEqual(63350);
+      await page.keyboard.up('ArrowLeft');
+    }
+    await ground(page);
+    await page.keyboard.down('ArrowRight');
+    await page.waitForTimeout(140);
+    await page.keyboard.down('Space');
+    await expect.poll(async()=>{
+      const saved=JSON.parse(await page.evaluate(()=>localStorage.getItem('tico.campaign.v1')));
+      return saved.story.events.includes('copa_life');
+    },{timeout:8000,intervals:[30]}).toBe(true);
+    await page.keyboard.up('Space');
+    await page.keyboard.up('ArrowRight');
+  }
   await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tico.campaign.v1')).story.events.includes('copa_life')),{intervals:[30]}).toBe(true);
-  await page.keyboard.up('ArrowLeft');
   expect((await snapshot(page)).lives).toBeGreaterThanOrEqual(livesBefore+1);
   await walk(page,63650);await ground(page);
   await page.screenshot({path:'builds/web/e08-copa-ampliada.png'});
   await page.keyboard.press('e');
   await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
   await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
-  await ground(page);await page.keyboard.press('e');
-  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(true);
-  await expect.poll(async()=>(await snapshot(page)).optional_transition).toBe(false);
+  await expect.poll(async()=>Math.abs((await snapshot(page)).x-23820),{intervals:[30]}).toBeLessThan(40);
   await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
   await context.setOffline(true);await page.reload();await startGame(page);
-  expect((await snapshot(page)).optional_active).toBe(true);
+  expect((await snapshot(page)).optional_active).toBe(false);
   expect((await snapshot(page)).optional_checkpoint).toBe(false);
-  await page.keyboard.down('ArrowLeft');
-  await expect.poll(async()=>(await snapshot(page)).x<60230,{timeout:8000,intervals:[30]}).toBe(true);
-  await page.keyboard.up('ArrowLeft');await ground(page);await page.keyboard.press('e');
-  await expect.poll(async()=>(await snapshot(page)).optional_active).toBe(false);
+  expect((await snapshot(page)).x).toBeGreaterThan(23000);
   expect((await snapshot(page)).campaign_stage).toBe(0);expect(errors).toEqual([]);
 });
 

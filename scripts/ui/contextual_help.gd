@@ -137,7 +137,8 @@ func _candidate() -> Array:
 		var offset: Vector2 = target.position-player.position
 		if offset.x< -80 or offset.x>250 or absf(offset.y)>140: continue
 		if target.has_meta("extra_life") and not target.taken and not _seen(KEYS[2]):
-			return [KEYS[2],"Uma vida extra! Pule para pegar o medalhão.","life",target]
+			var message := "Há uma vida neste bloco! Acerte-o por baixo." if target.has_meta("life_cache") else "Uma vida extra! Pule para pegar o medalhão."
+			return [KEYS[2],message,"life",target]
 		if target.has_method("reset_item") and target.healing and not target.taken and player.health<player.max_health and not _seen(KEYS[1]):
 			return [KEYS[1],"Pegue o coração para recuperar sua saúde.","heart",target]
 		if target.has_method("reset_enemy") and target!=level.guardian and not target.get("defeated"):

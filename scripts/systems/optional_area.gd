@@ -2,6 +2,8 @@ extends Node2D
 ## Protótipo de área secundária: identidade e pontos de retorno estáveis.
 const SIDE_OFFSET := Vector2(54100,0)
 const ENTRY := Vector2(21000,340)
+# Plataforma imediatamente anterior à bandeira; a superfície está em y=680.
+const RETURN := Vector2(23820,675)
 const START := Vector2(6100,755)+SIDE_OFFSET
 const FLAG := Vector2(6550,655)+SIDE_OFFSET
 const EXIT := Vector2(7350,360)+SIDE_OFFSET
@@ -24,7 +26,7 @@ var transitioning := false
 var flag: Area2D
 var veil: ColorRect
 var hints: Array[Label] = []
-var bonus_life: Area2D
+var bonus_life: StaticBody2D
 var slugs: Array[Node2D] = []
 
 static func location(point: Vector2) -> Vector2:
@@ -61,11 +63,13 @@ func build() -> void:
 		level._slug(location(point),65)
 		slugs.append(level.actors.get_child(level.actors.get_child_count()-1))
 	if LIFE_ID not in level.campaign.data.story.events:
-		bonus_life = preload("res://scripts/objects/extra_life.gd").new()
+		bonus_life = preload("res://scripts/objects/life_cache.gd").new()
+		bonus_life.name = "CopaLifeCache"
 		bonus_life.campaign = level.campaign
 		bonus_life.stage_id = 0
 		bonus_life.reward_id = LIFE_ID
-		bonus_life.position = location(Vector2(9240,412))
+		# 66 px acima do galho: Tico e Pipo passam por baixo e conseguem acertar.
+		bonus_life.position = location(Vector2(9240,365))
 		level.actors.add_child(bonus_life)
 	for entry in [[ENTRY,"Portal da Copa\nAÇÃO para entrar"],[START+Vector2(0,5),"Voltar à trilha"],[EXIT,"Voltar à trilha"],[FAR_EXIT,"Voltar à trilha"]]:
 		var label := Label.new()
@@ -122,7 +126,7 @@ func travel(entering: bool) -> void:
 	tween.tween_callback(func():
 		active = entering
 		apply_camera()
-		level.tico.reset_at(START if entering else ENTRY+Vector2(0,-5))
+		level.tico.reset_at(START if entering else RETURN)
 		level.tico.controls_enabled = false
 		level.camera.snap_to_target()
 		level._save_progress()

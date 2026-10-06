@@ -134,3 +134,13 @@ atual está em [Evolução E09](evolucao_e09.md), com novos alimentos e recompen
 O padrão atual para reestruturar outras fases está em
 [15_estrutura_fase_modelo.md](../arquivos_projeto/15_estrutura_fase_modelo.md).
 Atualize-o junto com qualquer mudança aprovada na estrutura de Primeiros Passos.
+
+## Refinamentos de interação — 0.29.5
+
+- Vidas especiais ficam dentro de um bloco raro com noz e folha. O jogador acerta
+o bloco por baixo; um medalhão `+1` sobe brevemente e a recompensa é salva na hora.
+- O pisão aceita a trajetória descendente mesmo quando a detecção da área ocorre
+um quadro depois e a velocidade vertical já foi reduzida. Contato lateral permanece dano.
+- A caudada não recebe balanço vertical adicional durante os quadros do giro.
+- Sair da copa leva à plataforma em x=23.820, imediatamente antes da bandeira,
+reforçando o avanço sem ativar o checkpoint automaticamente.

@@ -24,9 +24,14 @@ func run() -> void:
 	await open_campaign()
 	check(campaign.data.survival.lives==3,"Campanha antiga recebe três vidas")
 	check(not level.switch_character(),"Pipo continua bloqueado antes do resgate")
-	level.tico.reset_at(Vector2(450,675))
-	await frames(8)
-	check(campaign.data.survival.lives==4,"Colisão coleta medalhão de vida extra")
+	var life_cache: Node2D = level.actors.get_node("LifeCache")
+	level.tico.reset_at(Vector2(450,755))
+	key(KEY_SPACE,true)
+	for i in 30:
+		await frames(1)
+		if life_cache.used: break
+	key(KEY_SPACE,false)
+	check(campaign.data.survival.lives==4 and life_cache.used,"Bloco raro revela e concede vida extra")
 	check(not campaign.claim_life(0),"Vida extra não duplica na mesma fase")
 	defeat()
 	check(campaign.data.survival.lives==3,"Derrota desconta uma vida imediatamente")

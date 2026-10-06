@@ -136,3 +136,14 @@ Use estes passos ao reestruturar uma fase:
 Não replique automaticamente o total de itens de Primeiros Passos em outras
 fases. Use-o como exemplo de frequência e variedade; ajuste quantidades à
 duração, ao tema e à dificuldade de cada percurso.
+
+## Recompensa, combate e saída opcional — revisão 0.29.5
+
+Vidas especiais são reveladas em um bloco raro atingido por baixo. A linguagem
+visual usa noz, folha e dourado para diferenciá-lo dos blocos comuns; a animação
+`+1` confirma a recompensa sem deixar um coletável solto no caminho.
+
+O pisão em inimigos considera posição, direção vertical e trajetória do quadro
+anterior para tolerar pequenas diferenças de processamento. A saída de uma área
+secundária deve comunicar progresso: em Primeiros Passos, ela retorna à plataforma
+imediatamente anterior à bandeira, mantendo o checkpoint como conquista do jogador.
