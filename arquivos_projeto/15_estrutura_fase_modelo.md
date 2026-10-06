@@ -91,7 +91,8 @@ corações e uma recompensa especial, mas o jogador pode terminar a fase sem
 explorá-la. Preserve uma rota clara de entrada e retorno para a trilha principal.
 
 A entrada precisa ser reconhecida antes do contato: use uma árvore completa,
-com raízes apoiadas no terreno, tronco, galhos e copa, e destaque o vão com
+com raízes sobrepostas ao terreno, sem revelar a paisagem por baixo, tronco,
+galhos e copa, e destaque o vão com
 névoa suave em movimento e luz integrada à natureza.
 Ao se aproximar, mostre o nome do destino e o comando de entrada. O brilho deve
 chamar atenção sem competir com o personagem ou parecer um portal tecnológico.

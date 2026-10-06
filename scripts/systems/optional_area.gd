@@ -9,10 +9,10 @@ const FAR_EXIT := Vector2(9580,460)+SIDE_OFFSET
 const RIGHT_EDGE := 64000
 const LIFE_ID := "copa_life"
 const PORTAL_TREE = preload("res://assets/environment/canopy_portal_tree.png")
-# A imagem possui uma pequena margem transparente sob as raízes. O deslocamento
-# abaixo apoia a parte visível da árvore exatamente na plataforma de y=680.
-const PORTAL_TREE_RECT := Rect2(20340,-565,1230,1278)
-const PORTAL_MIST_CENTER := Vector2(20955,385)
+# A base visual atravessa ligeiramente o terreno principal de y=760. Essa
+# sobreposição enterra as pontas das raízes e impede enxergar a paisagem por baixo.
+const PORTAL_TREE_RECT := Rect2(20340,-465,1230,1278)
+const PORTAL_MIST_CENTER := Vector2(20955,485)
 const BRANCHES := [Rect2(1250,540,240,24),Rect2(1390,450,220,24),Rect2(1220,360,280,28),
 	Rect2(6400,660,300,28),Rect2(6700,560,230,28),Rect2(6940,460,230,28),Rect2(7190,360,360,32),
 	Rect2(7600,450,400,30),Rect2(8040,560,380,30),Rect2(8460,460,280,28),

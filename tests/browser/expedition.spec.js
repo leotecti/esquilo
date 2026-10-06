@@ -1,5 +1,21 @@
 import {test,expect} from '@playwright/test';
 const snapshot=page=>page.evaluate(()=>window.__ticoTest);
+
+test('PWA: cache registra arquivos para atualização incremental',async({page})=>{
+  await page.goto('http://127.0.0.1:8080/tico/?test=1');
+  await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller),{timeout:45000}).toBe(true);
+  const cacheInfo=await page.evaluate(async()=>{
+    const names=(await caches.keys()).filter(name=>name.startsWith('tico-/tico/-'));
+    const cache=await caches.open(names.at(-1));
+    const metadata=await cache.match(new URL('__tico_assets__.json',location.href));
+    const assets=metadata ? await metadata.json() : [];
+    return {assets,urls:(await cache.keys()).map(request=>request.url)};
+  });
+  expect(cacheInfo.assets.length).toBeGreaterThan(10);
+  expect(cacheInfo.assets.every(asset=>asset.name&&asset.hash&&asset.size>0)).toBe(true);
+  expect(cacheInfo.urls.some(url=>url.endsWith('/index.wasm'))).toBe(true);
+  await expect(page.locator('#update-state')).toBeHidden({timeout:5000});
+});
 const devices={4:[],5:['Tronco'],6:['Ponte'],7:[],8:[],9:['Rocha'],10:[],11:[],12:['Peso'],13:['Comporta'],14:['Tora','Roda','Engrenagem'],15:['Arena']};
 function fixture(index) {
   const levels={};

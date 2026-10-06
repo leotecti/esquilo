@@ -58,7 +58,7 @@ marcado no chão. Ao aproximar Tico, a fase recomenda chamar Pipo; ao aproximar
 Pipo, ensina a segurar a direção. O teto após o mecanismo agora possui colisão
 somente na copa baixa visível, eliminando o apoio invisível.
 
-A entrada da copa usa uma árvore completa com raízes apoiadas no terreno,
+A entrada da copa usa uma árvore completa com raízes sobrepostas ao terreno,
 tronco, galhos e folhas. O vão tem névoa verde clara em movimento, brilho
 natural e uma chamada contextual maior: **Portal da Copa — AÇÃO para entrar**.
 A geometria de acesso e os pontos de viagem permanecem.

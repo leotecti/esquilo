@@ -10,14 +10,14 @@ controles, faro e percurso completo.
 ## Pacote
 
 Versão atual: **Validação intermediária 2 — aventura completa em miniatura
-(0.29.3)**. Refina a pedra cooperativa e o portal da copa da fase modelo, preservando o vilarejo evolutivo e o Save V2.
+(0.29.4)**. Otimiza atualizações da PWA e preserva os refinamentos da fase modelo, o vilarejo evolutivo e o Save V2.
 
 Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientação
 horizontal. A PWA instalada abre diretamente no modo `fullscreen`; não há botão
 flutuante sobre o jogo para alternar esse estado.
 [Relatório e roteiro da validação](../tests/validacao_intermediaria_2.md).
 
-`builds/web/Tico-0.29.3-fase-modelo-refinada-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-0.29.4-atualizacao-otimizada-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
 Não coloque outra pasta `validacao_intermediaria_2` entre `/tico/` e os arquivos.
@@ -116,3 +116,12 @@ offline no celular, use o endereço HTTPS publicado. O servidor local serve
 somente para desenvolvimento e escuta em `127.0.0.1` por padrão.
 
 Referência técnica: [exportação Web da Godot](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html).
+
+## Atualizações incrementais — 0.29.4
+
+O build registra tamanho e assinatura de cada arquivo no service worker. Ao preparar
+uma nova versão, a PWA copia do cache anterior os arquivos que permanecem iguais
+e baixa apenas os alterados. Uma barra mostra o progresso em bytes, informa quantos
+arquivos foram reaproveitados e libera **Atualizar** quando a versão está completa.
+A primeira migração a partir da 0.29.3 ainda precisa formar o cache com assinaturas;
+as atualizações posteriores passam a aproveitar o mecanismo incremental.

@@ -28,6 +28,9 @@
     #notice { min-height:24px; }
     #tools { position:fixed; z-index:3; bottom:max(8px,env(safe-area-inset-bottom)); left:50%; transform:translateX(-50%); display:flex; gap:8px; }
     #tools button { min-height:44px; padding:8px 14px; font-size:14px; background:#244b37dd; }
+    #update-state { position:fixed; z-index:4; right:max(12px,env(safe-area-inset-right)); bottom:max(66px,calc(env(safe-area-inset-bottom) + 58px)); width:min(360px,calc(100vw - 24px)); padding:12px 15px; border:2px solid #afbd86; border-radius:16px; background:#fff2d9f2; box-shadow:0 7px 25px #18332344; text-align:left; }
+    #update-state p { margin:0 0 7px; font-size:14px; font-weight:650; }
+    #update-progress { height:12px; }
     #rotate { z-index:20; display:none; }
     #safe { position:fixed; visibility:hidden; pointer-events:none; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
     @media (pointer:coarse) and (orientation:portrait) { #rotate { display:grid; } }
@@ -53,6 +56,10 @@
     <button id="install" type="button" hidden>Instalar</button>
     <button id="update" type="button" hidden>Atualizar</button>
   </nav>
+  <aside id="update-state" hidden aria-live="polite">
+    <p id="update-message">Preparando atualização…</p>
+    <progress id="update-progress" max="100" value="0" aria-label="Progresso da atualização"></progress>
+  </aside>
   <noscript><section class="overlay">Ative o JavaScript para jogar com Tico.</section></noscript>
   <script src="$GODOT_URL"></script>
   <script>
@@ -64,9 +71,13 @@
     const progress = document.getElementById('progress');
     const install = document.getElementById('install');
     const update = document.getElementById('update');
+    const updateState = document.getElementById('update-state');
+    const updateMessage = document.getElementById('update-message');
+    const updateProgress = document.getElementById('update-progress');
     let installPrompt;
     let registration;
     let started = false;
+    const hadServiceWorkerAtOpen = Boolean(navigator.serviceWorker?.controller);
     window.ticoSafeInsets = () => {
       const s = getComputedStyle(document.getElementById('safe'));
       return [s.paddingLeft,s.paddingTop,s.paddingRight,s.paddingBottom].map(v => parseFloat(v) || 0);
@@ -92,19 +103,49 @@
     update.addEventListener('click', () => {
       update.disabled = true;
       update.textContent = 'Atualizando…';
-      registration?.waiting?.postMessage('update');
+      registration?.waiting?.postMessage({type:'ACTIVATE_UPDATE'});
     });
     if ('serviceWorker' in navigator && isSecureContext) {
+      navigator.serviceWorker.addEventListener('message', event => {
+        const data = event.data;
+        if (data?.type !== 'UPDATE_PROGRESS') return;
+        updateState.hidden = false;
+        const total = Number(data.totalBytes) || Number(data.total) || 1;
+        const done = Math.min(total,Number(data.doneBytes) || Number(data.done) || 0);
+        updateProgress.max = total;
+        updateProgress.value = done;
+        const percent = Math.round(done/total*100);
+        if (data.phase === 'ready') {
+          if (hadServiceWorkerAtOpen) {
+            updateMessage.textContent = 'Atualização pronta para instalar.';
+          } else {
+            updateMessage.textContent = 'Jogo preparado para funcionar offline.';
+            setTimeout(() => { if (update.hidden) updateState.hidden = true; },1800);
+          }
+        } else if (data.reused > 0) {
+          updateMessage.textContent = `Preparando atualização: ${percent}% • ${data.reused} arquivos reaproveitados`;
+        } else {
+          updateMessage.textContent = `Baixando atualização: ${percent}%`;
+        }
+      });
       navigator.serviceWorker.register(config.serviceWorker, {scope:'./', updateViaCache:'none'}).then(async reg => {
         registration = reg;
-        const showUpdate = () => { update.hidden = !(reg.waiting && reg.active); };
+        const showUpdate = () => {
+          update.hidden = !(reg.waiting && reg.active);
+          if (!update.hidden) {
+            updateState.hidden = false;
+            updateProgress.max = 100;
+            updateProgress.value = 100;
+            updateMessage.textContent = 'Atualização pronta para instalar.';
+          }
+        };
         showUpdate();
         reg.addEventListener('updatefound', () => reg.installing?.addEventListener('statechange', showUpdate));
         await reg.update();
         await navigator.serviceWorker.ready;
         document.getElementById('offline-status').textContent = 'Pronto para jogar offline neste dispositivo.';
       }).catch(() => { document.getElementById('offline-status').textContent = 'Jogue online. O modo offline ainda não está disponível.'; });
-      let hadController = Boolean(navigator.serviceWorker.controller);
+      let hadController = hadServiceWorkerAtOpen;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
         if (hadController) location.reload();
         hadController = true;

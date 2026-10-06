@@ -33,10 +33,16 @@ Object.assign(manifest, {
 await writeFile(manifestPath,JSON.stringify(manifest,null,2)+'\n');
 const files = (await readdir(out)).filter(name => /\.(html|js|wasm|pck|png|json)$/.test(name) && name !== 'index.service.worker.js').sort();
 const hash = createHash('sha256');
-for (const name of files) { hash.update(name); hash.update(await readFile(resolve(out,name))); }
+const assets = [];
+for (const name of files) {
+  const content = await readFile(resolve(out,name));
+  const fileHash = createHash('sha256').update(content).digest('hex').slice(0,16);
+  assets.push({name,size:content.byteLength,hash:fileHash});
+  hash.update(name); hash.update(content);
+}
 const version = hash.digest('hex').slice(0,16);
 const worker = (await readFile(resolve(root,'web/custom/service-worker.js'),'utf8'))
-  .replace('__BUILD_VERSION__',version).replace('__PRECACHE_FILES__',JSON.stringify(files));
+  .replace('__BUILD_VERSION__',version).replace('__ASSET_MANIFEST__',JSON.stringify(assets));
 await writeFile(resolve(out,'index.service.worker.js'),worker);
 await copyFile(resolve(root,'web/deploy.htaccess'),resolve(out,'.htaccess'));
 console.log(`Web/PWA pronta: ${out}\nCache: ${version}\nDestino: https://projetosdoleo.com/tico/`);

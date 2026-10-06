@@ -1,7 +1,7 @@
 # Status do projeto
 
 **Data:** 2026-10-05
-**Versão atual:** 0.29.3, baseada na Validação intermediária 2 — aventura
+**Versão atual:** 0.29.4, baseada na Validação intermediária 2 — aventura
 completa em miniatura.
 
 **Correção visual atual:** a caudada foi refeita como giro corporal completo em
