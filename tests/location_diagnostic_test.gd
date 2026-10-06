@@ -1,0 +1,33 @@
+extends "res://tests/checkpoints_e03_test.gd"
+
+func run() -> void:
+	root.size = Vector2i(1280,720)
+	root.content_scale_size = Vector2i(1280,720)
+	await start_phase(2)
+	var diagnostic = level.location_diagnostic
+	check(is_instance_valid(diagnostic) and not diagnostic.visible_mode,"Localizador inicia oculto")
+	level.tico.reset_at(Vector2(18420,675))
+	diagnostic.toggle(true)
+	diagnostic.refresh()
+	var main_text: String = diagnostic.location_text()
+	check(main_text=="Fase 1-3 | Trilha principal | T06 | X 18420 | Y 675","Referência principal combina fase, área, trecho e coordenadas")
+	diagnostic._register_title_tap(1000)
+	diagnostic._register_title_tap(1200)
+	diagnostic._register_title_tap(1400)
+	check(not diagnostic.visible_mode,"Três toques no título ocultam o localizador")
+	diagnostic._register_title_tap(3000)
+	diagnostic._register_title_tap(3200)
+	diagnostic._register_title_tap(3400)
+	check(diagnostic.visible_mode,"Três toques no título mostram o localizador")
+	level.optional_area.active = true
+	level.tico.reset_at(Vector2(67420,635))
+	diagnostic.refresh()
+	check(diagnostic.location_text()=="Fase 1-3 | Gruta Fria | T03 | X 67420 | Y 635","Área secundária recebe nome e trecho próprios")
+	diagnostic.copy_location()
+	check(diagnostic.last_copied==diagnostic.location_text() and diagnostic.copy_button.text=="Copiado!","Botão envia a referência completa à área de transferência e confirma a ação")
+	diagnostic.toggle(false)
+	check(not diagnostic.panel.visible,"F3 pode ocultar o painel sem alterar a partida")
+	await close_world()
+	DirAccess.remove_absolute(E03_SLOT)
+	print("RESULTADO LOCALIZADOR: %d verificações, %d falhas" % [checks,failures])
+	quit(1 if failures else 0)

@@ -52,6 +52,18 @@ test('1-3: Gruta Fria reabre dentro da caverna e preserva o progresso',async({pa
   expect(s.world_stage).toBe(2);
   expect(errors).toEqual([]);
 });
+
+test('Localizador: F3 mostra uma referência precisa da Gruta Fria',async({page})=>{
+  const data=fixture(2);
+  Object.assign(data.levels['2'],{optional_area:{active:true,checkpoint:false}});
+  await seed(page,data);await boot(page);await ground(page);
+  await page.keyboard.press('F3');
+  await expect.poll(async()=>(await snapshot(page)).location_diagnostic).toBe(true);
+  const reference=(await snapshot(page)).location_reference;
+  expect(reference).toContain('Fase 1-3 | Gruta Fria | T01 | X 65180');
+  await page.keyboard.press('F3');
+  await expect.poll(async()=>(await snapshot(page)).location_diagnostic).toBe(false);
+});
 const devices={4:[],5:['Tronco'],6:['Ponte'],7:[],8:[],9:['Rocha'],10:[],11:[],12:['Peso'],13:['Comporta'],14:['Tora','Roda','Engrenagem'],15:['Arena']};
 function fixture(index) {
   const levels={};

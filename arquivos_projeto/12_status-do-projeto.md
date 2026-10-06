@@ -1,8 +1,13 @@
 # Status do projeto
 
 **Data:** 2026-10-06
-**Versão atual:** 0.33.0, com a fase 1-3 ampliada, a Gruta Fria opcional, a
-identidade do aplicativo alinhada ao Tico atual e o balanceamento central da E22.
+**Versão atual:** 0.33.1, com localizador de correções, a fase 1-3 ampliada, a
+Gruta Fria opcional e a identidade do aplicativo alinhada ao Tico atual.
+
+**Localizador 0.33.1:** F3 no computador ou três toques no título da fase exibem
+fase, área, trecho e coordenadas X/Y. O botão de cópia produz uma referência como
+`Fase 1-3 | Gruta Fria | T03 | X 67420 | Y 635`. O painel inicia oculto e não
+altera o save.
 
 **Expansão de 1-3:** Um Novo Amigo preserva o resgate de Pipo e passa a ter
 38.000 unidades. A Gruta Fria possui entrada por túnel, morcegos, estalactites,

@@ -20,6 +20,7 @@ var _frame_samples: Array[float] = []
 var _elapsed := 0.0
 var _last_frame_usec := 0
 var feedback: CanvasLayer
+var location_diagnostic: CanvasLayer
 
 func _ready() -> void:
 	super._ready()
@@ -37,6 +38,9 @@ func _ready() -> void:
 	feedback = preload("res://scripts/presentation/polish_feedback.gd").new()
 	feedback.level = self
 	add_child(feedback)
+	location_diagnostic = preload("res://scripts/ui/location_diagnostic.gd").new()
+	location_diagnostic.level = self
+	add_child(location_diagnostic)
 	_skin_objects()
 	_skin_ui()
 	_art_ready = true
@@ -229,6 +233,7 @@ func _update_layout() -> void:
 	background.size = size + Vector2(240,100)
 	background.position = Vector2(-120,-30)
 	if is_instance_valid(feedback): feedback.layout()
+	if is_instance_valid(location_diagnostic): location_diagnostic._update_layout()
 
 func set_paused(value: bool) -> void:
 	super.set_paused(value)
@@ -286,6 +291,8 @@ func _test_details() -> Dictionary:
 	data["music_enabled"] = music_enabled
 	data["effects_enabled"] = effects_enabled
 	if _art_ready:
+		data["location_diagnostic"] = location_diagnostic.visible_mode
+		data["location_reference"] = location_diagnostic.location_text()
 		data["pose"] = tico.get_node("Illustration").pose
 		data["push_frame"] = tico.get_node("Illustration").push_frame
 		data["run_frame"] = tico.get_node("Illustration").run_frame
