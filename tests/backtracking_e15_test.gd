@@ -57,6 +57,9 @@ func run() -> void:
 	await frames(35)
 	level = campaign.level
 	check(is_instance_valid(level.backtrack_stone) and not level.backtrack_open,"Fase 1-2 também recebe um segredo curto na revisita")
+	check(not level.get_node("Geometry").has_node("BacktrackRoof"),"Fase 1-2 não cria apoio invisível sobre a rota")
+	check(level.terrain.any(func(rect): return rect.position==Vector2(2130,660) and rect.size==Vector2(300,24)),"Laje esquerda sustenta a pedra em uma superfície visível")
+	check(level.terrain.any(func(rect): return rect.position==Vector2(2510,660) and rect.size==Vector2(160,24)),"Abertura entre as lajes permite visitar a rota inferior")
 	level._on_exit(level.exit_marker)
 	await frames(3)
 	check(level.completed and "retorno_02" not in campaign.data.collectibles.golden_nuts.get("1",[]),"Exploração continua opcional e não impede concluir a fase")

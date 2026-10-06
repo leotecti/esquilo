@@ -1,4 +1,5 @@
 extends CharacterBody2D
+const BALANCE = preload("res://scripts/systems/game_balance.gd")
 ## Controlador de Tico. Valores iniciais ajustáveis no Inspector para playtest.
 
 signal landed
@@ -10,28 +11,28 @@ signal tail_window(attack_id: int)
 signal auto_run_finished
 
 @export_group("Vida")
-@export var max_health: int = 3
-@export var invulnerability_duration: float = 1.5
-var health: int = 3
+@export var max_health: int = BALANCE.PLAYER_MAX_HEALTH
+@export var invulnerability_duration: float = BALANCE.DAMAGE_INVULNERABILITY
+var health: int = BALANCE.PLAYER_MAX_HEALTH
 var invulnerability_left: float = 0.0
 var controls_enabled: bool = true
 var previous_position: Vector2
 var _hurt_left: float = 0.0
 
 @export_group("Movimento")
-@export var move_speed: float = 300.0
+@export var move_speed: float = BALANCE.TICO_MOVE_SPEED
 @export var acceleration: float = 2200.0
 @export var deceleration: float = 2600.0
 @export var air_acceleration: float = 1400.0
 @export_group("Salto")
-@export var jump_velocity: float = -560.0
+@export var jump_velocity: float = BALANCE.TICO_JUMP_VELOCITY
 @export_range(0.1, 1.0) var jump_cut: float = 0.48
 @export var fall_gravity_multiplier: float = 1.35
 @export var max_fall_speed: float = 900.0
 @export var coyote_duration: float = 0.10
 @export var jump_buffer_duration: float = 0.12
 @export_group("Planar")
-@export var glide_duration: float = 2.0
+@export var glide_duration: float = BALANCE.GLIDE_DURATION
 @export var glide_fall_speed: float = 100.0
 @export var glide_gravity_multiplier: float = 0.18
 @export_group("Caudada")
@@ -54,6 +55,7 @@ var wind_acceleration := Vector2.ZERO
 var tail_phase := "ready"
 var tail_phase_left := 0.0
 var tail_attack_id := 0
+var _drop_platform: CollisionObject2D
 
 @onready var sprite: AnimatedSprite2D = $Sprite
 
@@ -157,6 +159,8 @@ func _move_character(delta: float) -> void:
 	if grounded:
 		glide_remaining = glide_duration
 		_jump_cut_applied = false
+	if grounded and Input.is_action_just_pressed("move_down"):
+		grounded = not _begin_platform_drop()
 	if Input.is_action_just_pressed("jump"):
 		_buffer_left = jump_buffer_duration
 
@@ -199,6 +203,7 @@ func _move_character(delta: float) -> void:
 	if not grounded:
 		velocity += wind_acceleration * delta
 	move_and_slide()
+	_update_platform_drop()
 	if rising:
 		for index in get_slide_collision_count():
 			var collision := get_slide_collision(index)
@@ -212,6 +217,29 @@ func _move_character(delta: float) -> void:
 		_gliding = false
 		landed.emit()
 	_update_animation()
+
+func _begin_platform_drop() -> bool:
+	for index in get_slide_collision_count():
+		var collision := get_slide_collision(index)
+		var collider = collision.get_collider()
+		if collision.get_normal().y < -0.5 and collider is CollisionObject2D and collider.get_meta("drop_through",false):
+			_drop_platform = collider
+			add_collision_exception_with(_drop_platform)
+			global_position.y += 5.0
+			velocity.y = 190.0
+			_coyote_left = 0.0
+			_buffer_left = 0.0
+			return true
+	return false
+
+func _update_platform_drop() -> void:
+	if not is_instance_valid(_drop_platform):
+		_drop_platform = null
+		return
+	var release_y := float(_drop_platform.get_meta("drop_release_y",_drop_platform.global_position.y+50.0))
+	if global_position.y >= release_y:
+		remove_collision_exception_with(_drop_platform)
+		_drop_platform = null
 
 
 func _update_animation() -> void:
@@ -234,6 +262,8 @@ func _update_animation() -> void:
 
 
 func reset_at(point: Vector2) -> void:
+	if is_instance_valid(_drop_platform): remove_collision_exception_with(_drop_platform)
+	_drop_platform = null
 	cancel_tail_attack()
 	auto_run_target = INF
 	wind_acceleration = Vector2.ZERO

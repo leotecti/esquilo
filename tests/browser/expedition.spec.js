@@ -16,6 +16,42 @@ test('PWA: cache registra arquivos para atualização incremental',async({page})
   expect(cacheInfo.urls.some(url=>url.endsWith('/index.wasm'))).toBe(true);
   await expect(page.locator('#update-state')).toBeHidden({timeout:5000});
 });
+
+test('E20: Blocos e Segredos abre a galeria subterrânea e mantém o save',async({page,context})=>{
+  const data=fixture(1);
+  Object.assign(data.levels['1'],{optional_area:{active:true,checkpoint:false}});
+  await seed(page,data);const errors=errorsFor(page);await boot(page);await ground(page);
+  let s=await snapshot(page);
+  expect(s.world_stage).toBe(1);
+  expect(s.main_right).toBe(39000);
+  expect(s.optional_active).toBe(true);
+  expect(s.optional_left).toBe(46000);
+  expect(s.x).toBeGreaterThanOrEqual(46000);
+  await page.screenshot({path:'builds/web/e20-galeria-das-pedras.png'});
+  await context.setOffline(true);await page.reload();await startGame(page);await ground(page);
+  s=await snapshot(page);
+  expect(s.optional_active).toBe(true);
+  expect(s.world_stage).toBe(1);
+  expect(errors).toEqual([]);
+});
+
+test('1-3: Gruta Fria reabre dentro da caverna e preserva o progresso',async({page,context})=>{
+  const data=fixture(2);
+  Object.assign(data.levels['2'],{optional_area:{active:true,checkpoint:false}});
+  await seed(page,data);const errors=errorsFor(page);await boot(page);await ground(page);
+  let s=await snapshot(page);
+  expect(s.world_stage).toBe(2);
+  expect(s.main_right).toBe(38000);
+  expect(s.optional_active).toBe(true);
+  expect(s.optional_left).toBe(65000);
+  expect(s.x).toBeGreaterThanOrEqual(65000);
+  await page.screenshot({path:'builds/web/fase-1-3-gruta-fria.png'});
+  await context.setOffline(true);await page.reload();await startGame(page);await ground(page);
+  s=await snapshot(page);
+  expect(s.optional_active).toBe(true);
+  expect(s.world_stage).toBe(2);
+  expect(errors).toEqual([]);
+});
 const devices={4:[],5:['Tronco'],6:['Ponte'],7:[],8:[],9:['Rocha'],10:[],11:[],12:['Peso'],13:['Comporta'],14:['Tora','Roda','Engrenagem'],15:['Arena']};
 function fixture(index) {
   const levels={};

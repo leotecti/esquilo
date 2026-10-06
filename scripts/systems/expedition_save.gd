@@ -57,7 +57,7 @@ func valid(data: Variant) -> bool:
 			if data.levels[id].route_checkpoint>0 and not data.levels[id].checkpoint: return false
 		if data.levels[id].has("optional_area"):
 			var area: Variant = data.levels[id].optional_area
-			if index!=0 or not area is Dictionary or area.size()!=2: return false
+			if index not in [0,1,2] or not area is Dictionary or area.size()!=2: return false
 			if not area.get("active") is bool or not area.get("checkpoint") is bool: return false
 			if area.active and data.levels[id].completed: return false
 		if index<4: continue

@@ -1,11 +1,12 @@
 extends "res://scripts/systems/world_campaign.gd"
+const BALANCE = preload("res://scripts/systems/game_balance.gd")
 var legacy_path := "user://world1.json"
-@export_range(1,99) var initial_lives := 3
+@export_range(1,99) var initial_lives := BALANCE.INITIAL_LIVES
 @export var extra_life_stages: Array[int] = [0,4,8,12]
 const WORLD_NAMES = ["Bosque das Folhas","Rio das Pedras","Montanha das Corujas","Vila dos Castores"]
 var lives_label: Label
 var nut_progress: Label
-const NUTS_PER_LIFE := 100
+const NUTS_PER_LIFE := BALANCE.NUTS_PER_LIFE
 var return_layer: CanvasLayer
 var return_button: Button
 @export var start_on_map := true
@@ -85,7 +86,7 @@ func show_map() -> void:
 	level._apply_audio()
 	level.touch.release_all()
 	level.touch.set_controls_active(false)
-	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
+	for action in ["move_left","move_right","move_down","jump","action","switch_character"]: Input.action_release(action)
 	level.get_node("Interface").hide()
 	level.hide()
 	return_layer = CanvasLayer.new()
@@ -173,8 +174,8 @@ func village_progress() -> Dictionary:
 	var food := int(data.survival.get("food_total",0))
 	var state := 0
 	if completed>=16 or data.get("finished",false): state = 3
-	elif completed>=8 or food>=75: state = 2
-	elif completed>=3 or food>=20: state = 1
+	elif completed>=8 or food>=BALANCE.VILLAGE_FOOD_THRESHOLDS[1]: state = 2
+	elif completed>=3 or food>=BALANCE.VILLAGE_FOOD_THRESHOLDS[0]: state = 1
 	return {"state":state,"food":food,"completed":completed,"final":state==3}
 
 func _sync_village_flags() -> void:
@@ -337,7 +338,7 @@ func mark_hint_seen(id: String) -> void:
 
 func _refresh_lives() -> void:
 	if is_instance_valid(lives_label): lives_label.text = "Vidas: %02d" % int(data.survival.lives)
-	if is_instance_valid(nut_progress): nut_progress.text = "Vida: %d / 100  •  Comida: %d" % [int(data.survival.get("nut_total",0))%NUTS_PER_LIFE,int(data.survival.get("food_total",0))]
+	if is_instance_valid(nut_progress): nut_progress.text = "Vida: %d / %d  •  Comida: %d" % [int(data.survival.get("nut_total",0))%NUTS_PER_LIFE,NUTS_PER_LIFE,int(data.survival.get("food_total",0))]
 
 func awaiting_return() -> bool:
 	return data.get("survival",{}).get("pending_return",false)
@@ -350,24 +351,29 @@ func lose_life() -> void:
 		data.survival.return_stage = maxi(0,(int(data.stage)/4-1)*4)
 		data.survival.lives = initial_lives
 		level._say("Fim das vidas. Vamos descansar e voltar ao mundo anterior.")
+		level.sounds.play_effect("game_over")
+		if is_instance_valid(level.feedback): level.feedback.react("defeat","Hora de descansar")
 	else:
 		level._say("Vamos tentar de novo! Vidas restantes: %d" % int(data.survival.lives))
 	_refresh_lives()
 	save_progress()
 
 func claim_life(stage_id: int, reward_id := "") -> bool:
-	if awaiting_return() or stage_id!=int(data.stage) or data.survival.lives>=99: return false
+	if awaiting_return() or stage_id!=int(data.stage) or data.survival.lives>=BALANCE.MAX_LIVES: return false
 	if reward_id.is_empty():
 		if stage_id not in extra_life_stages or stage_id in data.survival.claimed: return false
 		data.survival.claimed.append(stage_id)
 	else:
-		if stage_id!=0 or reward_id!="copa_life" or reward_id in data.story.events or data.story.events.size()>=200: return false
+		var area_lives := {0:"copa_life",1:"galeria_12_life"}
+		if area_lives.get(stage_id,"")!=reward_id or reward_id in data.story.events or data.story.events.size()>=200: return false
 		data.story.events.append(reward_id)
 	data.survival.lives += 1
 	_refresh_lives()
 	save_progress()
 	level._say("Uma vida extra para os dois amigos!")
-	level.sounds.play_notes([523,659,784,1047])
+	level.sounds.play_effect("extra_life")
+	level.puff(level.tico.position+Vector2(0,-45),Color("ffe788"),18)
+	if is_instance_valid(level.feedback): level.feedback.react("life","+1 vida")
 	return true
 
 func show_return() -> void:

@@ -15,7 +15,7 @@ func _ready() -> void:
 	add_child(art)
 
 func _physics_process(delta: float) -> void:
-	if level.completed or level.respawning: return
+	if defeated or level.completed or level.respawning: return
 	time += delta
 	position.x = origin.x + sin(time * 0.7) * 45
 	facing = signf(cos(time*0.7))
@@ -28,9 +28,14 @@ func reset_enemy() -> void:
 	time = 0
 	position = origin
 	facing = 1.0
+	defeated = false
+	show()
 
 func receive_tail(_character: Node2D) -> bool:
-	return false
+	if defeated: return false
+	defeated = true
+	hide()
+	return true
 
 func _draw() -> void:
 	for i in 7:

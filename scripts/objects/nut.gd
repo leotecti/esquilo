@@ -1,4 +1,5 @@
 extends Area2D
+const BALANCE = preload("res://scripts/systems/game_balance.gd")
 signal collected(item: Node2D)
 @export var healing: bool = false
 var taken: bool = false
@@ -46,7 +47,7 @@ func _collect(body: Node2D) -> void:
 	if not area_rect.intersects(body_rect):
 		return
 	if healing and not body.recover():
-		if body.health!=body.max_health or not is_instance_valid(campaign) or campaign.data.survival.lives>=99: return
+		if body.health!=body.max_health or not is_instance_valid(campaign) or campaign.data.survival.lives>=BALANCE.MAX_LIVES: return
 		life_reward = true
 	taken = true
 	hide()

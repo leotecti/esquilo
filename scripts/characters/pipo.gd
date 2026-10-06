@@ -14,6 +14,7 @@ var _push_speed: float = 0.0
 
 func _ready() -> void:
 	tail_enabled = false
+	jump_velocity = BALANCE.PIPO_JUMP_VELOCITY
 	super._ready()
 
 func action_ready() -> bool:

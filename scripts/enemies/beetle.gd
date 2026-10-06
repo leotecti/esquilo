@@ -1,10 +1,11 @@
 extends Node2D
+const BALANCE = preload("res://scripts/systems/game_balance.gd")
 signal stomped(enemy: Node2D)
 
 var level: Node2D
 var origin := Vector2.ZERO
 var direction := -1.0
-var speed := 72.0
+var speed := BALANCE.BEETLE_SPEED
 var patrol_distance := 110.0
 var alert := false
 var defeated := false
@@ -22,7 +23,7 @@ func _physics_process(delta: float) -> void:
 	var player: CharacterBody2D = level.tico
 	alert = absf(player.position.x-position.x)<210 and absf(player.position.y-position.y)<65
 	if alert: direction = signf(player.position.x-position.x)
-	position.x += direction*(125.0 if alert else speed)*delta
+	position.x += direction*(BALANCE.BEETLE_ALERT_SPEED if alert else speed)*delta
 	if absf(position.x-origin.x)>patrol_distance:
 		position.x = origin.x+clampf(position.x-origin.x,-patrol_distance,patrol_distance)
 		direction = -signf(position.x-origin.x)

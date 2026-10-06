@@ -95,7 +95,7 @@ func run() -> void:
 	check(player.tail_phase=="ready","Dano cancela a caudada e limpa a janela de acerto")
 
 	var hedgehog := preload("res://scripts/enemies/hedgehog.gd").new()
-	check(not hedgehog.receive_tail(player),"Porco-espinho rejeita a caudada")
+	check(hedgehog.receive_tail(player) and hedgehog.defeated,"Caudada derrota o porco-espinho sem contato com os espinhos")
 	hedgehog.free()
 	var flying := preload("res://scripts/enemies/sky_enemy.gd").new()
 	check(flying.receive_tail(player) and flying.defeated,"Inimigo voador aceita a caudada quando está ao alcance")

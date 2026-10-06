@@ -133,9 +133,39 @@ Use estes passos ao reestruturar uma fase:
 6. Confira que cada degrau pode ser percorrido de ida e volta com Tico e Pipo.
 7. Atualize este documento sempre que a estrutura padrão aprovada mudar.
 
+### Aplicação em 1-2 — Blocos e Segredos
+
+A fase 1-2 aplica a frequência, a duração, a segurança e a progressão do modelo,
+mas usa composição própria. O percurso tem 39.000 unidades e organiza o avanço
+em salas de ruína, pilares, blocos suspensos, caminhos altos e segredos. Blocos
+são o mecanismo dominante; a geometria de escadas da fase 1-1 não foi copiada.
+
+A área secundária pode usar outra linguagem visual quando o tema pedir. Em 1-2,
+a Galeria das Pedras é acessada por um arco de alvenaria com névoa, aproximadamente
+no meio do percurso. Ela inclui recompensas, recuperação, inimigos e tesouro
+permanente. A saída fica antes da única bandeira da fase e comunica progresso.
+
 Não replique automaticamente o total de itens de Primeiros Passos em outras
 fases. Use-o como exemplo de frequência e variedade; ajuste quantidades à
 duração, ao tema e à dificuldade de cada percurso.
+
+### Aplicação em 1-3 — Um Novo Amigo
+
+A fase 1-3 preserva o resgate e a apresentação de Pipo como abertura. Depois do
+resgate, o percurso cresce para **38.000 unidades** e passa a alternar desafios
+de força e agilidade, pedras móveis, blocos resistentes, inimigos, provisões e
+recuperação. A fase oferece 244 nozes e 24 alimentos, distribuídos em dez trechos.
+
+A área secundária aparece aproximadamente em **x = 19.500** como um túnel
+mineral. A Gruta Fria usa um cenário próprio, quatro morcegos, estalactites e
+seis goteiras perigosas. Cada goteira anuncia a queda com brilho e uma gota
+parada, cai, produz um impacto breve e reinicia; o dano ocorre somente durante
+a parte ativa e legível do ciclo.
+
+A saída da gruta coloca o personagem em uma plataforma segura em x = 24.080.
+A única bandeira fica logo depois, em x = 24.300. O percurso termina em
+x = 37.780, após um trecho final mais calmo. Essa estrutura mantém a narrativa
+de formação da dupla e transforma as habilidades apresentadas em prática.
 
 ## Recompensa, combate e saída opcional — revisão 0.29.5
 
@@ -147,3 +177,8 @@ O pisão em inimigos considera posição, direção vertical e trajetória do qu
 anterior para tolerar pequenas diferenças de processamento. A saída de uma área
 secundária deve comunicar progresso: em Primeiros Passos, ela retorna à plataforma
 imediatamente anterior à bandeira, mantendo o checkpoint como conquista do jogador.
+
+
+## Navegação em dois níveis
+
+As fases podem reutilizar áreas inferiores já visíveis, sem ampliar sua extensão horizontal. Pontes marcadas com uma seta dourada aceitam **Baixo**, **S** ou o botão **▼** para descer. A rota inferior deve conter recompensas ou riscos, manter piso seguro e oferecer retorno por salto ou degrau. Superfícies comuns continuam sólidas para evitar descidas acidentais.

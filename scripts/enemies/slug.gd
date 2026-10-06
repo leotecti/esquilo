@@ -1,7 +1,8 @@
 extends CharacterBody2D
+const BALANCE = preload("res://scripts/systems/game_balance.gd")
 signal stomped(enemy: Node2D)
 @export var patrol_distance: float = 130.0
-@export var speed: float = 45.0
+@export var speed: float = BALANCE.SLUG_SPEED
 var defeated: bool = false
 var direction: float = -1.0
 var origin: Vector2

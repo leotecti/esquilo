@@ -4,7 +4,7 @@ var origin := Vector2.ZERO
 
 func attack_reach() -> float:
 	var stage := encounter_stage()-1
-	return [[260.0,320.0,380.0],[180.0,230.0,280.0],[160.0,180.0,200.0]][biome-2][stage]
+	return BALANCE.REGION_BOSS_REACH[biome-2][stage]
 
 func stage_message() -> String:
 	var messages := {

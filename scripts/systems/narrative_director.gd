@@ -84,7 +84,7 @@ func play(id: String, content: Array, replay := false) -> bool:
 		campaign.level.touch.release_all()
 		campaign.level.touch.set_controls_active(false)
 		campaign.level.get_node("Interface").hide()
-	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
+	for action in ["move_left","move_right","move_down","jump","action","switch_character"]: Input.action_release(action)
 	get_tree().paused = true
 	show()
 	_layout()

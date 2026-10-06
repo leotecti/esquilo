@@ -269,6 +269,9 @@ func celebrate_unlock(index: int) -> void:
 	tween.tween_property(marker,"scale",Vector2.ONE*1.16,.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(marker,"scale",Vector2.ONE,.3).set_trans(Tween.TRANS_SINE)
 	play_selection()
+	if campaign.data.settings.effects:
+		sound.stream = preload("res://assets/audio/slice/unlock.wav")
+		sound.play()
 
 func select_stage(section: int) -> void:
 	var index := world*4+section

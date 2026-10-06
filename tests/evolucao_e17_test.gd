@@ -45,7 +45,7 @@ func run() -> void:
 	check(hedgehog.get_node("EnemyArt").clock>hedgehog_clock,"Porco-espinho alterna as patas durante a patrulha")
 	check(beetle.alert,"Besouro acelera quando percebe o personagem")
 	check(beetle.receive_tail(level.tico) and beetle.defeated,"Besouro aceita pisão ou caudada")
-	check(not hedgehog.receive_tail(level.tico),"Espinhos do porco-espinho rejeitam a caudada")
+	check(hedgehog.receive_tail(level.tico) and hedgehog.defeated,"Caudada derrota o porco-espinho sem contato direto")
 	await close_world()
 
 	await start_phase(2)

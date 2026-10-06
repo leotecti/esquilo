@@ -1,17 +1,41 @@
 # Status do projeto
 
-**Data:** 2026-10-05
-**Versão atual:** 0.29.5, baseada na Validação intermediária 2 — aventura
-completa em miniatura.
+**Data:** 2026-10-06
+**Versão atual:** 0.33.0, com a fase 1-3 ampliada, a Gruta Fria opcional, a
+identidade do aplicativo alinhada ao Tico atual e o balanceamento central da E22.
+
+**Expansão de 1-3:** Um Novo Amigo preserva o resgate de Pipo e passa a ter
+38.000 unidades. A Gruta Fria possui entrada por túnel, morcegos, estalactites,
+goteiras com aviso e dano, recompensas próprias e saída próxima da bandeira.
+Foram aprovadas 12 verificações específicas, 15 da narrativa, 73 de save e 17
+da expansão anterior.
+
+**Identidade visual 0.32.1:** o PWA, o ícone da janela e o executável Windows
+agora usam o Tico ilustrado atual. A abertura Web, a instalação, a atualização e
+a página offline compartilham a paleta verde-floresta, creme, âmbar e laranja.
 
 **Correção visual atual:** a caudada foi refeita como giro corporal completo em
 seis poses, com o impacto sincronizado à passagem frontal da cauda.
 
-**Etapa atual:** E19 — vilarejo evolutivo. Provisões e fases concluídas produzem
-quatro estados visuais persistentes, acessíveis pelo mapa da jornada.
+**Etapa atual:** E22 — balanceamento concluído com um único perfil acessível.
 
-**Próximo trabalho previsto:** validar os quatro estados do vilarejo no aparelho
-e seguir para a E20 após o aceite da leitura visual e da navegação por toque.
+**Próximo trabalho previsto:** validar o ritmo completo no aparelho e avançar
+para a E23 — testes com crianças.
+
+## Evolução E22 — Entrega atual
+
+- Saúde, vidas, economia, movimento, inimigos, chefes e metas da fase modelo
+  foram reunidos em `scripts/systems/game_balance.gd`.
+- Permanecem três corações, três vidas iniciais e uma vida a cada 100 nozes.
+- Chefes exigem três acertos e mantêm aviso mínimo de um segundo e oportunidade
+  de ataque superior a 3,5 segundos.
+- Primeiros Passos mantém a meta aprovada de 5 a 8 minutos, checkpoint depois
+  da metade e oferta frequente de recuperação, alimentos e nozes.
+- Os níveis fácil, médio e difícil continuam adiados até a fase modelo estar
+  totalmente validada.
+- 12 verificações específicas e 141 verificações de regressão foram aprovadas.
+
+[Implementação e roteiro de playtest](../tests/evolucao_e22.md).
 
 ## Evolução E19 — Entrega atual
 
@@ -542,6 +566,37 @@ Nenhum commit ou push feito nesta entrega.
 Detalhes, testes Web e roteiro: [etapa 9](../tests/etapa_9.md).
 Pacotes: `builds/web/Tico-etapa-9-web.zip` e `builds/windows/Tico-etapa-9-windows.zip`.
 Nenhum commit ou push realizado. O Mundo 5 permanece para a etapa 10.
+
+## Evolução E20 — Blocos e Segredos
+
+**Correção 0.30.1:** removidos desníveis de 110, 120 e 160 pixels na rota
+principal. Os degraus repetidos agora sobem no máximo 80 pixels. A Galeria das
+Pedras também recebeu apoios intermediários para todas as plataformas elevadas.
+Uma travessia automatizada completa com Tico protege a rota contra bloqueios.
+
+**Correção 0.30.2:** a caudada derrota o porco-espinho como os demais inimigos
+comuns; o bloco raro da galeria concede sua vida após uma cabeçada real; e o fim
+da área secundária possui um portal grande, iluminado e acionável sobre o piso.
+
+**Correção 0.30.3:** o retorno da Galeria das Pedras e a bandeira foram movidos
+de dentro de um pilar para uma faixa plana. O teste agora exige movimento real
+imediatamente depois da transição.
+
+**Revisão visual 0.30.4:** a área secundária passa a representar uma travessia
+noturna pelo bosque, com pintura própria, luar, árvores em profundidade, névoa e
+vaga-lumes animados. Plataformas e elementos interativos preservam sua leitura.
+
+- [x] Fase 1-2 ampliada para 39.000 unidades, com duração alvo de 5 a 8 minutos.
+- [x] Introdução existente preservada e desenvolvida em uma jornada própria.
+- [x] Blocos, ruínas, pilares, rotas altas, inimigos, alimentos e segredos distribuídos.
+- [x] Galeria das Pedras criada como área secundária, sem reutilizar a árvore de 1-1.
+- [x] Corações, vida em bloco raro, Nozes Douradas e saída perto da bandeira.
+- [x] Bandeira única posicionada depois da área secundária.
+- [x] Save V2 ampliado para preservar a área opcional da fase 1-2.
+- [x] Teste E20 e regressão da área opcional de 1-1 aprovados.
+- [ ] Playtest de duração, retorno completo e legibilidade no celular do usuário.
+
+Detalhes e roteiro: [evolução E20](../tests/evolucao_e20.md). Nenhum commit feito.
 
 ## Decisões ainda abertas
 

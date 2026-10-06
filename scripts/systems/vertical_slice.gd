@@ -19,6 +19,7 @@ var _art_ready := false
 var _frame_samples: Array[float] = []
 var _elapsed := 0.0
 var _last_frame_usec := 0
+var feedback: CanvasLayer
 
 func _ready() -> void:
 	super._ready()
@@ -33,6 +34,9 @@ func _ready() -> void:
 		art.level = self
 		character.add_child(art)
 	_build_forest()
+	feedback = preload("res://scripts/presentation/polish_feedback.gd").new()
+	feedback.level = self
+	add_child(feedback)
 	_skin_objects()
 	_skin_ui()
 	_art_ready = true
@@ -224,6 +228,7 @@ func _update_layout() -> void:
 	pause_panel.position = (size-pause_panel.size)/2
 	background.size = size + Vector2(240,100)
 	background.position = Vector2(-120,-30)
+	if is_instance_valid(feedback): feedback.layout()
 
 func set_paused(value: bool) -> void:
 	super.set_paused(value)
@@ -259,6 +264,7 @@ func puff(point: Vector2, color: Color, amount: int = 8) -> void:
 func _on_collected(item: Node2D) -> void:
 	super._on_collected(item)
 	puff(item.position,Color("ffd877"),10)
+	if is_instance_valid(feedback): feedback.react("secret" if item.collectible_kind in ["secret","golden"] else "collect")
 
 func _on_stomp(enemy: Node2D) -> void:
 	super._on_stomp(enemy)
@@ -267,10 +273,12 @@ func _on_stomp(enemy: Node2D) -> void:
 func _on_checkpoint(marker: Node2D) -> void:
 	super._on_checkpoint(marker)
 	puff(marker.position+Vector2(0,-70),Color("ffe7a0"),14)
+	if is_instance_valid(feedback): feedback.react("checkpoint","Ponto seguro")
 
 func _on_exit(marker: Node2D) -> void:
 	super._on_exit(marker)
 	puff(marker.position+Vector2(0,-60),Color("ffd877"),18)
+	if is_instance_valid(feedback): feedback.react("victory","Trilha concluída!")
 
 func _test_details() -> Dictionary:
 	var data := super._test_details()

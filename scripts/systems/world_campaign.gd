@@ -28,7 +28,7 @@ func _read_progress() -> Dictionary:
 
 func _load_stage(index: int) -> void:
 	get_tree().paused = false
-	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
+	for action in ["move_left","move_right","move_down","jump","action","switch_character"]: Input.action_release(action)
 	if is_instance_valid(level):
 		remove_child(level)
 		level.queue_free()

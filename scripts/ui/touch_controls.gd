@@ -11,7 +11,7 @@ var _portrait: bool = false
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	touch_enabled = force_visible or DisplayServer.is_touchscreen_available()
-	for binding in [["Left", "move_left", "◀"], ["Right", "move_right", "▶"],
+	for binding in [["Left", "move_left", "◀"], ["Right", "move_right", "▶"], ["Down", "move_down", "▼"],
 		["Jump", "jump", "PULO"], ["Action", "action", "AÇÃO"]]:
 		var button := TouchScreenButton.new()
 		button.name = binding[0]
@@ -21,14 +21,14 @@ func _ready() -> void:
 		var hit_shape := RectangleShape2D.new()
 		hit_shape.size = Vector2(128, 128)
 		button.shape = hit_shape
-		button.passby_press = binding[0] in ["Left", "Right"]
+		button.passby_press = binding[0] in ["Left", "Right", "Down"]
 		var caption := Label.new()
 		caption.name = "Caption"
 		caption.text = binding[2]
-		if binding[0] in ["Left", "Right"]:
+		if binding[0] in ["Left", "Right", "Down"]:
 			caption.text = ""
 			var arrow := Polygon2D.new()
-			arrow.polygon = PackedVector2Array([Vector2(80, 38), Vector2(42, 64), Vector2(80, 90)])
+			arrow.polygon = PackedVector2Array([Vector2(80, 38), Vector2(42, 64), Vector2(80, 90)]) if binding[0] != "Down" else PackedVector2Array([Vector2(38, 48), Vector2(64, 86), Vector2(90, 48)])
 			arrow.color = Color("fff3d9")
 			if binding[0] == "Right":
 				arrow.position.x = 128
@@ -69,8 +69,9 @@ func update_layout() -> void:
 	var viewport_size := get_viewport_rect().size
 	var inset := safe_insets()
 	var y := viewport_size.y - 150.0 - inset.w
-	_buttons["Left"].position = Vector2(32.0 + inset.x, y)
-	_buttons["Right"].position = Vector2(180.0 + inset.x, y)
+	_buttons["Left"].position = Vector2(24.0 + inset.x, y)
+	_buttons["Down"].position = Vector2(160.0 + inset.x, y)
+	_buttons["Right"].position = Vector2(296.0 + inset.x, y)
 	_buttons["Jump"].position = Vector2(viewport_size.x - 160.0 - inset.z, y)
 	_buttons["Action"].position = Vector2(viewport_size.x - 308.0 - inset.z, y)
 	_portrait = touch_enabled and viewport_size.y > viewport_size.x

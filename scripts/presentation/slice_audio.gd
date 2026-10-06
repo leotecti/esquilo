@@ -14,6 +14,14 @@ const EFFECTS = {
 	"victory":preload("res://assets/audio/slice/victory.wav"),
 	"step":preload("res://assets/audio/slice/step.wav"),
 	"land":preload("res://assets/audio/slice/land.wav")}
+
+const POLISH_EFFECTS = {
+	"extra_life":preload("res://assets/audio/slice/extra_life.wav"),
+	"defeat":preload("res://assets/audio/slice/defeat.wav"),
+	"game_over":preload("res://assets/audio/slice/game_over.wav"),
+	"unlock":preload("res://assets/audio/slice/unlock.wav"),
+	"boss_warning":preload("res://assets/audio/slice/boss_warning.wav"),
+	"boss_victory":preload("res://assets/audio/slice/boss_victory.wav")}
 var music: AudioStreamPlayer
 var voices: Array[AudioStreamPlayer] = []
 var sfx_enabled := true
@@ -36,13 +44,22 @@ func _ready() -> void:
 		voices.append(voice)
 
 func play_effect(effect: String) -> void:
-	if not sfx_enabled or effect not in EFFECTS or voices.is_empty():
+	if not sfx_enabled or (effect not in EFFECTS and effect not in POLISH_EFFECTS) or voices.is_empty():
 		return
 	played[effect] = int(played.get(effect,0)) + 1
-	voices[_next].stream = EFFECTS[effect]
+	voices[_next].stream = EFFECTS.get(effect,POLISH_EFFECTS.get(effect))
 	voices[_next].volume_db = -21 if effect == "step" else -12
 	voices[_next].play()
 	_next = (_next + 1) % voices.size()
+
+func set_environment(kind: String) -> void:
+	if not is_instance_valid(music): return
+	var target_pitch := .88 if kind=="night" else 1.0
+	var target_volume := -21.0 if kind=="night" else -18.0
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(music,"pitch_scale",target_pitch,.45)
+	tween.tween_property(music,"volume_db",target_volume if music.volume_db>-70 else -80.0,.45)
 
 func play_notes(notes: Array, _duration: float = 0.09) -> void:
 	# Compatibilidade com os eventos das fases anteriores, sem duplicar seus handlers.

@@ -120,7 +120,7 @@ func travel(entering: bool) -> void:
 	transitioning = true
 	level.tico.controls_enabled = false
 	level.touch.release_all()
-	for action in ["move_left","move_right","jump","action","switch_character"]: Input.action_release(action)
+	for action in ["move_left","move_right","move_down","jump","action","switch_character"]: Input.action_release(action)
 	var tween := create_tween()
 	tween.tween_property(veil,"modulate:a",1.0,.16)
 	tween.tween_callback(func():

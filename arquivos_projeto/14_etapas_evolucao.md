@@ -1155,6 +1155,19 @@ O mundo responde visualmente às ações do jogador.
 
 # 26. EVOLUÇÃO E20 — EXPANSÃO DAS FASES E MUNDOS
 
+**Em andamento — fase 1-2 concluída na versão 0.30.0.** Blocos e Segredos foi
+expandida como a primeira aplicação do modelo de fase completa. A rota de 39.000
+unidades preserva sua introdução histórica e desenvolve identidade própria com
+salas largas, pilares, tetos de blocos, ruínas, caminhos altos e segredos.
+
+A área secundária é a **Galeria das Pedras**, acessada por uma ruína de alvenaria
+com névoa no meio da fase. Ela não reutiliza a árvore de Primeiros Passos. A
+galeria oferece percurso subterrâneo, inimigos, nozes, alimentos, corações, vida
+em bloco raro e Noz Dourada. Sua saída avança até perto da bandeira única.
+
+Esta entrega expande somente 1-2. As demais fases e mundos continuam previstas
+na E20 e devem receber jornadas próprias, sem copiar a geometria desta fase.
+
 Somente depois dos sistemas principais validados começar a grande produção de conteúdo.
 
 Para cada fase definir:
@@ -1183,6 +1196,10 @@ A duração do jogo cresce através de conteúdo significativo.
 ---
 
 # 27. EVOLUÇÃO E21 — ÁUDIO, ANIMAÇÕES E FEEDBACK
+
+**Status:** concluída na versão 0.31.0. A camada de apresentação agora combina
+sons próprios, clarões, mensagens, tremor, partículas e variação ambiental nos
+eventos centrais. Consulte [a validação da E21](../tests/evolucao_e21.md).
 
 Com os sistemas estáveis, iniciar forte etapa de polimento.
 
@@ -1214,7 +1231,21 @@ O jogo começa a apresentar sensação de produto final.
 
 # 28. EVOLUÇÃO E22 — BALANCEAMENTO
 
-Agora ajustar números.
+**Status:** concluída na versão 0.32.0. Os valores principais foram reunidos no
+perfil `scripts/systems/game_balance.gd`, preservando a experiência já aprovada
+de Primeiros Passos. Consulte [a validação da E22](../tests/evolucao_e22.md).
+
+O perfil adotado mantém três corações e três vidas iniciais, uma vida a cada
+100 nozes, inimigos comuns vencidos por um golpe correto e chefes vencidos com
+três acertos. Os avisos e as oportunidades de ataque dos chefes continuam
+legíveis enquanto o alcance aumenta a cada acerto.
+
+Primeiros Passos permanece como referência de 5 a 8 minutos, com checkpoint
+depois da metade, ao menos sete recuperações e oferta contínua de alimentos e
+nozes. Os níveis fácil, médio e difícil continuam adiados conforme a decisão da
+E16; esta entrega estabelece um único perfil acessível para o jogo atual.
+
+Itens validados:
 
 Testar:
 
@@ -1232,9 +1263,9 @@ Testar:
 
 Evitar inserir números diretamente em muitos pontos do código.
 
-Valores importantes deverão ser configuráveis.
+Os valores importantes são configuráveis no perfil central.
 
-Isso permitirá experimentar rapidamente.
+Isso permite experimentar rapidamente sem espalhar números pelo código.
 
 ---
 

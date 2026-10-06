@@ -5,6 +5,7 @@ var campaign: Node
 var world_ready := false
 var rescued := false
 var terrain: Array[Rect2] = []
+var drop_platforms: Array[Rect2] = []
 var rescue_lock: StaticBody2D
 var rescue_gate: StaticBody2D
 var captive: Sprite2D
@@ -75,10 +76,12 @@ func _build_gameplay() -> void:
 		for child in rescue_gate.get_children():
 			if child is Polygon2D: child.hide()
 		_sign(Vector2(375,485),"Pule sob o bloco rachado\npara libertar Pipo")
+		preload("res://scripts/systems/new_friend_layout.gd").build(self)
 	else:
 		_build_solo_or_arena()
-	if world_stage==0 and is_instance_valid(campaign) and campaign.has_method("progress_summary"):
-		optional_area = preload("res://scripts/systems/optional_area.gd").new()
+	if world_stage in [0,1,2] and is_instance_valid(campaign) and campaign.has_method("progress_summary"):
+		var area_scripts := [preload("res://scripts/systems/optional_area.gd"),preload("res://scripts/systems/blocks_secrets_area.gd"),preload("res://scripts/systems/friend_cave_area.gd")]
+		optional_area = area_scripts[world_stage].new()
 		optional_area.level = self
 		optional_area.z_index = -2
 		add_child(optional_area)
@@ -103,12 +106,18 @@ func _build_backtracking_secret() -> void:
 	var reward_offset := 775.0 if world_stage==0 else 465.0
 	backtrack_event_id = "backtrack_cache_%d_open" % world_stage
 	backtrack_plate_x = origin.x+plate_offset+40
-	_platform(Rect2(origin.x,origin.y,width,24))
-	# A rota principal passa sob a plataforma. A passagem superior tem 64 px:
-	# Tico entra; Pipo, mais alto, precisa aguardar do lado de fora.
-	var roof := _solid("BacktrackRoof",Rect2(origin.x+gate_offset,origin.y-126,tunnel_width,62),Color("46633f"))
-	for child in roof.get_children():
-		if child is Polygon2D: child.hide()
+	if world_stage==0:
+		_platform(Rect2(origin.x,origin.y,width,24))
+		# Em 1-1, a copa baixa desenhada pela árvore cobre esta colisão.
+		var roof := _solid("BacktrackRoof",Rect2(origin.x+gate_offset,origin.y-126,tunnel_width,62),Color("46633f"))
+		for child in roof.get_children():
+			if child is Polygon2D: child.hide()
+	else:
+		# Em 1-2 não há copa que justifique um teto oculto. Duas lajes visíveis
+		# deixam uma abertura de 80 px para chegar aos inimigos e alimentos da
+		# rota inferior, além de eliminar o apoio invisível sobre a passagem.
+		_platform(Rect2(origin.x,origin.y,300,24))
+		_platform(Rect2(origin.x+380,origin.y,width-380,24))
 	backtrack_stone = PUSHABLE.instantiate()
 	backtrack_stone.name = "BacktrackStone"
 	backtrack_stone.position = origin+Vector2(stone_offset,0)
@@ -176,6 +185,8 @@ func _build_solo_or_arena() -> void:
 		_sign(Vector2(360,485),"Bata por baixo dos blocos")
 		_sign(Vector2(1610,480),"Uma trilha escondida…")
 		_sign(Vector2(2300,535),"Espinhos! Passe por cima")
+		if is_instance_valid(campaign) and campaign.has_method("progress_summary"):
+			preload("res://scripts/systems/blocks_secrets_layout.gd").build(self)
 	else:
 		for point in [Vector2(380,715),Vector2(720,715),Vector2(1100,715),Vector2(1600,715)]: _nut(point)
 		_nut(Vector2(2250,715),true)
@@ -192,6 +203,20 @@ func _build_solo_or_arena() -> void:
 func _platform(rect: Rect2) -> void:
 	terrain.append(rect)
 	var body := _solid("WorldPlatform%d" % terrain.size(),rect,Color("759257"))
+	for child in body.get_children():
+		if child is Polygon2D: child.hide()
+
+func _drop_platform(rect: Rect2) -> void:
+	# Ponte de mão única: preserva a superfície superior e libera o espaço abaixo.
+	var bridge := Rect2(rect.position,Vector2(rect.size.x,24))
+	terrain.append(bridge)
+	drop_platforms.append(bridge)
+	var body := _solid("DropPlatform%d" % drop_platforms.size(),bridge,Color("759257"))
+	body.set_meta("drop_through",true)
+	body.set_meta("drop_release_y",bridge.position.y+54.0)
+	var shape: CollisionShape2D = body.get_node("Collision")
+	shape.one_way_collision = true
+	shape.one_way_collision_margin = 12.0
 	for child in body.get_children():
 		if child is Polygon2D: child.hide()
 
@@ -291,6 +316,7 @@ func _build_forest() -> void:
 		if child.get_script()==FOREST_ART:
 			child.coop_details = world_stage==2
 			child.platforms = terrain
+			child.drop_platforms = drop_platforms
 			child.queue_redraw()
 
 func switch_character() -> bool:
@@ -413,9 +439,15 @@ func _save_progress() -> void:
 
 func _on_defeat() -> void:
 	if respawning: return
+	if is_instance_valid(feedback): feedback.react("defeat","Tente novamente")
+	sounds.play_effect("defeat")
 	super._on_defeat()
 	if is_instance_valid(campaign) and campaign.has_method("lose_life"):
 		campaign.lose_life()
+
+func _on_hurt() -> void:
+	if is_instance_valid(feedback): feedback.react("hurt")
+	super._on_hurt()
 
 func _respawn() -> void:
 	if is_instance_valid(campaign) and campaign.has_method("awaiting_return") and campaign.awaiting_return():
@@ -536,7 +568,10 @@ func restore_world(data: Dictionary) -> void:
 
 func _test_details() -> Dictionary:
 	var data := super._test_details()
-	if is_instance_valid(optional_area): data.merge({"optional_active":optional_area.active,"optional_checkpoint":optional_area.checkpoint,"optional_transition":optional_area.transitioning})
+	if is_instance_valid(optional_area):
+		data.merge({"optional_active":optional_area.active,"optional_checkpoint":optional_area.checkpoint,"optional_transition":optional_area.transitioning,
+			"optional_entry_x":optional_area.ENTRY.x,"optional_left":optional_area.LEFT_EDGE if world_stage in [1,2] else optional_area.RIGHT_EDGE-4000})
+	data["main_right"] = main_right
 	data["phase_restart_confirmation"] = is_instance_valid(phase_restart_dialog) and phase_restart_dialog.visible
 	if is_instance_valid(phase_restart_button):
 		var phase_rect := phase_restart_button.get_global_rect()

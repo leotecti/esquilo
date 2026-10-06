@@ -143,8 +143,9 @@ func _candidate() -> Array:
 			return [KEYS[1],"Pegue o coração para recuperar sua saúde.","heart",target]
 		if target.has_method("reset_enemy") and target!=level.guardian and not target.get("defeated"):
 			var spiky: bool = target.get_script()==preload("res://scripts/enemies/hedgehog.gd")
-			if not spiky and player==level.squirrel and not _seen(KEYS[5]):
-				return [KEYS[5],"Use %s perto do inimigo para dar uma caudada." % ("CAUDADA" if level.touch.touch_enabled else "E"),"tail",target]
+			if player==level.squirrel and not _seen(KEYS[5]):
+				var tail_message := "Use %s para atingir os espinhos sem encostar." if spiky else "Use %s perto do inimigo para dar uma caudada."
+				return [KEYS[5],tail_message % ("CAUDADA" if level.touch.touch_enabled else "E"),"tail",target]
 			if not _seen(KEYS[0]): return [KEYS[0],"Tem espinhos! Passe por cima sem encostar." if spiky else "Dê um salto sobre ele!","enemy",target]
 	if not _seen(KEYS[3]) and player==level.squirrel and player.state==&"fall" and not player.is_on_floor():
 		var ray := PhysicsRayQueryParameters2D.create(player.position+Vector2(0,2),player.position+Vector2(0,140),1)

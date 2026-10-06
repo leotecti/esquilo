@@ -1,4 +1,5 @@
 extends CharacterBody2D
+const BOULDER = preload("res://assets/objects/pushable_boulder.png")
 @export var push_speed: float = 95.0
 @export var max_travel: float = 340.0
 var origin: Vector2
@@ -28,9 +29,9 @@ func push_by(character: Node2D, direction: float, delta: float) -> bool:
 	return absf(position.x - before) > 0.01
 
 func _draw() -> void:
-	draw_colored_polygon(PackedVector2Array([Vector2(-38,0),Vector2(-38,-44),Vector2(-25,-64),Vector2(22,-64),Vector2(38,-43),Vector2(38,0)]),Color("73817a"))
-	draw_polyline(PackedVector2Array([Vector2(-29,-12),Vector2(-23,-47),Vector2(14,-51)]),Color("a9b5a0"),5)
-	draw_line(Vector2(-5,-20),Vector2(18,-20),Color("d7dec6"),4)
+	# Rocha ilustrada com volume, fissuras e musgo. O recorte mantém a base
+	# alinhada à colisão para não parecer que a pedra flutua sobre o terreno.
+	draw_texture_rect(BOULDER,Rect2(-50,-73,100,73),false)
 	if position.x < guide_target_x:
 		var lift := sin(_time*4.0)*3.0
 		var arrow := PackedVector2Array([Vector2(-20,-100+lift),Vector2(8,-100+lift),Vector2(8,-109+lift),Vector2(27,-94+lift),Vector2(8,-79+lift),Vector2(8,-88+lift),Vector2(-20,-88+lift)])

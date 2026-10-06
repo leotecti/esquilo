@@ -1,9 +1,10 @@
 extends Node2D
 signal calmed
+const BALANCE = preload("res://scripts/systems/game_balance.gd")
 const PARAKEET_STATES := preload("res://assets/bosses/parakeet_guardian_states_v3.png")
 const PARAKEET_FRAME := Vector2(512,512)
 var level: Node2D
-var health := 3
+var health := BALANCE.BOSS_HEALTH
 var phase := "waiting"
 var remaining := 1.2
 var invulnerable := 0.0
@@ -22,13 +23,13 @@ func encounter_stage() -> int:
 func phase_duration(next_phase: String) -> float:
 	var stage := encounter_stage()-1
 	match next_phase:
-		"warning": return [1.25,1.10,1.0][stage]
-		"attack": return [0.45,0.55,0.65][stage]
-		"tired": return [4.0,3.8,3.6][stage]
-		_: return [1.4,1.15,0.95][stage]
+		"warning": return BALANCE.BOSS_WARNING[stage]
+		"attack": return BALANCE.BOSS_ATTACK[stage]
+		"tired": return BALANCE.BOSS_TIRED[stage]
+		_: return BALANCE.BOSS_WAITING[stage]
 
 func attack_reach() -> float:
-	return [220.0,270.0,320.0][encounter_stage()-1]
+	return BALANCE.BOSS_REACH[encounter_stage()-1]
 
 func stage_message() -> String:
 	return ["O Periquito agita raízes mais largas.","Último padrão: vento e raízes mais rápidos!"][encounter_stage()-2]
@@ -80,6 +81,8 @@ func _physics_process(delta: float) -> void:
 				phase = "warning"
 				remaining = phase_duration("warning")
 				level._say("O Periquito bate as asas! Pule quando o chão brilhar.")
+				level.sounds.play_effect("boss_warning")
+				if is_instance_valid(level.feedback): level.feedback.react("boss")
 			"warning":
 				phase = "attack"
 				remaining = phase_duration("attack")
@@ -118,6 +121,8 @@ func receive_hit() -> bool:
 	level.sounds.play_effect("impact")
 	if health == 0:
 		if is_parakeet:
+			level.sounds.play_effect("boss_victory")
+			if is_instance_valid(level.feedback): level.feedback.react("victory","Guardião vencido!")
 			phase = "defeating"
 			defeat_clock = 0.0
 			defeat_origin = position
@@ -149,7 +154,7 @@ func _process_defeat(delta: float) -> void:
 
 func reset_enemy() -> void:
 	if health == 0: return
-	health = 3
+	health = BALANCE.BOSS_HEALTH
 	elapsed = 0
 	phase = "waiting"
 	remaining = phase_duration("waiting")

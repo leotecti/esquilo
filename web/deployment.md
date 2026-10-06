@@ -10,14 +10,14 @@ controles, faro e percurso completo.
 ## Pacote
 
 Versão atual: **Validação intermediária 2 — aventura completa em miniatura
-(0.29.5)**. Refina recompensas, combate e progressão da fase modelo, preservando a atualização incremental, o vilarejo evolutivo e o Save V2.
+(0.33.0)**. Inclui a expansão de 1-3 e a Gruta Fria, a identidade visual baseada no Tico atual e o perfil central de balanceamento, preservando a atualização incremental, o vilarejo evolutivo e o Save V2.
 
 Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientação
 horizontal. A PWA instalada abre diretamente no modo `fullscreen`; não há botão
 flutuante sobre o jogo para alternar esse estado.
 [Relatório e roteiro da validação](../tests/validacao_intermediaria_2.md).
 
-`builds/web/Tico-0.29.5-refinamentos-fase-modelo-web.zip` contém os arquivos que devem ficar diretamente
+`builds/web/Tico-0.33.0-fase-1-3-web.zip` contém os arquivos que devem ficar diretamente
 na pasta pública correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e ícones.
 Não coloque outra pasta `validacao_intermediaria_2` entre `/tico/` e os arquivos.

@@ -4,6 +4,7 @@ const GROUND = preload("res://assets/slice/ground.svg")
 const DEEP_GROUND = preload("res://assets/slice/ground_deep.svg")
 var coop_details := true
 var platforms: Array[Rect2] = []
+var drop_platforms: Array[Rect2] = []
 
 func _ready() -> void:
 	z_index = -1
@@ -15,6 +16,9 @@ func _draw() -> void:
 	for rect in platforms:
 		organic_side(rect,true,ground_rects)
 		organic_side(rect,false,ground_rects)
+	for rect in drop_platforms:
+		var center := Vector2(rect.get_center().x,rect.position.y+10)
+		draw_colored_polygon(PackedVector2Array([center+Vector2(-13,-4),center+Vector2(0,10),center+Vector2(13,-4)]),Color("f6dc83"))
 	if coop_details:
 		_draw_coop()
 	# Vegetação compartilhada por todas as trilhas.

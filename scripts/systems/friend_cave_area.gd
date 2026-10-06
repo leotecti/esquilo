@@ -1,0 +1,157 @@
+extends Node2D
+## Área secundária de 1-3: túnel natural, morcegos, estalactites e goteiras.
+const ENTRY := Vector2(19500,520)
+const RETURN := Vector2(24080,675)
+const LEFT_EDGE := 65000
+const RIGHT_EDGE := 70800
+const START := Vector2(65180,755)
+const EXIT := Vector2(70550,700)
+var level: Node2D
+var active := false
+var checkpoint := false
+var transitioning := false
+var veil: ColorRect
+var hints: Array[Label] = []
+var drips: Array[Node2D] = []
+
+func build() -> void:
+	level._platform(Rect2(LEFT_EDGE,760,RIGHT_EDGE-LEFT_EDGE,220))
+	for rect in [Rect2(65480,690,360,70),Rect2(65840,620,420,140),Rect2(66480,680,300,80),
+		Rect2(66920,600,500,160),Rect2(67620,680,360,80),Rect2(68120,590,520,170),
+		Rect2(68820,670,400,90),Rect2(69420,610,500,150),Rect2(70120,680,420,80)]: level._platform(rect)
+	for rect in [Rect2(LEFT_EDGE-50,-200,50,1300),Rect2(RIGHT_EDGE,-200,50,1300)]: level._solid("FriendCaveBoundary",rect,Color.TRANSPARENT)
+	for row in [[65220,715,4],[65720,575,4],[66540,635,3],[67020,555,5],[67700,635,4],[68230,545,5],[68920,625,4],[69520,565,5],[70200,635,4]]:
+		for i in int(row[2]): _nut(Vector2(row[0]+i*76,row[1]))
+	for entry in [[66000,570,0],[67300,550,1],[68600,540,2],[69800,560,0]]: _food(Vector2(entry[0],entry[1]),entry[2])
+	for point in [Vector2(66800,635),Vector2(69200,625),Vector2(70280,635)]: _nut(point,true)
+	level._golden_nut(Vector2(68500,535),"caverna_amizade_13")
+	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","golden:caverna_amizade_13")
+	for point in [Vector2(66200,390),Vector2(67550,350),Vector2(69000,380),Vector2(69950,340)]:
+		var bat = preload("res://scripts/enemies/sky_enemy.gd").new()
+		bat.level = level
+		bat.position = point
+		bat.set_meta("friend_cave_bat",true)
+		level.actors.add_child(bat)
+		bat.stomped.connect(level._on_stomp)
+	for entry in [[65650,610,0.0],[66680,650,.7],[67950,650,1.4],[68750,640,2.1],[69700,650,.35],[70400,650,1.1]]:
+		var drip = preload("res://scripts/hazards/cave_drip.gd").new()
+		drip.level = level
+		drip.position = Vector2(entry[0],90)
+		drip.drop_y = entry[1]-90
+		drip.delay = entry[2]
+		add_child(drip)
+		drips.append(drip)
+	_add_hint(ENTRY,"Túnel da Gruta Fria\nAÇÃO para explorar",true)
+	_add_hint(START,"Voltar à trilha • Ação",false)
+	_add_hint(EXIT,"Saída da caverna • Ação",false)
+	var layer := CanvasLayer.new()
+	layer.layer = 19
+	add_child(layer)
+	veil = ColorRect.new()
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.color = Color("172b35")
+	veil.modulate.a = 0
+	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(veil)
+	queue_redraw()
+
+func _nut(point: Vector2, healing := false) -> void:
+	level._nut(point,healing)
+	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","friend-cave:%d:%d" % [point.x,point.y])
+
+func _food(point: Vector2, kind: int) -> void:
+	level._food(point,kind)
+	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","friend-cave-food:%d:%d" % [point.x,point.y])
+
+func _add_hint(point: Vector2, message: String, entry: bool) -> void:
+	var label := Label.new()
+	label.text = message
+	label.position = point+Vector2(-175,-150 if entry else -120)
+	label.size.x = 350
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size",19)
+	label.add_theme_color_override("font_color",Color("e9f3e6"))
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("18313aea")
+	style.border_color = Color("7da0a5")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(13)
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	label.add_theme_stylebox_override("normal",style)
+	label.set_meta("portal_point",point)
+	label.set_meta("entry_portal",entry)
+	label.hide()
+	add_child(label)
+	hints.append(label)
+
+func _physics_process(_delta: float) -> void:
+	queue_redraw()
+	for hint in hints:
+		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<(180 if hint.get_meta("entry_portal") else 110)
+	if transitioning or level.completed or level.respawning: return
+	if active and level.tico.position.y>980:
+		level.tico.take_damage(level.tico.position+Vector2(0,30))
+		if level.tico.health>0: restore_player()
+	if Input.is_action_just_pressed("action") and level.tico.is_on_floor():
+		if not active and level.tico.position.distance_to(ENTRY)<110: travel(true)
+		elif active and (level.tico.position.distance_to(START)<110 or level.tico.position.distance_to(EXIT)<110): travel(false)
+
+func travel(entering: bool) -> void:
+	if transitioning or level.completed or level.respawning: return
+	transitioning = true
+	level.tico.controls_enabled = false
+	level.touch.release_all()
+	for action in ["move_left","move_right","move_down","jump","action","switch_character"]: Input.action_release(action)
+	var tween := create_tween()
+	tween.tween_property(veil,"modulate:a",1.0,.18)
+	tween.tween_callback(func(): active=entering; apply_camera(); level.sounds.set_environment("night" if entering else "forest"); level.tico.reset_at(START if entering else RETURN); level.camera.snap_to_target(); level._save_progress(); level._say("Gruta Fria • observe o brilho antes dos pingos" if entering else "De volta à trilha, perto da bandeira"))
+	tween.tween_property(veil,"modulate:a",0.0,.18)
+	tween.tween_callback(func(): level.tico.controls_enabled=true; transitioning=false)
+
+func apply_camera() -> void:
+	level.camera.limit_left = LEFT_EDGE if active else 0
+	level.camera.limit_right = RIGHT_EDGE if active else level.main_right
+
+func restore_player() -> void:
+	apply_camera()
+	if active: level.tico.reset_at(START)
+	level.camera.snap_to_target()
+
+func snapshot() -> Dictionary: return {"active":active,"checkpoint":false}
+func restore(state: Dictionary) -> void:
+	active = state.get("active",false) and not level.completed
+	checkpoint = false
+	restore_player()
+
+func _draw() -> void:
+	# A entrada usa rochas sobrepostas e profundidade, com leitura clara de túnel.
+	var pulse := sin(Time.get_ticks_msec()*.003)
+	draw_colored_polygon(PackedVector2Array([Vector2(19230,760),Vector2(19280,520),Vector2(19380,405),Vector2(19500,365),Vector2(19620,405),Vector2(19720,520),Vector2(19770,760)]),Color("56544e"))
+	draw_set_transform(Vector2(19500,590),0,Vector2(1.2,1.0))
+	draw_circle(Vector2.ZERO,135,Color("182d35"))
+	draw_circle(Vector2(0,8),112,Color(0.20,0.38,0.42,.65+pulse*.04))
+	draw_set_transform(Vector2.ZERO)
+	for rock in [Rect2(19190,690,130,70),Rect2(19260,635,105,125),Rect2(19635,635,105,125),Rect2(19690,695,125,65)]:
+		draw_colored_polygon(PackedVector2Array([rock.position+Vector2(0,rock.size.y),rock.position+Vector2(15,22),rock.position+Vector2(rock.size.x*.55,0),rock.position+Vector2(rock.size.x,28),rock.end]),Color("777166"))
+	# Fundo da gruta em camadas, com colunas, estalactites e reflexos azulados.
+	draw_rect(Rect2(LEFT_EDGE,0,RIGHT_EDGE-LEFT_EDGE,760),Color("142a35"))
+	for band in 4:
+		var color: Color = [Color("203b45"),Color("294b52"),Color("31585b"),Color("1a343e")][band]
+		for i in 9:
+			var x := LEFT_EDGE+i*720+band*170
+			draw_circle(Vector2(x,320+band*105),250-band*28,color)
+	for x in range(LEFT_EDGE+180,RIGHT_EDGE,430):
+		var length := 85+(x/10)%125
+		draw_colored_polygon(PackedVector2Array([Vector2(x-34,0),Vector2(x+38,0),Vector2(x+8,length)]),Color("53666a"))
+		draw_line(Vector2(x-18,8),Vector2(x+3,length*.72),Color("7e9693aa"),4,true)
+	for x in range(LEFT_EDGE+350,RIGHT_EDGE,760):
+		var glow := 8.0+sin(Time.get_ticks_msec()*.002+x)*2
+		draw_circle(Vector2(x,690),glow,Color("72c7cbaa"))
+	# Portais internos têm moldura mineral e névoa baixa.
+	for point in [START,EXIT]:
+		draw_set_transform(point+Vector2(0,-45),0,Vector2(.8,1.15))
+		draw_circle(Vector2.ZERO,58,Color("617074"))
+		draw_circle(Vector2(0,4),47,Color(0.18,0.39,0.43,.72))
+		draw_arc(Vector2.ZERO,54,0,TAU,32,Color("91aaa4"),6,true)
+		draw_set_transform(Vector2.ZERO)
