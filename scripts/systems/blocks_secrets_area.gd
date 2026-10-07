@@ -8,6 +8,7 @@ const EXIT := Vector2(50750,565)
 const LEFT_EDGE := 46000
 const RIGHT_EDGE := 51200
 const LIFE_ID := "galeria_12_life"
+const EXIT_RETURN_STEPS := [Rect2(50990,630,110,20),Rect2(51080,700,120,20)]
 const NIGHT_FOREST = preload("res://assets/environment/night_forest_passage.png")
 var level: Node2D
 var active := false
@@ -28,6 +29,9 @@ func build() -> void:
 		Rect2(48630,680,160,80),Rect2(48790,610,160,150),Rect2(48950,540,520,220),
 		Rect2(49470,610,160,150),Rect2(49630,680,160,80),Rect2(49790,640,60,120),Rect2(49850,640,440,120),
 		Rect2(50290,640,105,120),Rect2(50395,570,105,190),Rect2(50500,570,500,190)]: level._platform(rect)
+	# Plataformas atravessáveis formam a volta após uma queda junto ao portal.
+	# Do piso y=760, os saltos sobem para 700, 630 e então para a saída em 570.
+	for rect in EXIT_RETURN_STEPS: level._drop_platform(rect)
 	for rect in [Rect2(LEFT_EDGE-50,-200,50,1300),Rect2(RIGHT_EDGE,-200,50,1300)]: level._solid("GalleryBoundary",rect,Color.TRANSPARENT)
 	for row in [[46400,715,4],[46800,605,4],[47500,545,5],[48300,625,4],[49040,495,5],[49920,595,4],[50600,525,5]]:
 		for i in int(row[2]): _nut(Vector2(row[0]+i*76,row[1]))

@@ -221,7 +221,10 @@ func _on_tail_window(attack_id: int) -> void:
 	if attack_id!=_tail_attack_id:
 		_tail_attack_id = attack_id
 		_tail_hits.clear()
-	for enemy in get_tree().get_nodes_in_group("enemies"):
+	var tail_targets: Array[Node] = get_tree().get_nodes_in_group("enemies")
+	for target in get_tree().get_nodes_in_group("tail_targets"):
+		if target not in tail_targets: tail_targets.append(target)
+	for enemy in tail_targets:
 		if not is_instance_valid(enemy) or not is_ancestor_of(enemy) or not enemy.has_method("receive_tail"): continue
 		var enemy_id := enemy.get_instance_id()
 		if _tail_hits.has(enemy_id): continue
@@ -229,6 +232,7 @@ func _on_tail_window(attack_id: int) -> void:
 		if offset.x*tico.facing<12 or offset.x*tico.facing>112 or absf(offset.y)>76: continue
 		var ray := PhysicsRayQueryParameters2D.create(tico.global_position+Vector2(0,-28),enemy.global_position+Vector2(0,-20),1)
 		ray.exclude = [tico.get_rid()]
+		if enemy is CollisionObject2D: ray.exclude.append(enemy.get_rid())
 		if not get_world_2d().direct_space_state.intersect_ray(ray).is_empty(): continue
 		_tail_hits[enemy_id] = true
 		if enemy.receive_tail(tico):

@@ -3,6 +3,8 @@ extends RefCounted
 const WIDTH := 38000
 const FINISH := Vector2(37780,550)
 const CAVE_X := 19500
+const ROUTE_ENEMIES := [[5900,520,70],[8900,540,85],[12600,600,75],[16400,620,90],
+	[24900,680,80],[28200,620,90],[31900,600,80],[34900,540,85]]
 
 static func build(level) -> void:
 	level.main_right = WIDTH
@@ -18,16 +20,22 @@ static func build(level) -> void:
 			var x := origin+step*455
 			var y: int = heights[step]
 			if y<760: level._platform(Rect2(x,y,455,760-y))
-			for offset in [125,255]: level._nut(Vector2(x+offset,y-44))
-			if step in [1,5]:
+			var covered_by_tunnel := section==4 and step in [4,5]
+			if not covered_by_tunnel:
+				for offset in [125,255]: level._nut(Vector2(x+offset,y-44))
+			if step in [1,5] and not covered_by_tunnel:
 				level._food(Vector2(x+350,y-48),(section+step)%3)
 		# Blocos e arcos alternam observação, salto e recompensas.
-		level._block(Vector2(origin+1320,heights[3]-155),2,"FriendSupply%02d" % section)
+		if section==2:
+			var ground_block = level._block(Vector2(origin+1320,heights[2]-28),1,"FriendSupply%02d" % section)
+			ground_block.set_meta("tail_ground_block",true)
+		else:
+			level._block(Vector2(origin+1320,heights[3]-155),2,"FriendSupply%02d" % section)
 		for reward in [[1760,80],[1890,120],[2020,80]]:
 			level._nut(Vector2(origin+reward[0],mini(heights[3],heights[4])-reward[1]))
 	# Encontros deixam áreas seguras antes e depois; a dupla pode derrotá-los.
-	for entry in [[5900,70],[8900,85],[12600,75],[16400,90],[24900,80],[28200,90],[31900,80],[34900,85]]:
-		var enemy = level._slug(Vector2(entry[0],760),entry[1]) if int(entry[0])%3 else level._beetle(Vector2(entry[0],760),entry[1])
+	for entry in ROUTE_ENEMIES:
+		var enemy = level._slug(Vector2(entry[0],entry[1]),entry[2]) if int(entry[0])%3 else level._beetle(Vector2(entry[0],entry[1]),entry[2])
 		enemy.set_meta("friend_route_enemy",true)
 	# Pontos de cooperação: pedras móveis e blocos resistentes reutilizam habilidades.
 	for x in [10400,27400]:
@@ -45,6 +53,7 @@ static func build(level) -> void:
 	for rect in [Rect2(18820,680,180,80),Rect2(19000,600,180,160),Rect2(19180,520,640,240),Rect2(19820,600,180,160),Rect2(20000,680,180,80)]:
 		level._platform(rect)
 	for point in [Vector2(18880,636),Vector2(19060,556),Vector2(19220,476),Vector2(19400,476),Vector2(19600,476),Vector2(19870,556),Vector2(20050,636)]: level._nut(point)
+	for entry in [[19320,472,1],[19680,472,2]]: level._food(Vector2(entry[0],entry[1]),entry[2])
 	level._sign(Vector2(18850,360),"Um vento frio sopra do túnel…")
 	# A única bandeira fica depois da saída secundária, confirmando progresso.
 	level.checkpoint.position = Vector2(24300,680)

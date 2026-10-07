@@ -49,6 +49,10 @@ func run() -> void:
 	check(foods.any(func(item): return item.position==Vector2(37580,642)),"Fruta de T12 acompanha a plataforma de chegada")
 	check(not foods.any(func(item): return item.position==Vector2(19440,552)),"Posicao soterrada de T07 nao e mais utilizada")
 	check(not foods.any(func(item): return item.position==Vector2(37580,712)),"Posicao soterrada de T12 nao e mais utilizada")
+	var nuts: Array = level.actors.get_children().filter(func(actor): return actor.get("collectible_kind")=="nut")
+	check(not nuts.any(func(item): return item.position in [Vector2(19245,556),Vector2(19355,556)]),"Portal da galeria nao possui nozes sob a plataforma")
+	check(not nuts.any(func(item): return item.position in [Vector2(37405,716),Vector2(37515,716)]),"Portal final nao possui nozes sob a plataforma")
+	check(nuts.any(func(item): return item.position==Vector2(19420,476)) and nuts.any(func(item): return item.position==Vector2(37520,646)),"Portais preservam recompensas sobre as plataformas")
 	var gallery_food_positions := [Vector2(47150,632),Vector2(47920,602),Vector2(48710,632),Vector2(49720,632),Vector2(50350,592)]
 	var gallery_foods_supported := true
 	for point in gallery_food_positions:
@@ -67,6 +71,9 @@ func run() -> void:
 	var golden_nuts: Array = level.actors.get_children().filter(func(actor): return actor.get("collectible_kind")=="golden")
 	check(golden_nuts.any(func(item): return item.position==Vector2(31850,672)),"Recompensa dourada de T10 fica ao alcance do jogador")
 	check(preload("res://scripts/presentation/enemy_art.gd").BEETLE_GROUND_CORRECTION==10.0,"Patas dos besouros recebem alinhamento visual com o terreno")
+	var return_steps: Array = preload("res://scripts/systems/blocks_secrets_area.gd").EXIT_RETURN_STEPS
+	check(return_steps==[Rect2(50990,630,110,20),Rect2(51080,700,120,20)],"Queda em T06 possui degraus de retorno ao portal")
+	check(level.drop_platforms.any(func(rect): return rect.position==return_steps[0].position and rect.size.x==return_steps[0].size.x) and level.drop_platforms.any(func(rect): return rect.position==return_steps[1].position and rect.size.x==return_steps[1].size.x),"Degraus de retorno estao ativos na Galeria das Pedras")
 	await close_world()
 	DirAccess.remove_absolute(E03_SLOT)
 	print("RESULTADO CORREÇÕES 1-2: %d verificações, %d falhas" % [checks,failures])

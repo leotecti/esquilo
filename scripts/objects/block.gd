@@ -3,6 +3,9 @@ signal opened(block: Node2D, reward: bool)
 @export_enum("Comum", "Quebrável", "Noz") var kind: int = 0
 var used: bool = false
 
+func _ready() -> void:
+	if kind==1: add_to_group("tail_targets")
+
 func _draw() -> void:
 	draw_style_box(_style(), Rect2(-28, -28, 56, 56))
 	if kind == 1 and not used:
@@ -28,6 +31,11 @@ func hit_from_below() -> void:
 		$Collision.set_deferred("disabled", true)
 	queue_redraw()
 	opened.emit(self, kind == 2)
+
+func receive_tail(_character: Node2D) -> bool:
+	if used or kind!=1: return false
+	hit_from_below()
+	return used
 
 func reset_block() -> void:
 	used = false

@@ -35,7 +35,10 @@ static func build(level) -> void:
 						level._food(Vector2(x+235,710),(section+step+1)%3)
 						for lower_x in [x+115,x+355]: level._nut(Vector2(lower_x,715))
 				else: level._platform(Rect2(x,y,470,760-y))
-			if step not in [1,5] or section%2==0:
+			# As passagens dos portais possuem plataformas especiais e recompensas
+			# próprias. Não cria duplicatas do perfil-base dentro do terreno.
+			var covered_by_portal := (section==4 and step in [3,4]) or (section==9 and step==6)
+			if (step not in [1,5] or section%2==0) and not covered_by_portal:
 				for offset in [135,245]: level._nut(Vector2(x+offset,y-44))
 		# Cada conjunto acompanha o terceiro degrau, onde os blocos aparecem.
 		# Assim, a face inferior continua ao alcance mesmo quando o próximo sobe.

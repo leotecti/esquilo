@@ -6,6 +6,9 @@ const LEFT_EDGE := 65000
 const RIGHT_EDGE := 70800
 const START := Vector2(65180,755)
 const EXIT := Vector2(70550,700)
+const PORTAL_STYLE_VERSION := 2
+const CAVE_BACKGROUND = preload("res://assets/environment/cold_cave_background.png")
+const BACKGROUND_STYLE_VERSION := 2
 var level: Node2D
 var active := false
 var checkpoint := false
@@ -130,14 +133,38 @@ func _draw() -> void:
 	draw_colored_polygon(PackedVector2Array([Vector2(19230,760),Vector2(19280,520),Vector2(19380,405),Vector2(19500,365),Vector2(19620,405),Vector2(19720,520),Vector2(19770,760)]),Color("56544e"))
 	draw_set_transform(Vector2(19500,590),0,Vector2(1.2,1.0))
 	draw_circle(Vector2.ZERO,135,Color("182d35"))
-	draw_circle(Vector2(0,8),112,Color(0.20,0.38,0.42,.65+pulse*.04))
+	draw_circle(Vector2(0,8),112,Color(0.12,0.31,0.38,.78+pulse*.04))
+	draw_circle(Vector2(0,12),86,Color(0.31,0.66,0.67,.16+pulse*.04))
 	draw_set_transform(Vector2.ZERO)
+	# Arco segmentado, brilho e neblina deixam clara a função de passagem.
+	for i in 9:
+		var angle := lerpf(PI,TAU,float(i)/8.0)
+		var center := Vector2(19500,590)+Vector2(cos(angle)*158,sin(angle)*142)
+		var radial := Vector2(cos(angle),sin(angle))
+		var tangent := Vector2(-radial.y,radial.x)
+		draw_colored_polygon(PackedVector2Array([center-radial*20-tangent*29,center-radial*20+tangent*29,center+radial*20+tangent*25,center+radial*20-tangent*25]),Color("898273"))
+		draw_polyline(PackedVector2Array([center-radial*20-tangent*29,center-radial*20+tangent*29,center+radial*20+tangent*25,center+radial*20-tangent*25,center-radial*20-tangent*29]),Color("b8ad91"),3,true)
+	for i in 7:
+		var phase := Time.get_ticks_msec()*.00055+i*.9
+		draw_circle(Vector2(19500+sin(phase)*92,625-fmod(Time.get_ticks_msec()*.014+i*29,125)),4,Color("b8f0dfaa"))
+	for i in 4:
+		draw_set_transform(Vector2(19435+i*45,675+i%2*9),0,Vector2(1.7,.35))
+		draw_circle(Vector2.ZERO,46,Color(0.55,0.84,0.79,.10))
+		draw_set_transform(Vector2.ZERO)
 	for rock in [Rect2(19190,690,130,70),Rect2(19260,635,105,125),Rect2(19635,635,105,125),Rect2(19690,695,125,65)]:
 		draw_colored_polygon(PackedVector2Array([rock.position+Vector2(0,rock.size.y),rock.position+Vector2(15,22),rock.position+Vector2(rock.size.x*.55,0),rock.position+Vector2(rock.size.x,28),rock.end]),Color("777166"))
-	# Fundo da gruta em camadas, com colunas, estalactites e reflexos azulados.
-	draw_rect(Rect2(LEFT_EDGE,0,RIGHT_EDGE-LEFT_EDGE,760),Color("142a35"))
+	# Pintura em painéis preserva a leitura lateral e cobre toda a Gruta Fria.
+	for panel in 3:
+		draw_texture_rect(CAVE_BACKGROUND,Rect2(LEFT_EDGE+panel*1934,-5,1934,765),false,Color("b9d3df"))
+	draw_rect(Rect2(LEFT_EDGE,0,RIGHT_EDGE-LEFT_EDGE,760),Color(0.03,0.10,0.16,.24))
+	# Sombras esporádicas de morcegos cruzam planos distantes em velocidades diferentes.
+	var bat_time := Time.get_ticks_msec()*.000055
+	for i in 5:
+		var travel := fmod(bat_time*(1.0+i*.11)+i*.21,1.0)
+		var shadow_center := Vector2(LEFT_EDGE-180+travel*(RIGHT_EDGE-LEFT_EDGE+360),150+(i%3)*105+sin(bat_time*8+i)*28)
+		_draw_bat_shadow(shadow_center,.55+i*.08,.10+i*.012)
 	for band in 4:
-		var color: Color = [Color("203b45"),Color("294b52"),Color("31585b"),Color("1a343e")][band]
+		var color: Color = [Color(0.13,0.23,0.27,.12),Color(0.16,0.29,0.32,.10),Color(0.19,0.35,0.36,.08),Color(0.10,0.20,0.24,.10)][band]
 		for i in 9:
 			var x := LEFT_EDGE+i*720+band*170
 			draw_circle(Vector2(x,320+band*105),250-band*28,color)
@@ -155,3 +182,12 @@ func _draw() -> void:
 		draw_circle(Vector2(0,4),47,Color(0.18,0.39,0.43,.72))
 		draw_arc(Vector2.ZERO,54,0,TAU,32,Color("91aaa4"),6,true)
 		draw_set_transform(Vector2.ZERO)
+
+func _draw_bat_shadow(center: Vector2, size: float, alpha: float) -> void:
+	var flap := sin(Time.get_ticks_msec()*.009+center.x*.01)*7.0
+	var color := Color(0.015,0.025,0.045,alpha)
+	draw_set_transform(center,0,Vector2(size,size))
+	draw_circle(Vector2.ZERO,8,color)
+	draw_colored_polygon(PackedVector2Array([Vector2(-5,-2),Vector2(-27,-13-flap),Vector2(-47,-4),Vector2(-28,8+flap),Vector2(-8,5)]),color)
+	draw_colored_polygon(PackedVector2Array([Vector2(5,-2),Vector2(27,-13-flap),Vector2(47,-4),Vector2(28,8+flap),Vector2(8,5)]),color)
+	draw_set_transform(Vector2.ZERO)

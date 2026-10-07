@@ -55,3 +55,10 @@ As três lesmas da galeria foram alinhadas às plataformas acessíveis.
   fruta usa `y=472`; a antiga posição soterrada em `y=552` não é mais criada.
 - `Trilha principal | T12 | X 37513 | Y 690`: confirmação adicional de que a
   fruta usa `y=642`; a antiga posição soterrada em `y=712` não é mais criada.
+
+Uma segunda revisão identificou nozes procedurais duplicadas sob as plataformas
+especiais próximas ao portal da Galeria e ao portal final. Essas duplicatas
+foram removidas; as recompensas manuais acessíveis continuam nos dois locais.
+
+- `Galeria das Pedras | T06 | X 51016 | Y 760`: dois degraus atravessáveis
+  permitem subir do piso para `y=700`, `y=630` e retornar ao portal em `y=570`.
