@@ -8,8 +8,13 @@ func run() -> void:
 	check(ground_block.position==Vector2(12020,572) and ground_block.kind==1,"Bloco fora do padrao fica apoiado no solo e e quebravel")
 	check(ground_block.is_in_group("tail_targets"),"Bloco quebravel participa da deteccao da caudada")
 	check(ground_block.receive_tail(level.tico) and ground_block.used and not ground_block.visible,"Caudada quebra o bloco apoiado no solo")
+	var t08_block: StaticBody2D = level.actors.get_node("FriendSupply06")
+	check(t08_block.position==Vector2(24820,572) and t08_block.kind==1 and t08_block.is_in_group("tail_targets"),"Bloco de T08 fica no solo e aceita a caudada")
+	var passage_block: StaticBody2D = level.actors.get_node("FriendPassageT10")
+	check(passage_block.position==Vector2(30400,652) and passage_block.receive_tail(level.tico),"Obstaculo de T10 nao bloqueia o progresso e pode ser quebrado pela caudada")
+	check(not level.actors.has_node("FriendHeavy30400"),"Parede alta e ambigua de T10 foi removida")
 	var route_enemies: Array = level.actors.get_children().filter(func(actor): return actor.has_meta("friend_route_enemy"))
-	var expected := [Vector2(5900,520),Vector2(8900,540),Vector2(12600,600),Vector2(16400,620),Vector2(24900,680),Vector2(28200,620),Vector2(31900,600),Vector2(34900,540)]
+	var expected := [Vector2(5900,520),Vector2(8900,540),Vector2(12600,600),Vector2(16400,620),Vector2(24900,600),Vector2(28600,540),Vector2(31900,600),Vector2(34900,540)]
 	var aligned := route_enemies.size()==expected.size()
 	for index in mini(route_enemies.size(),expected.size()):
 		aligned = aligned and route_enemies[index].origin==expected[index]
@@ -22,6 +27,8 @@ func run() -> void:
 	check(preload("res://scripts/systems/friend_cave_area.gd").PORTAL_STYLE_VERSION==2,"Portal usa arco mineral, luz, particulas e nevoa refinados")
 	var cave_script = preload("res://scripts/systems/friend_cave_area.gd")
 	check(cave_script.BACKGROUND_STYLE_VERSION==2 and cave_script.CAVE_BACKGROUND!=null,"Gruta Fria usa pintura de fundo propria")
+	check(cave_script.TERRAIN_STYLE_VERSION==1 and cave_script.CAVE_PLATFORMS.size()==10,"Gruta Fria usa solo mineral proprio em todas as plataformas")
+	check(preload("res://scripts/presentation/forest_art.gd").CAVE_VISUAL_START==64000.0,"Terra do bosque nao e desenhada dentro da caverna")
 	check(preload("res://scripts/hazards/cave_drip.gd").VISUAL_STYLE_VERSION==2,"Pingo possui formacao, rastro, queda alongada e respingo")
 	await close_world()
 	DirAccess.remove_absolute(E03_SLOT)

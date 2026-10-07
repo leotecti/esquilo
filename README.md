@@ -214,7 +214,7 @@ As cenas das etapas anteriores continuam disponÃ­veis para abrir com F6.
 ## Web/PWA â€” validaÃ§Ã£o intermediÃ¡ria 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-0.34.1-gruta-fria-web.zip`. Consulte [publicaÃ§Ã£o e teste no celular](web/deployment.md).
+`builds/web/Tico-0.34.3-solo-gruta-fria-web.zip`. Consulte [publicaÃ§Ã£o e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuÃ¡rio confirmou o teste e a aprovaÃ§Ã£o da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponÃ­veis:
@@ -233,7 +233,7 @@ Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instal
 ## Build Windows da validaÃ§Ã£o intermediÃ¡ria 2
 
 Abra `builds/windows/validacao_intermediaria_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-0.34.1-gruta-fria-windows.zip` contÃ©m os dois arquivos.
+O pacote `builds/windows/Tico-0.34.3-solo-gruta-fria-windows.zip` contÃ©m os dois arquivos.
 As ilustraÃ§Ãµes em `assets/slice/` seguem as pranchas de `img/`, com aprovaÃ§Ã£o
 artÃ­stica ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 

@@ -9,6 +9,11 @@ const EXIT := Vector2(70550,700)
 const PORTAL_STYLE_VERSION := 2
 const CAVE_BACKGROUND = preload("res://assets/environment/cold_cave_background.png")
 const BACKGROUND_STYLE_VERSION := 2
+const TERRAIN_STYLE_VERSION := 1
+const CAVE_PLATFORMS := [Rect2(65000,760,5800,220),Rect2(65480,690,360,70),
+	Rect2(65840,620,420,140),Rect2(66480,680,300,80),Rect2(66920,600,500,160),
+	Rect2(67620,680,360,80),Rect2(68120,590,520,170),Rect2(68820,670,400,90),
+	Rect2(69420,610,500,150),Rect2(70120,680,420,80)]
 var level: Node2D
 var active := false
 var checkpoint := false
@@ -18,10 +23,7 @@ var hints: Array[Label] = []
 var drips: Array[Node2D] = []
 
 func build() -> void:
-	level._platform(Rect2(LEFT_EDGE,760,RIGHT_EDGE-LEFT_EDGE,220))
-	for rect in [Rect2(65480,690,360,70),Rect2(65840,620,420,140),Rect2(66480,680,300,80),
-		Rect2(66920,600,500,160),Rect2(67620,680,360,80),Rect2(68120,590,520,170),
-		Rect2(68820,670,400,90),Rect2(69420,610,500,150),Rect2(70120,680,420,80)]: level._platform(rect)
+	for rect in CAVE_PLATFORMS: level._platform(rect)
 	for rect in [Rect2(LEFT_EDGE-50,-200,50,1300),Rect2(RIGHT_EDGE,-200,50,1300)]: level._solid("FriendCaveBoundary",rect,Color.TRANSPARENT)
 	for row in [[65220,715,4],[65720,575,4],[66540,635,3],[67020,555,5],[67700,635,4],[68230,545,5],[68920,625,4],[69520,565,5],[70200,635,4]]:
 		for i in int(row[2]): _nut(Vector2(row[0]+i*76,row[1]))
@@ -175,12 +177,32 @@ func _draw() -> void:
 	for x in range(LEFT_EDGE+350,RIGHT_EDGE,760):
 		var glow := 8.0+sin(Time.get_ticks_msec()*.002+x)*2
 		draw_circle(Vector2(x,690),glow,Color("72c7cbaa"))
+	# Rocha escura substitui a terra do bosque sem sugerir piso de gelo.
+	for rect in CAVE_PLATFORMS: _draw_cave_ground(rect)
 	# Portais internos têm moldura mineral e névoa baixa.
 	for point in [START,EXIT]:
 		draw_set_transform(point+Vector2(0,-45),0,Vector2(.8,1.15))
 		draw_circle(Vector2.ZERO,58,Color("617074"))
 		draw_circle(Vector2(0,4),47,Color(0.18,0.39,0.43,.72))
 		draw_arc(Vector2.ZERO,54,0,TAU,32,Color("91aaa4"),6,true)
+		draw_set_transform(Vector2.ZERO)
+
+func _draw_cave_ground(rect: Rect2) -> void:
+	draw_rect(rect,Color("20333b"))
+	# A faixa superior mantém o percurso legível e tem aparência de pedra úmida.
+	draw_colored_polygon(PackedVector2Array([
+		Vector2(rect.position.x,rect.position.y),Vector2(rect.end.x,rect.position.y),
+		Vector2(rect.end.x,rect.position.y+20),Vector2(rect.position.x,rect.position.y+16)]),Color("29424b"))
+	draw_line(rect.position,Vector2(rect.end.x,rect.position.y),Color("55747a"),5,true)
+	var first_x := int(rect.position.x)+46
+	for x in range(first_x,int(rect.end.x)-18,118):
+		var available_depth := maxi(32,int(rect.size.y)-26)
+		var depth := 38+int(x/7)%available_depth
+		var y := minf(rect.end.y-12,rect.position.y+depth)
+		draw_polyline(PackedVector2Array([Vector2(x-18,y-5),Vector2(x,y),Vector2(x+24,y-8)]),Color("3c5660aa"),3,true)
+	for x in range(int(rect.position.x)+70,int(rect.end.x)-20,210):
+		draw_set_transform(Vector2(x,rect.position.y+10),0,Vector2(1.5,.42))
+		draw_circle(Vector2.ZERO,7,Color("76909766"))
 		draw_set_transform(Vector2.ZERO)
 
 func _draw_bat_shadow(center: Vector2, size: float, alpha: float) -> void:

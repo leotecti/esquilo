@@ -2,6 +2,7 @@ extends Node2D
 const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
 const GROUND = preload("res://assets/slice/ground.svg")
 const DEEP_GROUND = preload("res://assets/slice/ground_deep.svg")
+const CAVE_VISUAL_START := 64000.0
 var coop_details := true
 var platforms: Array[Rect2] = []
 var drop_platforms: Array[Rect2] = []
@@ -11,9 +12,10 @@ func _ready() -> void:
 
 func _draw() -> void:
 	var ground_rects: Array[Rect2] = [Rect2(0,760,3800,200)]
-	ground_rects.append_array(platforms)
+	var forest_platforms: Array[Rect2] = platforms.filter(func(rect: Rect2): return rect.position.x<CAVE_VISUAL_START)
+	ground_rects.append_array(forest_platforms)
 	for rect in ground_rects: ground(rect)
-	for rect in platforms:
+	for rect in forest_platforms:
 		organic_side(rect,true,ground_rects)
 		organic_side(rect,false,ground_rects)
 	for rect in drop_platforms:

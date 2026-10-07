@@ -4,7 +4,7 @@ const WIDTH := 38000
 const FINISH := Vector2(37780,550)
 const CAVE_X := 19500
 const ROUTE_ENEMIES := [[5900,520,70],[8900,540,85],[12600,600,75],[16400,620,90],
-	[24900,680,80],[28200,620,90],[31900,600,80],[34900,540,85]]
+	[24900,600,80],[28600,540,90],[31900,600,80],[34900,540,85]]
 
 static func build(level) -> void:
 	level.main_right = WIDTH
@@ -15,7 +15,9 @@ static func build(level) -> void:
 		[760,680,600,680,600,680,760], [760,700,620,620,540,620,700]]
 	for section in 10:
 		var origin := 4300+section*3200
-		var heights: Array = profiles[section%profiles.size()]
+		var heights: Array = profiles[section%profiles.size()].duplicate()
+		# T08 tinha um rebaixo curto que escondia o inimigo abaixo da rota.
+		if section==6: heights[3] = 600
 		for step in heights.size():
 			var x := origin+step*455
 			var y: int = heights[step]
@@ -26,7 +28,7 @@ static func build(level) -> void:
 			if step in [1,5] and not covered_by_tunnel:
 				level._food(Vector2(x+350,y-48),(section+step)%3)
 		# Blocos e arcos alternam observação, salto e recompensas.
-		if section==2:
+		if section in [2,6]:
 			var ground_block = level._block(Vector2(origin+1320,heights[2]-28),1,"FriendSupply%02d" % section)
 			ground_block.set_meta("tail_ground_block",true)
 		else:
@@ -44,11 +46,14 @@ static func build(level) -> void:
 		rock.position = Vector2(x,760)
 		rock.max_travel = 260
 		level.actors.add_child(rock)
-	for x in [14600,30400]:
+	for x in [14600]:
 		var heavy = preload("res://scenes/objects/heavy_block.tscn").instantiate()
 		heavy.name = "FriendHeavy%d" % x
 		heavy.position = Vector2(x,680)
 		level.actors.add_child(heavy)
+	# T10 usa um obstáculo baixo e legível: pode ser saltado ou quebrado pela cauda.
+	var passage_block = level._block(Vector2(30400,652),1,"FriendPassageT10")
+	passage_block.set_meta("tail_ground_block",true)
 	# Túnel principal: entrada visível no meio e uma faixa plana para interação.
 	for rect in [Rect2(18820,680,180,80),Rect2(19000,600,180,160),Rect2(19180,520,640,240),Rect2(19820,600,180,160),Rect2(20000,680,180,80)]:
 		level._platform(rect)
