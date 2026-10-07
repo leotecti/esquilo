@@ -191,6 +191,22 @@ em corrida, preparação, investida e empurrão. Essa diferença deve comunicar
 força e volume e preparar a leitura de passagens estreitas exclusivas de Tico,
 sem aumentar novamente a colisão ou comprometer fases já validadas.
 
+Seu peso também tem efeito mecânico: Pipo recebe 45% do recuo de golpes, 30% da
+força do vento e 25% da correnteza. Faixas de água rasa usam setas para indicar
+direção. Elas devem oferecer rotas ou recompensas em que a estabilidade de Pipo
+seja vantajosa, mantendo o dano dos inimigos e a necessidade de atenção.
+
+Besouros blindados reforçam Pipo no combate. A carapaça deve rejeitar caudada e
+pisão com resposta metálica; a investida de Pipo quebra a defesa e deixa o
+inimigo exposto para qualquer personagem finalizar. A armadura usa placas
+azul-petróleo e rebites dourados para comunicar sua regra antes do primeiro golpe.
+
+Plataformas largas de peso afundam gradualmente e travam após Pipo permanecer
+sobre elas. O Mundo 2 usa uma em cada fase de percurso. Pontos de impulso usam
+folhas em leque e uma seta ascendente: Pipo prepara o movimento, o controle passa
+automaticamente para Tico e o esquilo é lançado até uma rota elevada. A área de
+chegada precisa estar livre e oferecer recompensa ou progresso claramente visível.
+
 ### Aplicação em 1-4 — Periquito do Bosque
 
 A fase 1-4 passa a ter **38.000 unidades** e onze trechos antes do portal final.

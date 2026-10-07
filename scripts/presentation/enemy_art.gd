@@ -61,3 +61,13 @@ func _draw() -> void:
 	var destination := Rect2(Vector2(-size.x*.5,-size.y+ground_offset),size)
 	var source := Rect2(Vector2(animation_frame*FRAME_SIZE.x,0),FRAME_SIZE)
 	draw_texture_rect_region(texture,destination,source)
+	# Placas azul-petróleo distinguem o besouro que exige a investida de Pipo.
+	if kind=="beetle" and enemy.get("armored")==true:
+		var flash := float(enemy.get("armor_flash"))
+		var armor_color := Color("b9e1dc") if flash>0 else Color("426f73")
+		draw_arc(Vector2(0,-34),size.x*.42,PI,TAU,24,Color("d5ead7"),8,true)
+		draw_arc(Vector2(0,-34),size.x*.34,PI,TAU,24,armor_color,10,true)
+		for plate_x in [-24.0,0.0,24.0]:
+			draw_line(Vector2(plate_x,-62),Vector2(plate_x*.72,-30),Color("263f48"),3,true)
+		draw_circle(Vector2(-size.x*.31,-39),5,Color("d3a84c"))
+		draw_circle(Vector2(size.x*.31,-39),5,Color("d3a84c"))

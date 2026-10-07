@@ -11,6 +11,9 @@ var charge_direction: float = 1.0
 var sniffing: bool = false
 var pushing: bool = false
 var _push_speed: float = 0.0
+const KNOCKBACK_MULTIPLIER := 0.45
+const WIND_MULTIPLIER := 0.30
+const CURRENT_MULTIPLIER := 0.25
 
 func _ready() -> void:
 	tail_enabled = false
@@ -26,6 +29,7 @@ func _physics_process(delta: float) -> void:
 		super._physics_process(delta)
 		return
 	if ability == "ready" and is_on_floor() and Input.is_action_just_pressed("action") and _hurt_left <= 0:
+		if level_has_launch_assist(): return
 		charge_direction = facing
 		_set_ability("prepare", prepare_duration)
 	if ability != "ready":
@@ -67,6 +71,10 @@ func _physics_process(delta: float) -> void:
 				_push_speed = object.push_speed
 	_update_animation()
 
+func level_has_launch_assist() -> bool:
+	var parent_level := get_parent().get_parent()
+	return parent_level.has_method("try_pipo_launch") and parent_level.try_pipo_launch(self)
+
 func _set_ability(phase: String, duration: float) -> void:
 	ability = phase
 	ability_left = duration
@@ -107,6 +115,14 @@ func take_damage(source: Vector2) -> bool:
 	if applied:
 		cancel_ability()
 	return applied
+
+func environmental_force_multiplier(kind: StringName) -> float:
+	if kind==&"wind": return WIND_MULTIPLIER
+	if kind==&"current": return CURRENT_MULTIPLIER
+	return 1.0
+
+func knockback_multiplier() -> float:
+	return KNOCKBACK_MULTIPLIER
 
 func reset_at(point: Vector2) -> void:
 	cancel_ability()

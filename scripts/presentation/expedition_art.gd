@@ -23,6 +23,14 @@ func _draw() -> void:
 		for x in range(int(rect.position.x),int(rect.end.x),45):
 			var y: float = rect.position.y+sin(clock*2+x)*4
 			draw_line(Vector2(x,y),Vector2(x+30,y),Color("bcf0e5"),3)
+	# Faixas rasas indicam correnteza caminhável. As setas deixam clara a direção
+	# sem adicionar partículas ou nós extras ao percurso.
+	for zone in level.current_zones:
+		draw_rect(zone,Color(0.20,0.55,0.65,.12))
+		for x in range(int(zone.position.x)+45,int(zone.end.x),120):
+			var y: float = zone.end.y-22.0
+			draw_line(Vector2(x,y),Vector2(x+34,y),Color("bceee0a0"),3,true)
+			draw_colored_polygon(PackedVector2Array([Vector2(x+34,y),Vector2(x+24,y-7),Vector2(x+24,y+7)]),Color("bceee0a0"))
 	for zone in level.wind_zones:
 		var rect: Rect2 = zone
 		for i in 8:

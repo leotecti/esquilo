@@ -8,6 +8,9 @@ const NAMES = {
 const BACKGROUNDS = [preload("res://assets/worlds/river.svg"),preload("res://assets/worlds/mountain.svg"),preload("res://assets/worlds/village.svg")]
 var water: Array[Rect2] = []
 var wind_zones: Array[Rect2] = []
+var current_zones: Array[Rect2] = []
+var launch_stations: Array[Node2D] = []
+var launching_tico := false
 var cave_roofs: Array[Rect2] = []
 var movers: Array[Node2D] = []
 var mechanisms: Dictionary = {}
@@ -41,12 +44,14 @@ func _river() -> void:
 	if section==1:
 		for rect in [Rect2(0,760,940,200),Rect2(1450,760,720,200),Rect2(2580,760,1220,200)]: _platform(rect)
 		water = [Rect2(940,805,510,190),Rect2(2170,805,410,190)]
+		current_zones = [Rect2(1450,650,720,150),Rect2(2580,650,520,150)]
 		_device("Tronco",Vector2(700,760),"log")
+		_weight_platform("PesoMargem",Vector2(1760,760))
 		_bridge("Tronco",Rect2(900,758,580,30))
 		_gate("Tronco",Rect2(1430,310,25,450))
 		_mover(Vector2(2250,720),Vector2(250,0),180,5)
 		for point in [Vector2(350,715),Vector2(550,715),Vector2(1050,712),Vector2(1260,712),Vector2(1620,715),Vector2(2020,715),Vector2(2360,655),Vector2(2710,715),Vector2(3400,715)]: _nut(point)
-		_slug(Vector2(2940,760),70)
+		_armored_enemy(Vector2(2940,760),70)
 		_markers(Vector2(1830,760),Vector2(3570,760))
 		_sign(Vector2(390,540),"Pipo • Empurre o tronco até a água")
 		_sign(Vector2(1620,550),"Tico • Siga sobre os troncos")
@@ -54,13 +59,15 @@ func _river() -> void:
 	if section==2:
 		for rect in [Rect2(0,760,720,200),Rect2(1150,700,650,260),Rect2(2300,700,460,260),Rect2(3180,760,620,200)]: _platform(rect)
 		water = [Rect2(720,810,430,180),Rect2(1800,810,500,180),Rect2(2760,810,420,180)]
+		current_zones = [Rect2(1150,590,650,150),Rect2(2300,590,460,150)]
 		_mover(Vector2(780,715),Vector2(300,0),180,5)
 		_device("Ponte",Vector2(1440,700),"charge")
+		_weight_platform("PesoPonte",Vector2(1620,700))
 		_bridge("Ponte",Rect2(1770,700,570,30))
 		_gate("Ponte",Rect2(2280,270,25,430))
 		_mover(Vector2(2820,720),Vector2(300,0),200,5.5)
 		for point in [Vector2(350,715),Vector2(580,715),Vector2(1260,655),Vector2(1620,655),Vector2(1920,655),Vector2(2150,655),Vector2(2520,655),Vector2(3380,715)]: _nut(point)
-		_slug(Vector2(2580,700),65)
+		_armored_enemy(Vector2(2580,700),65)
 		_markers(Vector2(1660,700),Vector2(3580,760))
 		_sign(Vector2(370,540),"A grande ponte • Espere os troncos")
 		_sign(Vector2(1180,460),"Pipo • Invista na engrenagem")
@@ -68,12 +75,17 @@ func _river() -> void:
 	# A primeira fase é validada antes da produção das demais.
 	for rect in [Rect2(0,760,680,200),Rect2(1140,760,460,200),Rect2(2080,720,460,240),Rect2(2840,760,960,200)]: _platform(rect)
 	water = [Rect2(680,810,460,180),Rect2(1600,810,480,180),Rect2(2540,810,300,180)]
+	current_zones = [Rect2(1140,650,460,150),Rect2(2080,610,460,150),Rect2(2840,650,520,150)]
 	_mover(Vector2(740,725),Vector2(320,0),180,5)
 	_mover(Vector2(1680,725),Vector2(180,0),180,4.8)
 	_mover(Vector2(1950,700),Vector2(110,0),180,5.2)
 	_mover(Vector2(2620,730),Vector2(140,0),180,4)
+	_weight_platform("PesoCorrente",Vector2(3200,760))
+	_launch_station(Vector2(2200,720))
+	_platform(Rect2(2140,455,420,45))
+	for point in [Vector2(2200,411),Vector2(2320,411),Vector2(2440,411)]: _nut(point)
 	for point in [Vector2(350,715),Vector2(580,715),Vector2(850,650),Vector2(1260,715),Vector2(1520,715),Vector2(1850,620),Vector2(2350,645),Vector2(2970,715),Vector2(3290,715)]: _nut(point)
-	_slug(Vector2(3070,760),65)
+	_armored_enemy(Vector2(3070,760),65)
 	_markers(Vector2(1410,760),Vector2(3590,760))
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
@@ -233,6 +245,48 @@ func _device(id: String, point: Vector2, mode: String) -> Node2D:
 	device.activated.connect(func(_node): _apply_device(id,true))
 	return device
 
+func _weight_platform(id: String, point: Vector2) -> Node2D:
+	var device = preload("res://scripts/objects/weight_platform.gd").new()
+	device.name = id
+	device.level = self
+	device.position = point
+	actors.add_child(device)
+	mechanisms[id] = device
+	connections[id] = []
+	device.activated.connect(func(_node): _apply_device(id,true))
+	return device
+
+func _launch_station(point: Vector2) -> Node2D:
+	var station = preload("res://scripts/objects/pipo_launch_marker.gd").new()
+	station.level = self
+	station.position = point
+	actors.add_child(station)
+	launch_stations.append(station)
+	return station
+
+func try_pipo_launch(character: CharacterBody2D) -> bool:
+	if launching_tico or character!=pipo or not rescued: return false
+	for station in launch_stations:
+		if character.position.distance_to(station.position)>105: continue
+		launching_tico = true
+		character._set_ability("prepare",.24)
+		character.controls_enabled = false
+		touch.release_all()
+		_feedback(station.position,"Impulso em dupla!",Color("ffe394"))
+		sounds.play_notes([262,392,523],.06)
+		var launch_point: Vector2 = station.position+Vector2(0,-72)
+		var tween := create_tween()
+		tween.tween_interval(.24)
+		tween.tween_callback(func():
+			character.controls_enabled = true
+			_activate(squirrel,launch_point)
+			squirrel.velocity = Vector2(character.facing*125.0,-720.0)
+			squirrel.previous_position = launch_point
+			launching_tico = false
+			_say("Pipo lançou Tico! Segure PULO para alcançar o caminho alto."))
+		return true
+	return false
+
 func _bridge(id: String, rect: Rect2) -> void:
 	var body := _solid("Bridge",rect,Color("a8804b"))
 	body.hide()
@@ -276,6 +330,21 @@ func _crow_enemy(point: Vector2) -> void:
 	actors.add_child(enemy)
 	enemy.stomped.connect(_on_stomp)
 
+func _armored_enemy(point: Vector2, distance: float = 95.0) -> Node2D:
+	var enemy = preload("res://scripts/enemies/armored_beetle.gd").new()
+	enemy.position = point
+	enemy.level = self
+	enemy.patrol_distance = distance
+	actors.add_child(enemy)
+	enemy.stomped.connect(_on_stomp)
+	enemy.armor_broken_signal.connect(_on_enemy_armor_broken)
+	return enemy
+
+func _on_enemy_armor_broken(enemy: Node2D) -> void:
+	_feedback(enemy.position,"Armadura quebrada!",Color("f3d580"))
+	_say("Boa, Pipo! A carapaça quebrou. Agora o inimigo está vulnerável.")
+	sounds.play_notes([196,294,440],.065)
+
 func _build_forest() -> void:
 	$Landscape.hide()
 	for body in $Geometry.get_children():
@@ -299,11 +368,15 @@ func _build_forest() -> void:
 func _physics_process(delta: float) -> void:
 	if not world_ready: return
 	tico.wind_acceleration = Vector2.ZERO
+	tico.current_acceleration = Vector2.ZERO
 	if get_tree().paused or completed or respawning: return
 	hazard_delay = maxf(0,hazard_delay-delta)
 	for zone in wind_zones:
 		if zone.has_point(tico.position) and tico==squirrel and Input.is_action_pressed("jump"):
 			tico.wind_acceleration = Vector2(160,-500)
+	for zone in current_zones:
+		if zone.has_point(tico.position):
+			tico.current_acceleration = Vector2(900,0)
 	if tico.is_on_floor():
 		for rect in terrain:
 			if tico.position.x>rect.position.x+35 and tico.position.x<rect.end.x-35 and absf(tico.position.y-rect.position.y)<4:

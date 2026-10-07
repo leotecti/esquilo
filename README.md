@@ -8,6 +8,18 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
+**Peso e impulso em dupla (0.36.4):** as três fases de percurso do Mundo 2
+receberam plataformas ativadas pelo peso de Pipo. Em 2-1, Pipo também pode lançar
+Tico até uma rota elevada de recompensas. [Implementação e testes](tests/pipo_weight_launch.md).
+
+**Inimigos blindados (0.36.3):** besouros protegidos no Mundo 2 bloqueiam pisão
+e caudada até Pipo quebrar a carapaça com sua investida. Depois da abertura,
+qualquer personagem pode finalizar o encontro. [Implementação e testes](tests/armored_enemy.md).
+
+**Resistência de Pipo (0.36.2):** seu peso agora reduz recuo de golpes, vento e
+correntezas. O Mundo 2 possui faixas caminháveis de água corrente para aplicar
+essa vantagem durante a expansão das fases. [Implementação e testes](tests/pipo_resistance.md).
+
 **Porte visual de Pipo (0.36.1):** Pipo agora aparece cerca de 29% mais alto
 que Tico durante a partida e também é maior no mapa. Corrida, preparação,
 investida e empurrão preservam a nova proporção, enquanto a colisão aprovada

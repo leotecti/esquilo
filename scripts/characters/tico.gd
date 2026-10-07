@@ -52,6 +52,7 @@ var _gliding: bool = false
 var _reset_pending: bool = false
 var auto_run_target := INF
 var wind_acceleration := Vector2.ZERO
+var current_acceleration := Vector2.ZERO
 var tail_phase := "ready"
 var tail_phase_left := 0.0
 var tail_attack_id := 0
@@ -201,7 +202,10 @@ func _move_character(delta: float) -> void:
 		velocity.y = minf(velocity.y, glide_fall_speed if _gliding else max_fall_speed)
 	var rising: bool = velocity.y < 0.0
 	if not grounded:
-		velocity += wind_acceleration * delta
+		velocity += wind_acceleration * environmental_force_multiplier(&"wind") * delta
+	# Correntezas rasas deslocam também no chão. A aceleração entra depois do
+	# controle horizontal para tornar a estabilidade de cada personagem visível.
+	velocity += current_acceleration * environmental_force_multiplier(&"current") * delta
 	move_and_slide()
 	_update_platform_drop()
 	if rising:
@@ -267,6 +271,7 @@ func reset_at(point: Vector2) -> void:
 	cancel_tail_attack()
 	auto_run_target = INF
 	wind_acceleration = Vector2.ZERO
+	current_acceleration = Vector2.ZERO
 	global_position = point
 	force_update_transform()
 	previous_position = point
@@ -287,6 +292,12 @@ func reset_at(point: Vector2) -> void:
 		sprite.play(state)
 
 
+func environmental_force_multiplier(_kind: StringName) -> float:
+	return 1.0
+
+func knockback_multiplier() -> float:
+	return 1.0
+
 func take_damage(source: Vector2) -> bool:
 	if health <= 0 or invulnerability_left > 0.0 or not controls_enabled:
 		return false
@@ -295,7 +306,8 @@ func take_damage(source: Vector2) -> bool:
 	_gliding = false
 	invulnerability_left = invulnerability_duration
 	_hurt_left = 0.2
-	velocity = Vector2(-240.0 if source.x >= global_position.x else 240.0, -240.0)
+	var knockback := 240.0 * knockback_multiplier()
+	velocity = Vector2(-knockback if source.x >= global_position.x else knockback, -knockback)
 	_jump_cut_applied = true
 	health_changed.emit(health)
 	hurt.emit()

@@ -1,5 +1,5 @@
 extends "res://scripts/systems/world_save.gd"
-const DEVICES = {4:[],5:["Tronco"],6:["Ponte"],7:[],8:[],9:["Rocha"],10:[],11:[],12:["Peso"],13:["Comporta"],14:["Tora","Roda","Engrenagem"],15:["Arena"]}
+const DEVICES = {4:["PesoCorrente"],5:["Tronco","PesoMargem"],6:["Ponte","PesoPonte"],7:[],8:[],9:["Rocha"],10:[],11:[],12:["Peso"],13:["Comporta"],14:["Tora","Roda","Engrenagem"],15:["Arena"]}
 func _init() -> void:
 	current_version = 2
 	max_stage = 15
@@ -89,6 +89,7 @@ func migrate(source: Dictionary) -> Dictionary:
 	if result.get("save_version",1)==2:
 		for key in preload("res://scripts/ui/contextual_help.gd").KEYS:
 			if not result.tutorials.has(key): result.tutorials[key] = false
+		_sync_devices(result)
 		return result
 	result.save_version = 2
 	if not result.has("survival"):
@@ -106,7 +107,21 @@ func migrate(source: Dictionary) -> Dictionary:
 	sync_story(result)
 	# Campanhas anteriores começaram sem abertura; não interrompê-las após atualizar.
 	if "opening_complete" not in result.story.events: result.story.events.append("opening_complete")
+	_sync_devices(result)
 	return result
+
+func _sync_devices(data: Dictionary) -> void:
+	# Novas plataformas de peso não invalidam campanhas já concluídas ou salvas
+	# depois da bandeira. Fases ainda em andamento recebem o mecanismo desativado.
+	for id in data.get("levels",{}):
+		var index := int(id)
+		if index<4 or not DEVICES.has(index): continue
+		var state: Dictionary = data.levels[id]
+		if not state.has("mechanisms") or not state.mechanisms is Dictionary: state.mechanisms = {}
+		for device in DEVICES[index]:
+			if not state.mechanisms.has(device): state.mechanisms[device] = bool(state.get("completed",false) or state.get("checkpoint",false))
+		for device in state.mechanisms.keys():
+			if device not in DEVICES[index]: state.mechanisms.erase(device)
 
 func sync_story(data: Dictionary) -> void:
 	var events: Array = data.story.events
