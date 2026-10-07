@@ -115,6 +115,7 @@ func _physics_process(delta: float) -> void:
 func receive_hit() -> bool:
 	if phase != "tired" or invulnerable>0 or health<=0: return false
 	health -= 1
+	if get("river_guard_broken") != null: set("river_guard_broken",false)
 	# A proteção evita que o mesmo salto seja contado mais de uma vez.
 	invulnerable = 2.0
 	level.puff(position+Vector2(0,-90),Color("ffd877"),12)

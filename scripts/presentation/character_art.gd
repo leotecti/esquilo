@@ -114,7 +114,7 @@ func _draw() -> void:
 	var maps := {"idle":0,"jump":3,"fall":4,"land":0,
 		"glide":5,"hurt":6,"celebrate":7}
 	if pig:
-		maps.merge({"push":5,"charge":6,"sniff":7,"hurt":8,"celebrate":9,"prepare":10,"recover":11},true)
+		maps.merge({"push":5,"carry":5,"charge":6,"sniff":7,"hurt":8,"celebrate":9,"prepare":10,"recover":11},true)
 	var texture := ATLAS.frame("pipo" if pig else "tico",maps.get(pose,0))
 	if not pig and pose.begins_with("tail_"):
 		tail_spin_frame = 0
@@ -134,7 +134,7 @@ func _draw() -> void:
 	if pose == "glide": height = 82
 	if pose == "charge": height = PIPO_CHARGE_HEIGHT
 	if pose == "prepare": height = PIPO_PREPARE_HEIGHT
-	if pose in ["push", "push_attempt"]: height = PIPO_PUSH_HEIGHT if pig else 72
+	if pose in ["push", "push_attempt", "carry"]: height = PIPO_PUSH_HEIGHT if pig else 72
 	if pose.begins_with("tail_"): height = 82
 	var size := texture.get_size() * (height / texture.get_height())
 	var bob := sin(_time*3)*1.0
@@ -144,6 +144,7 @@ func _draw() -> void:
 		angle = sin(_time*2.5)*0.015
 	if pose == "run": bob = -absf(sin(_run_distance / (20.0 if pig else 18.0) * PI/2))*2
 	if pose == "push": bob = 0
+	if pose == "carry": bob = -absf(sin(_time*5))*1.0
 	if pose == "push_attempt": bob = -absf(sin(_push_time*5))*0.6
 	if pose == "celebrate": bob = -absf(sin(_time*5))*7
 	# O giro já possui deslocamento desenhado em cada quadro. Um segundo balanço

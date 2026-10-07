@@ -1,5 +1,5 @@
 extends "res://scripts/systems/world_save.gd"
-const DEVICES = {4:["PesoCorrente"],5:["Tronco","PesoMargem"],6:["Ponte","PesoPonte"],7:[],8:[],9:["Rocha"],10:[],11:[],12:["Peso"],13:["Comporta"],14:["Tora","Roda","Engrenagem"],15:["Arena"]}
+const DEVICES = {4:["TroncoRio","PesoCorrente","CargaRio"],5:["Tronco","PesoMargem","CargaMargem"],6:["Ponte","PesoPonte","CargaPonte"],7:[],8:[],9:["Rocha"],10:[],11:[],12:["Peso"],13:["Comporta"],14:["Tora","Roda","Engrenagem"],15:["Arena"]}
 func _init() -> void:
 	current_version = 2
 	max_stage = 15

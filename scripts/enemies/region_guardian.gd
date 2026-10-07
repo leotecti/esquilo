@@ -1,6 +1,7 @@
 extends "res://scripts/enemies/forest_guardian.gd"
 var biome := 2
 var origin := Vector2.ZERO
+var river_guard_broken := false
 
 func attack_reach() -> float:
 	var stage := encounter_stage()-1
@@ -38,11 +39,12 @@ func _physics_process(delta: float) -> void:
 				remaining = phase_duration("attack")
 			"attack":
 				phase = "tired"
-				remaining = phase_duration("tired")
+				remaining = maxf(phase_duration("tired"),7.0) if biome==2 else phase_duration("tired")
 				level._say("Agora! Salte por cima com Tico." if biome>2 else "Agora! Salte ou use a investida de Pipo.")
 			"tired":
 				phase = "waiting"
 				remaining = phase_duration("waiting")
+				if biome==2: river_guard_broken = false
 	if biome==3:
 		var height := 0.0 if phase=="tired" else 125.0
 		if phase=="attack": height *= maxf(0,remaining/phase_duration("attack"))
@@ -51,17 +53,37 @@ func _physics_process(delta: float) -> void:
 	if phase=="attack" and absf(offset.x)<attack_reach() and offset.y>(-65 if biome==2 else -45) and offset.y<25:
 		player.take_damage(position)
 	var contact: Vector2 = player.position-position
-	if absf(contact.x)<65 and contact.y>-115 and contact.y<20:
+	var contact_width := 90.0 if biome==2 else 65.0
+	var contact_top := -180.0 if biome==2 else -115.0
+	if absf(contact.x)<contact_width and contact.y>contact_top and contact.y<20:
 		var stomp: bool = player.velocity.y>0 and player.previous_position.y<=position.y-90
 		var charge: bool = biome==2 and player.is_in_group("pipo") and player.ability=="charge"
-		if phase=="tired" and ((stomp and (biome==2 or player==level.squirrel)) or charge):
-			if receive_hit() and stomp: player.bounce()
+		if phase=="tired" and biome==2 and charge and not river_guard_broken:
+			river_guard_broken = true
+			invulnerable = 0.35
+			remaining = maxf(remaining,4.5)
+			level.puff(position+Vector2(0,-75),Color("8bd5dd"),10)
+			level.sounds.play_effect("impact")
+			level._say("Defesa rompida! Troque para Tico e acerte a cabeça.")
+			queue_redraw()
+		elif phase=="tired" and stomp and (biome!=2 or (player==level.squirrel and river_guard_broken)):
+			var hit := receive_tico_stomp(player) if biome==2 else receive_hit()
+			if hit: player.bounce()
+		elif phase=="tired" and biome==2 and river_guard_broken and player.is_in_group("pipo"):
+			# Depois de romper a proteção, Pipo pode permanecer perto do guardião
+			# enquanto o jogador realiza a troca para Tico.
+			pass
 		elif invulnerable<=0: player.take_damage(position)
 	queue_redraw()
+
+func receive_tico_stomp(character: Node2D) -> bool:
+	if biome!=2 or character!=level.squirrel or not river_guard_broken: return false
+	return receive_hit()
 
 func reset_enemy() -> void:
 	super.reset_enemy()
 	position = origin
+	river_guard_broken = false
 
 func _draw() -> void:
 	var color: Color = [Color("659dac"),Color("755342"),Color("ab794f")][biome-2]
@@ -98,3 +120,6 @@ func _draw() -> void:
 	else: draw_arc(Vector2(0,-42),18,0,PI,18,Color("493e34"),3)
 	for i in 3: draw_circle(Vector2(-26+i*26,-148),8,Color("f6d584") if i<health else Color("677b80"))
 	if phase=="tired": draw_arc(Vector2(0,-112),67,PI,TAU,32,Color("ffe6a0"),4)
+	if biome==2 and phase=="tired" and not river_guard_broken:
+		draw_arc(Vector2(0,-65),82,PI,TAU,32,Color("7ed0dd"),8)
+		draw_circle(Vector2(0,-151),10,Color("e9c968"))

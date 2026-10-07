@@ -8,6 +8,16 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
+**Estrutura de Pipo no Mundo 2 (0.36.6):** a fase 2-1 combina resistência à
+correnteza com um tronco que Pipo precisa empurrar; 2-2 usa plataformas de peso
+e balsas; 2-3 reúne besouros blindados e transporte de provisões. No Guardião do
+Rio, Pipo rompe a defesa e Tico completa cada abertura com um salto.
+
+**Transporte de objetos (0.36.5):** Pipo pode levar cestos de provisões nas três
+fases de percurso do Mundo 2. Carregar reduz sua velocidade, impede salto e troca,
+permite soltar e recolher e exige entrega em uma marca visível.
+[Implementação e testes](tests/pipo_transport.md).
+
 **Peso e impulso em dupla (0.36.4):** as três fases de percurso do Mundo 2
 receberam plataformas ativadas pelo peso de Pipo. Em 2-1, Pipo também pode lançar
 Tico até uma rota elevada de recompensas. [Implementação e testes](tests/pipo_weight_launch.md).

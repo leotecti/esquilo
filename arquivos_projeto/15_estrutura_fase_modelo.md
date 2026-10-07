@@ -207,6 +207,24 @@ folhas em leque e uma seta ascendente: Pipo prepara o movimento, o controle pass
 automaticamente para Tico e o esquilo é lançado até uma rota elevada. A área de
 chegada precisa estar livre e oferecer recompensa ou progresso claramente visível.
 
+O transporte de provisões usa cestos colocados em superfícies seguras. Pipo anda
+mais devagar e não salta nem troca de personagem enquanto carrega. AÇÃO solta o
+cesto ou o entrega em uma marca dourada; dano também solta a carga. As rotas
+devem permitir o transporte a pé e deixar o destino visível antes do início.
+
+### Estrutura do Mundo 2
+
+| Fase | Uso obrigatório de Pipo |
+|---|---|
+| 2-1 | Resistência à correnteza e empurrão do tronco que abre a passagem final |
+| 2-2 | Plataformas de peso e travessia em balsas móveis |
+| 2-3 | Quebra de armaduras e transporte de provisões |
+| 2-4 | Investida para romper a defesa do Guardião do Rio antes do salto de Tico |
+
+Na fase 2-4, os três acertos repetem a cooperação completa. Pipo rompe a
+proteção, o jogo mantém uma janela segura para a troca e somente o salto de Tico
+reduz a vida do chefe. Isso impede que um único personagem resolva o encontro.
+
 ### Aplicação em 1-4 — Periquito do Bosque
 
 A fase 1-4 passa a ter **38.000 unidades** e onze trechos antes do portal final.

@@ -11,6 +11,8 @@ var wind_zones: Array[Rect2] = []
 var current_zones: Array[Rect2] = []
 var launch_stations: Array[Node2D] = []
 var launching_tico := false
+var cargo_objects: Array[Node2D] = []
+var carried_object: Node2D
 var cave_roofs: Array[Rect2] = []
 var movers: Array[Node2D] = []
 var mechanisms: Dictionary = {}
@@ -47,6 +49,7 @@ func _river() -> void:
 		current_zones = [Rect2(1450,650,720,150),Rect2(2580,650,520,150)]
 		_device("Tronco",Vector2(700,760),"log")
 		_weight_platform("PesoMargem",Vector2(1760,760))
+		_supply_cargo("CargaMargem",Vector2(1560,760),Vector2(2050,760))
 		_bridge("Tronco",Rect2(900,758,580,30))
 		_gate("Tronco",Rect2(1430,310,25,450))
 		_mover(Vector2(2250,720),Vector2(250,0),180,5)
@@ -63,6 +66,7 @@ func _river() -> void:
 		_mover(Vector2(780,715),Vector2(300,0),180,5)
 		_device("Ponte",Vector2(1440,700),"charge")
 		_weight_platform("PesoPonte",Vector2(1620,700))
+		_supply_cargo("CargaPonte",Vector2(2700,700),Vector2(3390,760))
 		_bridge("Ponte",Rect2(1770,700,570,30))
 		_gate("Ponte",Rect2(2280,270,25,430))
 		_mover(Vector2(2820,720),Vector2(300,0),200,5.5)
@@ -80,7 +84,11 @@ func _river() -> void:
 	_mover(Vector2(1680,725),Vector2(180,0),180,4.8)
 	_mover(Vector2(1950,700),Vector2(110,0),180,5.2)
 	_mover(Vector2(2620,730),Vector2(140,0),180,4)
-	_weight_platform("PesoCorrente",Vector2(3200,760))
+	_device("TroncoRio",Vector2(3150,760),"log")
+	_bridge("TroncoRio",Rect2(3180,758,150,30))
+	_gate("TroncoRio",Rect2(3330,360,25,400))
+	_weight_platform("PesoCorrente",Vector2(3400,760))
+	_supply_cargo("CargaRio",Vector2(3370,760),Vector2(3520,760))
 	_launch_station(Vector2(2200,720))
 	_platform(Rect2(2140,455,420,45))
 	for point in [Vector2(2200,411),Vector2(2320,411),Vector2(2440,411)]: _nut(point)
@@ -89,6 +97,7 @@ func _river() -> void:
 	_markers(Vector2(1410,760),Vector2(3590,760))
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
+	_sign(Vector2(3000,530),"Pipo • Mova o tronco e abra a passagem")
 
 func _mountain() -> void:
 	if section==3:
@@ -147,7 +156,7 @@ func _boss_arena() -> void:
 	guardian.position = Vector2(2850,760)
 	if biome==2:
 		_mover(Vector2(2550,640),Vector2(120,0),160,5)
-		_sign(Vector2(1100,520),"A água sobe • Pule para os troncos")
+		_sign(Vector2(1100,520),"Pipo rompe a defesa • Tico acerta o guardião")
 	elif biome==3:
 		_platform(Rect2(2500,690,750,70))
 		guardian.position.y = 690
@@ -263,6 +272,47 @@ func _launch_station(point: Vector2) -> Node2D:
 	actors.add_child(station)
 	launch_stations.append(station)
 	return station
+
+func _supply_cargo(id: String, point: Vector2, destination: Vector2) -> Node2D:
+	var cargo = preload("res://scripts/objects/carryable_supply.gd").new()
+	cargo.name = id
+	cargo.level = self
+	cargo.position = point
+	cargo.destination = destination
+	actors.add_child(cargo)
+	cargo_objects.append(cargo)
+	mechanisms[id] = cargo
+	connections[id] = []
+	cargo.delivered.connect(func(_node): _apply_device(id,true))
+	return cargo
+
+func pipo_is_carrying() -> bool:
+	return is_instance_valid(carried_object) and carried_object.carried
+
+func try_pipo_carry(character: CharacterBody2D) -> bool:
+	if character!=pipo or launching_tico: return false
+	if pipo_is_carrying():
+		var cargo := carried_object
+		cargo.interact(character)
+		if cargo.active:
+			_feedback(cargo.destination,"Provisões entregues!",Color("ffe394"))
+			_say("Muito bem, Pipo! A comida seguirá para o vilarejo.")
+			sounds.play_notes([523,659,784],.07)
+		carried_object = null
+		return true
+	for cargo in cargo_objects:
+		if cargo.active or character.position.distance_to(cargo.position)>105: continue
+		if cargo.interact(character):
+			carried_object = cargo
+			_say("Pipo está levando as provisões. AÇÃO solta ou entrega o cesto.")
+			sounds.play_notes([262,330],.06)
+			return true
+	return false
+
+func drop_carried_object() -> void:
+	if not pipo_is_carrying(): return
+	carried_object.drop_at(pipo.position)
+	carried_object = null
 
 func try_pipo_launch(character: CharacterBody2D) -> bool:
 	if launching_tico or character!=pipo or not rescued: return false

@@ -12,7 +12,10 @@ func run() -> void:
 	check(weight.active,"Pipo mantém a plataforma pressionada até travar o mecanismo")
 	var station: Node2D = level.launch_stations[0]
 	await place(station.position,4)
-	check(level.try_pipo_launch(level.pipo),"Ação de Pipo prepara o impulso em dupla")
+	key(KEY_E,true)
+	await frames(2)
+	key(KEY_E,false)
+	check(level.launching_tico,"AÇÃO de Pipo prepara o impulso em dupla em vez da investida")
 	await frames(18)
 	check(level.tico==level.squirrel and level.launching_tico==false,"Impulso entrega o controle automaticamente a Tico")
 	check(level.squirrel.velocity.y<0 and level.squirrel.position.y<station.position.y,"Tico parte para cima e alcança a rota elevada")
