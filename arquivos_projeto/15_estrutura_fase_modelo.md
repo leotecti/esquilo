@@ -192,7 +192,9 @@ tipos de inimigo. A entrada da área secundária fica aproximadamente em
 contextual. A saída retorna em **x = 24.600** e a bandeira única fica adiante,
 em **x = 25.100**.
 
-O Refúgio da Cachoeira possui cenário, terreno e recompensas próprios. Todos os
+O Refúgio da Cachoeira possui cenário, terreno e recompensas próprios. O piso
+usa rocha úmida verde-petróleo, lajes irregulares, musgo e reflexos discretos,
+sem redesenho contínuo da camada estática. Todos os
 coletáveis e inimigos se apoiam em superfícies navegáveis. A aproximação final
 fica mais calma e a arena do Periquito permanece limpa para que o jogador leia
 voo, pouso, cansaço e vulnerabilidade sem interferência de inimigos comuns.

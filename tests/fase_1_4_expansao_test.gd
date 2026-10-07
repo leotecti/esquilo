@@ -13,6 +13,7 @@ func run() -> void:
 	check(grotto_enemies.size()>=6,"Refúgio da cachoeira possui fauna própria")
 	check(level.total_nuts>130 and level.total_foods>=25,"Alimentos e nozes preenchem os trechos exploráveis")
 	check(level.optional_area.GROTTO_BACKGROUND!=null,"Refúgio possui paisagem exclusiva")
+	check(level.optional_area.TERRAIN_STYLE_VERSION>=2,"Terreno da gruta usa rocha úmida, musgo e acabamento mineral")
 	# Todo coletável está sobre alguma superfície navegável e perto o bastante para coleta ou salto.
 	var unreachable := 0
 	for actor in level.actors.get_children():

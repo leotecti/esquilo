@@ -219,7 +219,7 @@ As cenas das etapas anteriores continuam disponÃ­veis para abrir com F6.
 ## Web/PWA â€” validaÃ§Ã£o intermediÃ¡ria 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-0.36.0-fase-1-4-web.zip`. Consulte [publicaÃ§Ã£o e teste no celular](web/deployment.md).
+`builds/web/Tico-0.36.0-fase-1-4-rochas-web.zip`. Consulte [publicaÃ§Ã£o e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuÃ¡rio confirmou o teste e a aprovaÃ§Ã£o da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponÃ­veis:

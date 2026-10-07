@@ -8,6 +8,7 @@ const START := Vector2(72180,760)
 const EXIT := Vector2(77930,680)
 const PORTAL_STYLE_VERSION := 1
 const BACKGROUND_STYLE_VERSION := 1
+const TERRAIN_STYLE_VERSION := 2
 const GROTTO_BACKGROUND = preload("res://assets/environment/waterfall_grotto_background.png")
 const GROTTO_PLATFORMS := [
 	Rect2(72000,760,6200,220), Rect2(72450,680,420,80), Rect2(73050,600,500,160),
@@ -21,7 +22,6 @@ var checkpoint := false
 var transitioning := false
 var veil: ColorRect
 var hints: Array[Label] = []
-var _visual_elapsed := 0.0
 
 func build() -> void:
 	for rect in GROTTO_PLATFORMS: level._platform(rect)
@@ -102,10 +102,9 @@ func _add_hint(point: Vector2, message: String, entry: bool) -> void:
 	hints.append(label)
 
 func _physics_process(delta: float) -> void:
-	_visual_elapsed += delta
-	if (active or level.tico.position.distance_to(ENTRY)<900.0) and _visual_elapsed>=1.0/30.0:
-		_visual_elapsed = 0.0
-		queue_redraw()
+	# O cenário e o terreno são estáticos: não redesenhá-los a cada quadro evita
+	# reconstruir milhares de pixels e comandos enquanto o jogador explora a gruta.
+	var _unused_delta := delta
 	for hint in hints:
 		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<(180 if hint.get_meta("entry_portal") else 115)
 	if transitioning or level.completed or level.respawning: return
@@ -152,13 +151,12 @@ func _draw() -> void:
 	# Portal principal: abertura rochosa, lâmina d'água e névoa deixam clara a passagem.
 	draw_colored_polygon(PackedVector2Array([Vector2(18110,760),Vector2(18145,520),Vector2(18230,390),Vector2(18400,345),Vector2(18570,390),Vector2(18655,520),Vector2(18690,760)]),Color("42554b"))
 	draw_circle(Vector2(18400,570),150,Color("15363b"))
-	var pulse := sin(Time.get_ticks_msec()*.003)
 	for stripe in 11:
 		var x := 18262+stripe*27
-		draw_rect(Rect2(x,385,16,330),Color(0.48,0.87,0.91,.30+pulse*.025))
+		draw_rect(Rect2(x,385,16,330),Color(0.48,0.87,0.91,.31))
 		draw_line(Vector2(x+8,400),Vector2(x+4,700),Color(0.80,1.0,1.0,.38),3,true)
 	for i in 7:
-		draw_circle(Vector2(18240+i*54,715+sin(i+Time.get_ticks_msec()*.004)*9),42,Color(0.72,0.95,0.91,.10))
+		draw_circle(Vector2(18240+i*54,715+(i%2)*7),42,Color(0.72,0.95,0.91,.10))
 	# A ilustração cobre todo o refúgio, em painéis contínuos e sem colisões falsas.
 	for panel in 4:
 		draw_texture_rect(GROTTO_BACKGROUND,Rect2(LEFT_EDGE+panel*1600,0,1600,760),false,Color("d0ece4"))
@@ -171,8 +169,38 @@ func _draw() -> void:
 			draw_line(point+Vector2(-36+stripe*14,-88),point+Vector2(-40+stripe*14,8),Color(0.74,0.97,0.91,.30),5,true)
 
 func _draw_grotto_ground(rect: Rect2) -> void:
-	draw_rect(rect,Color("223f3a"))
-	draw_rect(Rect2(rect.position,Vector2(rect.size.x,18)),Color("4f7958"))
-	draw_line(rect.position,Vector2(rect.end.x,rect.position.y),Color("8fbf72"),5,true)
-	for x in range(int(rect.position.x)+65,int(rect.end.x)-20,160):
-		draw_polyline(PackedVector2Array([Vector2(x-28,rect.position.y+55),Vector2(x,rect.position.y+68),Vector2(x+35,rect.position.y+48)]),Color("365b52"),3,true)
+	# Face profunda: verde-petróleo com base irregular, coerente com a luz da água.
+	draw_rect(rect,Color("193631"))
+	var bottom: float = rect.end.y
+	var face := PackedVector2Array([Vector2(rect.position.x,rect.position.y+15)])
+	var x := int(rect.position.x)
+	while x<int(rect.end.x):
+		face.append(Vector2(x,rect.position.y+16+((x/37)%3)*4))
+		x += 72
+	face.append(Vector2(rect.end.x,rect.position.y+18))
+	face.append(Vector2(rect.end.x,bottom))
+	face.append(Vector2(rect.position.x,bottom))
+	draw_colored_polygon(face,Color("294842"))
+	# Lajes quebradas escondem a geometria retangular sem mudar a colisão aprovada.
+	for slab_x in range(int(rect.position.x),int(rect.end.x),148):
+		var slab_end := minf(slab_x+152,rect.end.x)
+		var dip := 22.0+float((slab_x/31)%3)*3.0
+		draw_colored_polygon(PackedVector2Array([
+			Vector2(slab_x,rect.position.y+3),Vector2(slab_x+22,rect.position.y-2),
+			Vector2(slab_end-28,rect.position.y),Vector2(slab_end,rect.position.y+5),
+			Vector2(slab_end-12,rect.position.y+dip),Vector2(slab_x+18,rect.position.y+dip+4)
+		]),Color("52766b"))
+		draw_line(Vector2(slab_x+18,rect.position.y+dip+4),Vector2(slab_end-12,rect.position.y+dip),Color("365b52"),2,true)
+	# Musgo descontínuo, brilho úmido e rachaduras dão profundidade com poucos traços.
+	for detail_x in range(int(rect.position.x)+42,int(rect.end.x)-20,196):
+		var top_y := rect.position.y-float((detail_x/29)%3)
+		draw_polyline(PackedVector2Array([
+			Vector2(detail_x-25,top_y+4),Vector2(detail_x-9,top_y-5),
+			Vector2(detail_x+10,top_y+1),Vector2(detail_x+31,top_y-4)
+		]),Color("557a45"),7,true)
+		draw_line(Vector2(detail_x-18,top_y+8),Vector2(detail_x+26,top_y+5),Color(0.44,0.72,0.66,.50),2,true)
+		if rect.size.y>65:
+			draw_polyline(PackedVector2Array([
+				Vector2(detail_x+38,rect.position.y+37),Vector2(detail_x+28,rect.position.y+57),
+				Vector2(detail_x+42,rect.position.y+73)
+			]),Color("182d2b"),3,true)

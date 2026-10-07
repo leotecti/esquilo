@@ -12,8 +12,13 @@
 
 A passagem fica no centro da fase. A lâmina d'água, a abertura rochosa, a névoa e a
 mensagem contextual indicam que `AÇÃO` atravessa a cachoeira. O refúgio possui
-paisagem própria, percurso de pedra com musgo, alimentos, nozes, corações, uma noz
+paisagem própria, percurso de rocha úmida com musgo, alimentos, nozes, corações, uma noz
 dourada e seis encontros. A saída devolve Tico/Pipo adiante, perto da bandeira.
+
+O terreno usa faces em verde-petróleo, lajes minerais irregulares, musgo nas
+frestas, reflexos turquesa discretos e rachaduras. A arte é desenhada uma única
+vez e mantém as colisões retangulares já validadas, evitando custo contínuo de
+animação durante a exploração.
 
 Esse desenho usa princípios comuns em fases profissionais: o portal é um marco visual,
 a área opcional recompensa a curiosidade, o retorno confirma progresso e a aproximação
