@@ -122,7 +122,7 @@ func _ready() -> void:
 		add_child(node)
 		nodes.append(node)
 	squirrel = portrait("tico",Vector2(116,92))
-	companion = portrait("pipo",Vector2(102,82))
+	companion = portrait("pipo",Vector2(126,108))
 	primary = button("")
 	primary.add_theme_stylebox_override("normal",box(Color("315c47"),Color("edd596")))
 	primary.add_theme_stylebox_override("hover",box(Color("416f52"),Color("fff0ae")))
@@ -339,7 +339,7 @@ func position_characters() -> void:
 	companion.texture = atlas.frame("run",4+int(_walk_distance/30.0)%4) if _walking else atlas.frame("pipo",0)
 	# Altura e apoio dos pés constantes: os recortes têm larguras diferentes.
 	place_portrait(squirrel,92,_actor_point+Vector2(-32 if companion.visible else 0,-42))
-	place_portrait(companion,82,_actor_point+Vector2(55,-42))
+	place_portrait(companion,108,_actor_point+Vector2(62,-42))
 
 func place_portrait(item: TextureRect, height: float, feet: Vector2) -> void:
 	item.stretch_mode = TextureRect.STRETCH_SCALE

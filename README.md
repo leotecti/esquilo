@@ -8,6 +8,11 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
+**Porte visual de Pipo (0.36.1):** Pipo agora aparece cerca de 29% mais alto
+que Tico durante a partida e também é maior no mapa. Corrida, preparação,
+investida e empurrão preservam a nova proporção, enquanto a colisão aprovada
+permanece igual. [Implementação e testes](tests/pipo_visual_size.md).
+
 **Fase 1-4 ampliada (0.36.0):** Periquito do Bosque agora possui uma jornada de
 38.000 unidades, encontros variados, alimentos, blocos e o Refúgio da Cachoeira.
 A passagem secundária retorna perto da bandeira e a arena do chefe encerra a

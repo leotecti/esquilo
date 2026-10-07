@@ -183,6 +183,14 @@ imediatamente anterior à bandeira, mantendo o checkpoint como conquista do joga
 
 As fases podem reutilizar áreas inferiores já visíveis, sem ampliar sua extensão horizontal. Pontes marcadas com uma seta dourada aceitam **Baixo**, **S** ou o botão **▼** para descer. A rota inferior deve conter recompensas ou riscos, manter piso seguro e oferecer retorno por salto ou degrau. Superfícies comuns continuam sólidas para evitar descidas acidentais.
 
+## Escala e leitura dos personagens
+
+Pipo aparece aproximadamente 29% mais alto que Tico durante o jogo e também é
+maior no mapa. Sua ilustração acompanha o corpo físico já existente, inclusive
+em corrida, preparação, investida e empurrão. Essa diferença deve comunicar
+força e volume e preparar a leitura de passagens estreitas exclusivas de Tico,
+sem aumentar novamente a colisão ou comprometer fases já validadas.
+
 ### Aplicação em 1-4 — Periquito do Bosque
 
 A fase 1-4 passa a ter **38.000 unidades** e onze trechos antes do portal final.

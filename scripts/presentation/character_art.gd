@@ -7,6 +7,13 @@ const TAIL_SPIN_FRAME_COUNT := 6
 # preserva o tamanho de Tico e impede fragmentos dos quadros vizinhos.
 const TAIL_SPIN_CROP_Y := 0.0
 const TAIL_SPIN_CROP_HEIGHT := 335.0
+const TICO_VISUAL_HEIGHT := 76.0
+# A arte acompanha o corpo físico já aprovado: Pipo tem 72 px de colisão contra
+# 56 px de Tico. O porte agora fica evidente sem ampliar colisões ou bloquear rotas.
+const PIPO_VISUAL_HEIGHT := 98.0
+const PIPO_CHARGE_HEIGHT := 69.0
+const PIPO_PREPARE_HEIGHT := 78.0
+const PIPO_PUSH_HEIGHT := 86.0
 var character: CharacterBody2D
 var level: Node2D
 var pig := false
@@ -122,12 +129,12 @@ func _draw() -> void:
 		texture = ATLAS.frame("run",(4 if pig else 0)+run_frame)
 	if pose in ["push", "push_attempt"]:
 		texture = ATLAS.frame("push",(4 if pig else 0)+push_frame)
-	var height := 82.0 if pig else 76.0
+	var height := PIPO_VISUAL_HEIGHT if pig else TICO_VISUAL_HEIGHT
 	# Compensa a cauda erguida do recorte sem encolher o corpo ao abrir a planagem.
 	if pose == "glide": height = 82
-	if pose == "charge": height = 58
-	if pose == "prepare": height = 65
-	if pose in ["push", "push_attempt"]: height = 72
+	if pose == "charge": height = PIPO_CHARGE_HEIGHT
+	if pose == "prepare": height = PIPO_PREPARE_HEIGHT
+	if pose in ["push", "push_attempt"]: height = PIPO_PUSH_HEIGHT if pig else 72
 	if pose.begins_with("tail_"): height = 82
 	var size := texture.get_size() * (height / texture.get_height())
 	var bob := sin(_time*3)*1.0
