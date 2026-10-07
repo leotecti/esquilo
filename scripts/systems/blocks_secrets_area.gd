@@ -31,11 +31,15 @@ func build() -> void:
 	for rect in [Rect2(LEFT_EDGE-50,-200,50,1300),Rect2(RIGHT_EDGE,-200,50,1300)]: level._solid("GalleryBoundary",rect,Color.TRANSPARENT)
 	for row in [[46400,715,4],[46800,605,4],[47500,545,5],[48300,625,4],[49040,495,5],[49920,595,4],[50600,525,5]]:
 		for i in int(row[2]): _nut(Vector2(row[0]+i*76,row[1]))
-	for entry in [[47150,710,0],[47920,710,1],[48710,710,2],[49720,710,0],[50350,710,1]]: _food(Vector2(entry[0],entry[1]),entry[2])
+	# Cada fruta acompanha a superfície local. A altura fixa anterior (y=710)
+	# deixava os itens soterrados sob as plataformas elevadas da galeria.
+	for entry in [[47150,632,0],[47920,602,1],[48710,632,2],[49720,632,0],[50350,592,1]]: _food(Vector2(entry[0],entry[1]),entry[2])
 	for point in [Vector2(47800,545),Vector2(49380,495),Vector2(50580,525)]: _nut(point,true)
 	level._golden_nut(Vector2(49300,495),"galeria_pedra_12")
 	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","golden:galeria_pedra_12")
-	for entry in [[48050,760,70],[49600,760,75],[50380,760,65]]:
+	# Lesmas patrulham as plataformas do percurso. No piso-base elas ficavam
+	# presas sob os degraus e não participavam do desafio da galeria.
+	for entry in [[48050,710,70],[49600,610,75],[50380,640,65]]:
 		var enemy = level._slug(Vector2(entry[0],entry[1]),entry[2])
 		enemy.set_meta("e20_optional_enemy",true)
 		enemies.append(enemy)

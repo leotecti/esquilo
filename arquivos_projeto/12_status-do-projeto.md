@@ -1,8 +1,35 @@
 # Status do projeto
 
 **Data:** 2026-10-06
-**Versão atual:** 0.33.1, com localizador de correções, a fase 1-3 ampliada, a
-Gruta Fria opcional e a identidade do aplicativo alinhada ao Tico atual.
+**Versão atual:** 0.33.8, com as correções localizadas de 1-2, o localizador de
+mapa, a fase 1-3 ampliada e a Gruta Fria opcional.
+
+**Correções 1-2 em 0.33.2:** o besouro inicial apoia visualmente as patas no
+solo; os blocos suspensos ficam ao alcance de um salto normal; e os oito
+inimigos da rota ampliada patrulham sobre superfícies visíveis.
+
+**Correções 1-2 em 0.33.3:** o encontro de T03 foi levado para a plataforma
+percorrida e os blocos de T03 e T04 agora seguem a altura do próprio degrau,
+mantendo a face inferior ao alcance do salto normal.
+
+**Correções 1-2 em 0.33.4:** os porcos-espinhos acompanham as plataformas da
+rota, inclusive em T04 e T06. O bloco secreto de T05 foi colocado ao alcance
+do salto normal.
+
+**Correções 1-2 em 0.33.5:** a fruta de T07 e as cinco frutas da Galeria das
+Pedras acompanham as superfícies visíveis e podem ser coletadas pelo jogador.
+
+**Correções 1-2 em 0.33.6:** as três lesmas da Galeria das Pedras patrulham as
+plataformas acessíveis. As frutas de T04 e T05 permanecem alinhadas às mesmas
+superfícies.
+
+**Correções 1-2 em 0.33.7:** os blocos de T08 possuem margem adicional para a
+cabeçada. Os besouros receberam alinhamento mais preciso das patas com o solo;
+os itens e inimigos anteriormente corrigidos em T05 e T09 têm testes próprios.
+
+**Correções 1-2 em 0.33.8:** a recompensa dourada de T10 e a fruta da chegada
+em T12 ficam acessíveis. Os blocos de T12 receberam margem adicional e os
+inimigos de T11/T12 têm posições protegidas por testes.
 
 **Localizador 0.33.1:** F3 no computador ou três toques no título da fase exibem
 fase, área, trecho e coordenadas X/Y. O botão de cópia produz uma referência como

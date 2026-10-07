@@ -4,6 +4,9 @@ const WIDTH := 39000
 const FINISH := Vector2(38780,550)
 const PASSAGE_X := 19400
 const PROFILES := [[760,720,640,600,520,610,700],[760,680,600,520,610,680,760],[760,680,680,600,520,600,680],[760,680,600,680,600,680,760]]
+const ROUTE_ENEMIES := [[5480,640,120],[8840,600,120],[12620,600,130],[16450,600,120],
+	[24600,760,85],[28450,680,120],[32720,600,120],[35620,600,120]]
+const HEDGEHOG_ENCOUNTERS := [[12220,680],[16930,680],[26380,520],[34100,700]]
 
 static func build(level) -> void:
 	level.main_right = WIDTH
@@ -34,29 +37,41 @@ static func build(level) -> void:
 				else: level._platform(Rect2(x,y,470,760-y))
 			if step not in [1,5] or section%2==0:
 				for offset in [135,245]: level._nut(Vector2(x+offset,y-44))
-		var ceiling_y: int = mini(heights[2],heights[3])-155
+		# Cada conjunto acompanha o terceiro degrau, onde os blocos aparecem.
+		# Assim, a face inferior continua ao alcance mesmo quando o próximo sobe.
+		var ceiling_y: int = heights[2]-120
+		# Em T08 a aproximação ocorre pelo degrau de y=680; uma margem adicional
+		# evita que a borda da colisão impeça a cabeçada no bloco.
+		if section in [6,9]: ceiling_y += 20
 		for column in 4:
 			var kind := 2 if column==1 or (column==3 and section%3==0) else (column+section)%2
 			level._block(Vector2(origin+1040+column*92,ceiling_y),kind,"RouteBlock%02d_%d" % [section,column])
 		for entry in [[0,330],[3,330],[6,310]]:
 			var step: int = entry[0]
-			level._food(Vector2(origin+step*470+entry[1],heights[step]-48),(section+step)%3)
+			var food_y: int = heights[step]-48
+			# A escadaria da passagem cobre o piso original no centro de T07.
+			# A fruta acompanha sua superfície visível em vez de ficar soterrada.
+			if section==4 and step==3: food_y=472
+			# A plataforma de chegada começa em y=690 e cobre o piso-base de T12.
+			if section==9 and step==6: food_y=642
+			level._food(Vector2(origin+step*470+entry[1],food_y),(section+step)%3)
 		for reward in [[1660,80],[1790,125],[1920,80]]: level._nut(Vector2(origin+reward[0],mini(heights[3],heights[4])-reward[1]))
 	# Encontros espaçados deixam uma área segura antes e depois de cada inimigo.
-	for entry in [[5650,80],[9100,90],[12800,75],[16600,90],[24600,85],[28600,95],[32900,80],[35700,80]]:
-		var enemy = level._beetle(Vector2(entry[0],760),entry[1]) if int(entry[0])%2==0 else level._slug(Vector2(entry[0],760),entry[1])
+	for entry in ROUTE_ENEMIES:
+		var enemy = level._beetle(Vector2(entry[0],entry[1]),entry[2])
 		enemy.set_meta("e20_route_enemy",true)
-	for x in [10800,18100,26400,34100]:
+	for encounter in HEDGEHOG_ENCOUNTERS:
 		var hedgehog = preload("res://scripts/enemies/hedgehog.gd").new()
-		hedgehog.name = "HedgehogE20_%d" % x
+		hedgehog.name = "HedgehogE20_%d" % encounter[0]
 		hedgehog.level = level
-		hedgehog.position = Vector2(x,760)
+		hedgehog.position = Vector2(encounter[0],encounter[1])
+		hedgehog.set_meta("e20_route_hedgehog",true)
 		level.actors.add_child(hedgehog)
 	# Segredos fora da linha direta recompensam observação e exploração vertical.
-	level._block(Vector2(15120,445),1,"HiddenGalleryBlock")
+	level._block(Vector2(15120,560),1,"HiddenGalleryBlock")
 	level._golden_nut(Vector2(15305,515),"galeria_oculta_12")
 	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","golden:galeria_oculta_12")
-	level._golden_nut(Vector2(31850,430),"torre_blocos_12")
+	level._golden_nut(Vector2(31850,672),"torre_blocos_12")
 	level.actors.get_child(level.actors.get_child_count()-1).set_meta("save_id","golden:torre_blocos_12")
 	for point in [Vector2(7400,600),Vector2(17400,600),Vector2(27600,600),Vector2(35100,600)]: level._nut(point,true)
 	# A galeria fica no meio. A única bandeira aparece depois de sua saída.

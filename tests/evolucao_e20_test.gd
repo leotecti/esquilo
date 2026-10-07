@@ -23,7 +23,7 @@ func run() -> void:
 		if actor.has_meta("e20_route_enemy"): route_enemies += 1
 		if actor.has_method("reset_item") and actor.healing: hearts += 1
 	check(blocks>=45,"Blocos são a mecânica central da fase")
-	check(route_enemies>=8 and level.actors.has_node("HedgehogE20_10800"),"Rota alterna inimigos e áreas seguras")
+	check(route_enemies>=8 and level.actors.has_node("HedgehogE20_12220"),"Rota alterna inimigos e áreas seguras")
 	check(hearts>=7,"Rota e galeria oferecem recuperação")
 	check(level.checkpoint.position.x>level.optional_area.ENTRY.x and level.checkpoint.position.x<level.exit_marker.position.x,"Bandeira única fica depois da área secundária")
 	check(level.optional_area.ENTRY==Vector2(19400,475) and level.optional_area.LEFT_EDGE==46000,"Galeria fica no meio e usa espaço próprio")
