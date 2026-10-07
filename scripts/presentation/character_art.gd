@@ -68,8 +68,8 @@ func _process(delta: float) -> void:
 		push_frame = int(_push_distance / 12.0) % 4 if pose == "push" else (0 if pig else int(_push_time * 5) % 4)
 	else:
 		push_frame = 0
-	if pose == "run":
-		if previous_pose != "run": _run_distance = 0
+	if pose in ["run","carry"]:
+		if previous_pose != pose: _run_distance = 0
 		else:
 			# Distância relativa ao apoio: um elevador não deve fazer os pés correrem.
 			_run_distance += absf(character.velocity.x) * delta
@@ -125,7 +125,7 @@ func _draw() -> void:
 			var recovery: float = 1.0-character.tail_phase_left/character.tail_recovery_duration
 			tail_spin_frame = 4 if recovery<0.35 else 5
 		texture = _tail_frames[tail_spin_frame]
-	if pose == "run":
+	if pose == "run" or (pose=="carry" and absf(character.velocity.x)>20):
 		texture = ATLAS.frame("run",(4 if pig else 0)+run_frame)
 	if pose in ["push", "push_attempt"]:
 		texture = ATLAS.frame("push",(4 if pig else 0)+push_frame)
@@ -144,7 +144,9 @@ func _draw() -> void:
 		angle = sin(_time*2.5)*0.015
 	if pose == "run": bob = -absf(sin(_run_distance / (20.0 if pig else 18.0) * PI/2))*2
 	if pose == "push": bob = 0
-	if pose == "carry": bob = -absf(sin(_time*5))*1.0
+	if pose == "carry":
+		bob = -absf(sin(_run_distance/20.0*PI/2))*1.5 if absf(character.velocity.x)>20 else sin(_time*3.0)*0.5
+		angle = sin(_time*5.0)*0.012
 	if pose == "push_attempt": bob = -absf(sin(_push_time*5))*0.6
 	if pose == "celebrate": bob = -absf(sin(_time*5))*7
 	# O giro já possui deslocamento desenhado em cada quadro. Um segundo balanço
@@ -159,3 +161,16 @@ func _draw() -> void:
 		# As mãos ficam junto à lateral física da pedra, também ao virar à esquerda.
 		right_edge = 26.0 if pig else 18.0
 	draw_texture_rect(texture,Rect2(Vector2(right_edge-size.x,-size.y),size),false)
+	if pig and pose=="carry":
+		# Braços sustentam a cesta acima da cabeça; sobrancelhas, boca e suor
+		# comunicam peso sem exigir textura ou animação adicional.
+		var skin := Color("a9d83f")
+		var sleeve := Color("f2ead2")
+		for side in [-1.0,1.0]:
+			draw_line(Vector2(side*25,-48),Vector2(side*32,-89),Color("17613c"),13,true)
+			draw_line(Vector2(side*29,-70),Vector2(side*32,-89),sleeve,10,true)
+			draw_circle(Vector2(side*32,-96),8,skin)
+		draw_line(Vector2(-13,-70),Vector2(-4,-66),Color("334424"),3,true)
+		draw_line(Vector2(10,-66),Vector2(19,-70),Color("334424"),3,true)
+		draw_arc(Vector2(4,-55),7,PI+.25,TAU-.25,12,Color("6e382e"),3,true)
+		draw_colored_polygon(PackedVector2Array([Vector2(-24,-73),Vector2(-18,-86),Vector2(-13,-74)]),Color("dff4ddcc"))

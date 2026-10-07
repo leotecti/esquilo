@@ -6,13 +6,15 @@ ao vilarejo. O sistema torna a força de Pipo parte da missão principal.
 ## Funcionamento
 
 - Próximo do cesto, `AÇÃO` recolhe a carga em vez de iniciar a investida.
-- Pipo segura visualmente o cesto e passa a andar a 150 px/s.
+- Pipo ergue a cesta em uma transição curta, segura-a acima da cabeça e passa a
+  andar a 150 px/s com passos, braços elevados e expressão de esforço.
 - O salto e a troca de personagem ficam bloqueados durante o transporte.
 - `AÇÃO` fora do destino solta o cesto, que pode ser recolhido novamente.
 - `AÇÃO` dentro da marca dourada entrega as provisões e conclui o mecanismo.
 - Sofrer dano faz Pipo soltar a carga no local.
 
-O cesto usa desenho vetorial simples com frutas e uma marca de entrega estática.
+A cesta possui trama de madeira, aro, tecido e alimentos legíveis. O destino usa
+estrado de madeira, círculo dourado, bandeira verde e indicação `ENTREGA • AÇÃO`.
 Não há textura adicional, partículas contínuas ou física aplicada ao objeto. A
 posição acompanha Pipo somente enquanto ele o carrega.
 

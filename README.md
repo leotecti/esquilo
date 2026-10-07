@@ -21,9 +21,10 @@ correnteza com um tronco que Pipo precisa empurrar; 2-2 usa plataformas de peso
 e balsas; 2-3 reúne besouros blindados e transporte de provisões. No Guardião do
 Rio, Pipo rompe a defesa e Tico completa cada abertura com um salto.
 
-**Transporte de objetos (0.36.5):** Pipo pode levar cestos de provisões nas três
-fases de percurso do Mundo 2. Carregar reduz sua velocidade, impede salto e troca,
-permite soltar e recolher e exige entrega em uma marca visível.
+**Transporte de objetos (refinado em 0.37.1):** Pipo ergue e leva acima da cabeça
+cestas de provisões nas três fases de percurso do Mundo 2. Seus passos, braços e
+expressão demonstram o peso. Carregar reduz sua velocidade, impede salto e troca,
+permite soltar e recolher e exige entrega em um estrado sinalizado.
 [Implementação e testes](tests/pipo_transport.md).
 
 **Mola de peso e vento (0.37.0):** na fase 2-1, Pipo resiste às rajadas e usa
