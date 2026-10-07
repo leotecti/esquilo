@@ -130,6 +130,11 @@ Fluxo sugerido para cada alteração:
 5. Atualize a documentação da etapa e gere novamente os builds que serão testados.
 6. Revise `git diff`, `git diff --check` e `git status` antes de decidir o que enviar.
 
+Durante a validação, abra o mapa e use **Liberar fases para teste** ou
+`Ctrl + F10`. O modo libera todas as fases e Pipo somente na memória. Ao
+encerrá-lo, o jogo restaura a campanha real; recompensas, vidas, checkpoints e
+conclusões obtidos durante o teste não são gravados.
+
 Mantenha arquivos de texto em UTF-8. Versione os recursos-fonte e arquivos de
 referência da Godot, como `.uid` e `.import`, quando gerados ou alterados pelo
 editor. O cache `.godot/` fica fora do Git. Não edite apenas os arquivos dentro

@@ -23,6 +23,7 @@ var back: Button
 var previous_world: Button
 var next_world: Button
 var village_button: Button
+var test_button: Button
 var village_view: Control
 var ambience: Control
 var squirrel: TextureRect
@@ -40,6 +41,10 @@ var _walk_distance := 0.0
 
 func _input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or campaign._map_portrait(): return
+	if event.keycode==KEY_F10 and event.ctrl_pressed:
+		get_viewport().set_input_as_handled()
+		campaign.toggle_test_mode()
+		return
 	var direction := 0
 	if event.keycode in [KEY_RIGHT,KEY_UP]: direction = 1
 	elif event.keycode in [KEY_LEFT,KEY_DOWN]: direction = -1
@@ -47,11 +52,11 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 	if _walking: return
 	var target := selected+direction
-	if target<0 or target>int(campaign.data.unlocked): return
+	if not campaign.test_stage_available(target): return
 	move_to_stage(target)
 
 func move_to_stage(index: int) -> void:
-	if index<0 or index>int(campaign.data.unlocked): return
+	if not campaign.test_stage_available(index): return
 	var origin := _actor_point
 	var same_world := world==index/4 and squirrel.visible
 	if is_instance_valid(_travel): _travel.kill()
@@ -116,6 +121,10 @@ func _ready() -> void:
 	village_button = button("Visitar vilarejo")
 	village_button.tooltip_text = "Veja como suas provisões estão mudando o vilarejo"
 	village_button.pressed.connect(open_village)
+	test_button = button("Liberar fases para teste")
+	test_button.tooltip_text = "Acesso temporário; não altera o progresso salvo • Ctrl+F10"
+	test_button.add_theme_font_size_override("font_size",18)
+	test_button.pressed.connect(campaign.toggle_test_mode)
 	for i in 4:
 		var node := preload("res://scripts/ui/map_marker.gd").new()
 		node.pressed.connect(select_stage.bind(i))
@@ -215,6 +224,8 @@ func refresh() -> void:
 	title.text = WORLDS[world]
 	subtitle.text = "NOSSA JORNADA  /  MUNDO %d DE 4" % (world+1)
 	progress.text = "TRILHAS CONCLUÍDAS\n%d / 16" % summary.completed.size()
+	test_button.text = "Encerrar modo de teste" if campaign.test_mode else "Liberar fases para teste"
+	test_button.disabled = campaign.awaiting_return()
 	ambience.world = world
 	for i in 4:
 		var index := world*4+i
@@ -236,12 +247,13 @@ func refresh() -> void:
 		description.text = "Seu progresso original está preservado"
 		detail.text = "Save indisponível • Consulte o menu de pausa ao entrar na fase."
 	back.visible = not campaign.awaiting_return()
-	notice.visible = campaign.awaiting_return()
-	notice.text = "Vamos tentar de novo! %d vidas • Retorno ao mundo anterior" % campaign.data.survival.lives
+	notice.visible = campaign.awaiting_return() or campaign.test_mode
+	notice.text = "MODO DE TESTE ATIVO • progresso e recompensas não serão salvos" if campaign.test_mode else "Vamos tentar de novo! %d vidas • Retorno ao mundo anterior" % campaign.data.survival.lives
+	notice.add_theme_font_size_override("font_size",18 if campaign.test_mode else 22)
 	if campaign.awaiting_return() and int(campaign.data.stage)<4: notice.text = "Vamos tentar de novo! %d vidas • De volta ao Bosque" % campaign.data.survival.lives
 	var actor_stage := selected
 	squirrel.visible = actor_stage/4==world
-	companion.visible = squirrel.visible and campaign.data.survival.pipo_unlocked
+	companion.visible = squirrel.visible and (campaign.test_mode or campaign.data.survival.pipo_unlocked)
 	layout()
 	queue_redraw()
 
@@ -275,7 +287,7 @@ func celebrate_unlock(index: int) -> void:
 
 func select_stage(section: int) -> void:
 	var index := world*4+section
-	if section<0 or section>3 or index>int(campaign.data.unlocked): return
+	if section<0 or section>3 or not campaign.test_stage_available(index): return
 	move_to_stage(index)
 
 func play_selection() -> void:
@@ -302,12 +314,14 @@ func layout() -> void:
 	next_world.size = Vector2(88,88)
 	village_button.position = Vector2(left,132+inset.y)
 	village_button.size = Vector2(225,64)
+	test_button.position = Vector2(right-270,132+inset.y)
+	test_button.size = Vector2(270,64)
 	back.position = Vector2(left,29+inset.y)
 	back.size = Vector2(192,88)
 	progress.position = Vector2(right-210,43+inset.y)
 	progress.size = Vector2(210,62)
-	notice.position = Vector2((size.x-780)/2,132+inset.y)
-	notice.size = Vector2(780,36)
+	notice.position = Vector2((size.x-600)/2,132+inset.y)
+	notice.size = Vector2(600,36)
 	footer = Rect2(left,size.y-134-inset.w,right-left,110)
 	description.position = footer.position+Vector2(26,20)
 	description.size = Vector2(footer.size.x-330,38)
@@ -357,7 +371,7 @@ func _draw() -> void:
 		curve.add_point(previous,Vector2.ZERO,Vector2(distance*.48,0))
 		curve.add_point(target,Vector2(-distance*.48,0),Vector2.ZERO)
 		var line := curve.get_baked_points()
-		var unlocked: bool = world*4+i<=int(campaign.data.unlocked)
+		var unlocked: bool = campaign.test_stage_available(world*4+i)
 		draw_polyline(line,Color("5d4b3355"),25,true)
 		draw_polyline(line,Color("f4d392") if unlocked else Color("71846d99"),18,true)
 		if unlocked: draw_polyline(line,Color("ffe7b080"),4,true)
@@ -383,7 +397,7 @@ func details() -> Dictionary:
 	return {"map_open":true,"map_world":world,"map_selected":selected,"map_states":states,"map_nodes":rects,"map_walking":_walking,"map_actor_x":_actor_point.x,
 		"map_previous_rect":rect(previous_world),"map_next_rect":rect(next_world),"map_enter_rect":rect(primary),"map_enter_disabled":primary.disabled,"map_back_rect":rect(back),
 		"map_pipo_visible":companion.visible,"map_tico_visible":squirrel.visible,"map_art":BACKGROUNDS[world],
-		"map_village_rect":rect(village_button),"village":village_details}
+		"map_village_rect":rect(village_button),"map_test_rect":rect(test_button),"test_mode":campaign.test_mode,"village":village_details}
 
 func rect(control: Control) -> Array:
 	var r := control.get_global_rect()

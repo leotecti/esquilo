@@ -17,14 +17,46 @@ var _unlocked_stage := -1
 var narrative: CanvasLayer
 var _opening_after_load := false
 var _map_after_narrative := false
+var test_mode := false
+var _test_original_data: Dictionary = {}
 
 func save_progress() -> void:
 	var previous := int(data.get("unlocked",0))
+	var persistent_save := save_enabled
+	if test_mode: save_enabled = false
 	super.save_progress()
+	save_enabled = persistent_save
 	if int(data.get("unlocked",0))>previous:
 		_unlocked_stage = int(data.unlocked)
 	if is_instance_valid(level) and level.completed:
 		_present_result.call_deferred()
+
+func toggle_test_mode() -> void:
+	if _changing or not map_is_open() or awaiting_return(): return
+	if not test_mode:
+		# O mapa já salvou a tentativa real antes de abrir. A cópia seguinte pode
+		# ser alterada livremente sem alcançar o arquivo persistente.
+		_test_original_data = data.duplicate(true)
+		data = data.duplicate(true)
+		data.unlocked = scene_paths.size()-1
+		data.finished = false
+		data.survival.pipo_unlocked = true
+		data.survival.pending_return = false
+		data.survival.replay = true
+		data.survival.lives = maxi(initial_lives,int(data.survival.lives))
+		test_mode = true
+		world_map.refresh()
+		world_map.focus_stage(int(data.stage))
+		return
+	_changing = true
+	data = _test_original_data.duplicate(true)
+	_test_original_data.clear()
+	test_mode = false
+	_map_after_load = true
+	_load_stage.call_deferred(int(data.stage))
+
+func test_stage_available(index: int) -> bool:
+	return index>=0 and index<scene_paths.size() and (test_mode or index<=int(data.unlocked))
 
 func _present_result() -> void:
 	if not is_instance_valid(level) or not level.completed: return
@@ -122,7 +154,7 @@ func close_map() -> void:
 		level.start_pending_narrative.call_deferred()
 
 func enter_from_map(index: int) -> void:
-	if not map_is_open() or _changing or index<0 or index>int(data.unlocked) or _map_portrait(): return
+	if not map_is_open() or _changing or not test_stage_available(index) or _map_portrait(): return
 	if awaiting_return():
 		resume_at(index)
 		return
@@ -144,6 +176,10 @@ func _map_portrait() -> bool:
 	return level.touch.is_portrait()
 
 func new_adventure() -> void:
+	if test_mode:
+		data = _test_original_data.duplicate(true)
+		_test_original_data.clear()
+		test_mode = false
 	_unlocked_stage = -1
 	_opening_after_load = start_on_map
 	_map_after_load = false

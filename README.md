@@ -8,6 +8,10 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
+**Modo temporário de teste (0.37.2):** o mapa pode liberar as dezesseis fases e
+Pipo para testes diretos, sem alterar o save da campanha. O botão do mapa ou
+`Ctrl + F10` ativa e encerra a sessão isolada. [Implementação e testes](tests/test_mode_map.md).
+
 **Correção visual da Galeria (0.36.9):** a área secundária de 1-2 voltou a
 desenhar o solo e os degraus da Galeria das Pedras. Os trechos opcionais usam
 coordenadas locais para evitar descarte do desenho distante pelo renderizador.
