@@ -11,7 +11,7 @@ func run() -> void:
 	campaign.data.survival.lives = 5
 	check(is_instance_valid(level.optional_area),"Primeiros Passos possui área opcional")
 	var canopy_floor_visual := level.get_node_or_null("ForestOptionalCanopy")
-	check(is_instance_valid(canopy_floor_visual) and canopy_floor_visual.platforms.any(func(rect): return rect==Rect2(60000,760,4000,200)),"Copa possui piso visual em toda a área caminhável")
+	check(is_instance_valid(canopy_floor_visual) and canopy_floor_visual.position.x==60000 and canopy_floor_visual.platforms.any(func(rect): return rect==Rect2(0,760,4000,200)),"Copa possui piso visual local em toda a área caminhável")
 	check(not level.optional_area.active and level.total_nuts==271,"Trilha E09 tem 245 nozes principais e 26 opcionais")
 	check(level.main_right==42000 and level.exit_marker.position.x==41780,"Trilha principal ganha trecho final")
 	check(level.optional_area.RIGHT_EDGE==64000 and level.optional_area.slugs.size()==3,"Copa ampliada tem três lesmas")

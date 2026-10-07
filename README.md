@@ -8,8 +8,9 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
-**Correção visual da Galeria (0.36.8):** a área secundária de 1-2 voltou a
-desenhar o solo e os degraus da Galeria das Pedras com um trecho estático próprio.
+**Correção visual da Galeria (0.36.9):** a área secundária de 1-2 voltou a
+desenhar o solo e os degraus da Galeria das Pedras. Os trechos opcionais usam
+coordenadas locais para evitar descarte do desenho distante pelo renderizador.
 
 **Correção visual da Copa (0.36.7):** o piso da área secundária de 1-1 voltou a
 ser desenhado por um trecho estático próprio. A colisão existente foi preservada

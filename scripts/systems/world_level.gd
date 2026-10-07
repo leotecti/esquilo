@@ -307,7 +307,7 @@ func _build_forest() -> void:
 	super._build_forest()
 	var base_forest: Node2D
 	for child in get_children():
-		if child.get_script()==FOREST_ART:
+		if child.get_script()==FOREST_ART and not child.name.begins_with("ForestOptional"):
 			base_forest = child
 			child.coop_details = world_stage==2
 			child.platforms = terrain
@@ -339,12 +339,21 @@ func _build_optional_forest_visual() -> void:
 	var bounds := Vector2(60000.0,64000.0) if world_stage==0 else Vector2(float(optional_area.LEFT_EDGE),float(optional_area.RIGHT_EDGE))
 	var chunk = FOREST_ART.new()
 	chunk.name = "ForestOptionalCanopy" if world_stage==0 else "ForestOptionalGallery"
+	chunk.position = Vector2(bounds.x,0)
 	chunk.draw_base = false
 	chunk.coop_details = false
-	chunk.clip_start = bounds.x
-	chunk.clip_end = bounds.y
-	chunk.platforms = terrain
-	chunk.drop_platforms = drop_platforms
+	chunk.clip_start = 0.0
+	chunk.clip_end = bounds.y-bounds.x
+	var local_platforms: Array[Rect2] = []
+	var local_drop_platforms: Array[Rect2] = []
+	for rect in terrain:
+		if rect.end.x>bounds.x and rect.position.x<bounds.y:
+			local_platforms.append(Rect2(rect.position-Vector2(bounds.x,0),rect.size))
+	for rect in drop_platforms:
+		if rect.end.x>bounds.x and rect.position.x<bounds.y:
+			local_drop_platforms.append(Rect2(rect.position-Vector2(bounds.x,0),rect.size))
+	chunk.platforms = local_platforms
+	chunk.drop_platforms = local_drop_platforms
 	add_child(chunk)
 
 func switch_character() -> bool:
