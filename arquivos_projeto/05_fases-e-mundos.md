@@ -708,25 +708,18 @@ Atmosfera:
 
 # 29. FASE 2-1 — ATRAVESSANDO O RIO
 
-## Mecânica principal
+## Mecânicas principais
 
-Plataformas móveis.
+- travessias iniciais em plataformas móveis;
+- correnteza, tronco empurrável e plataforma de peso;
+- corredor de vento contrário que Tico não consegue vencer;
+- mola artesanal ativada pelo peso de Pipo;
+- lançamento de Pipo até uma plataforma alta e salto para a outra margem.
 
-Primeiro:
-
-uma plataforma simples.
-
-Depois:
-
-duas.
-
-Depois:
-
-plataforma + salto.
-
-Posteriormente:
-
-plataforma + inimigo.
+Na travessia da mola, a água ocupa todo o espaço entre as margens e causa dano
+em caso de queda. Não existe plataforma móvel alternativa nesse trecho. Tico
+recebe apenas um salto curto ao pisar na mola, deixando clara a diferença de
+peso, enquanto as rajadas e a mensagem contextual indicam a troca para Pipo.
 
 ---
 

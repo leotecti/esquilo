@@ -26,9 +26,14 @@ fases de percurso do Mundo 2. Carregar reduz sua velocidade, impede salto e troc
 permite soltar e recolher e exige entrega em uma marca visível.
 [Implementação e testes](tests/pipo_transport.md).
 
-**Peso e impulso em dupla (0.36.4):** as três fases de percurso do Mundo 2
-receberam plataformas ativadas pelo peso de Pipo. Em 2-1, Pipo também pode lançar
-Tico até uma rota elevada de recompensas. [Implementação e testes](tests/pipo_weight_launch.md).
+**Mola de peso e vento (0.37.0):** na fase 2-1, Pipo resiste às rajadas e usa
+uma mola artesanal para alcançar a plataforma alta sobre o rio. Tico é leve
+demais para obter o mesmo impulso, e a travessia não possui rota alternativa.
+[Implementação e testes](tests/pipo_weight_launch.md).
+
+**Plataformas de peso (0.36.4):** as três fases de percurso do Mundo 2
+receberam plataformas ativadas pelo peso de Pipo. A interação inicial de 2-1
+foi posteriormente substituída pela mola descrita acima.
 
 **Inimigos blindados (0.36.3):** besouros protegidos no Mundo 2 bloqueiam pisão
 e caudada até Pipo quebrar a carapaça com sua investida. Depois da abertura,

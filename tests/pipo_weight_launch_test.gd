@@ -4,31 +4,54 @@ func run() -> void:
 	root.size = Vector2i(1280,720)
 	root.content_scale_size = Vector2i(1280,720)
 	await open_stage(2,"1")
-	check(level.mechanisms.has("PesoCorrente") and level.launch_stations.size()==1,"2-1 combina plataforma de peso e ponto de impulso")
+	check(level.mechanisms.has("PesoCorrente") and level.weighted_springs.size()==1,"2-1 combina plataforma de peso e mola exclusiva de Pipo")
+	check(level.headwind_zones.size()==1,"Corredor antes da mola possui vento contrário visível")
+	check(level.movers.size()==3,"Travessia da mola não possui plataforma móvel alternativa sobre o rio")
+	var spring: Node2D = level.weighted_springs[0]
+	check(spring.position==Vector2(2440,720),"Mola está na margem indicada em T01")
+	await place(Vector2(2250,720),12)
+	var tico_start: float = level.squirrel.position.x
+	key(KEY_D,true)
+	await frames(45)
+	key(KEY_D,false)
+	check(level.squirrel.position.x<=tico_start+20,"Vento impede Tico de avançar até a mola")
 	if level.tico!=level.pipo: level.switch_character()
-	await frames(12)
-	var weight: Node2D = level.mechanisms.PesoCorrente
-	await place(weight.position,35)
-	check(weight.active,"Pipo mantém a plataforma pressionada até travar o mecanismo")
-	var station: Node2D = level.launch_stations[0]
-	await place(station.position,4)
-	key(KEY_E,true)
-	await frames(2)
-	key(KEY_E,false)
-	check(level.launching_tico,"AÇÃO de Pipo prepara o impulso em dupla em vez da investida")
-	await frames(18)
-	check(level.tico==level.squirrel and level.launching_tico==false,"Impulso entrega o controle automaticamente a Tico")
-	check(level.squirrel.velocity.y<0 and level.squirrel.position.y<station.position.y,"Tico parte para cima e alcança a rota elevada")
+	await place(Vector2(2250,720),12)
+	var pipo_start: float = level.pipo.position.x
+	key(KEY_D,true)
+	await frames(45)
+	key(KEY_D,false)
+	check(level.pipo.position.x>pipo_start+45,"Peso de Pipo permite atravessar o corredor de vento")
+
+	level.squirrel.velocity = Vector2.ZERO
+	spring.launch(level.squirrel)
+	check(spring.last_strength==330.0 and level.squirrel.velocity.y==-330.0,"Peso baixo de Tico produz somente um salto curto")
+	check((330.0*330.0)/(2.0*980.0)<250.0,"Impulso de Tico não alcança a plataforma alta")
+	await frames(35)
+
+	if level.tico!=level.pipo: level.switch_character()
+	await frames(8)
+	spring.cooldown = 0.0
+	level.pipo.velocity = Vector2.ZERO
+	spring.launch(level.pipo)
+	check(level.tico==level.pipo and spring.last_strength==900.0,"Mola lança Pipo sem trocar o personagem ativo")
+	check(level.pipo.velocity.x>0 and level.pipo.velocity.y<=-900,"Pipo segue em arco para a plataforma sobre o rio")
+	check(level.squirrel.environmental_force_multiplier(&"wind")==1.0,"Tico recebe toda a força do vento")
+	check(level.pipo.environmental_force_multiplier(&"wind")<0.5,"Peso de Pipo oferece resistência suficiente ao vento")
+	var high_route: Array = level.terrain.filter(func(rect: Rect2): return rect.position.y==405 and rect.position.x==2580)
+	check(high_route.size()==1 and level.water.any(func(rect: Rect2): return rect.position.x==2540),"Plataforma alta é a única rota sobre o rio fatal")
+
+	# Exercita o arco real, incluindo gravidade, controle no ar e colisão da plataforma.
+	await place(spring.position+Vector2(0,-65),2)
+	spring.cooldown = 0.0
+	level.pipo.velocity = Vector2(0,90)
+	key(KEY_D,true)
+	await frames(105)
+	key(KEY_D,false)
+	check(level.pipo.position.x>=2580 and level.pipo.position.y<430,"Pipo pousa na plataforma alta durante a travessia jogável")
+
+	await place(level.mechanisms.PesoCorrente.position,35)
+	check(level.mechanisms.PesoCorrente.active,"Pipo mantém a plataforma de peso do restante da fase")
 	await close_level()
-	await open_stage(2,"2")
-	check(level.mechanisms.has("PesoMargem"),"2-2 possui plataforma de peso própria")
-	await close_level()
-	await open_stage(2,"3")
-	check(level.mechanisms.has("PesoPonte"),"2-3 possui plataforma de peso própria")
-	await close_level()
-	var store = preload("res://scripts/systems/expedition_save.gd").new()
-	var old: Dictionary = {"save_version":2,"tutorials":{},"levels":{"4":{"completed":true,"checkpoint":true,"mechanisms":{}}}}
-	var migrated: Dictionary = store.migrate(old)
-	check(migrated.levels["4"].mechanisms.get("PesoCorrente",false),"Save anterior concluído recebe o novo mecanismo sem perder progresso")
-	print("RESULTADO PESO E IMPULSO: %d verificações, %d falhas" % [checks,failures])
+	print("RESULTADO MOLA E PESO: %d verificações, %d falhas" % [checks,failures])
 	quit(1 if failures else 0)

@@ -201,8 +201,9 @@ func _move_character(delta: float) -> void:
 		velocity.y += get_gravity().y * gravity_multiplier * delta
 		velocity.y = minf(velocity.y, glide_fall_speed if _gliding else max_fall_speed)
 	var rising: bool = velocity.y < 0.0
-	if not grounded:
-		velocity += wind_acceleration * environmental_force_multiplier(&"wind") * delta
+	# Rajadas horizontais também atuam no chão; correntes de sustentação continuam
+	# sendo preenchidas pelo nível apenas durante a planagem.
+	velocity += wind_acceleration * environmental_force_multiplier(&"wind") * delta
 	# Correntezas rasas deslocam também no chão. A aceleração entra depois do
 	# controle horizontal para tornar a estabilidade de cada personagem visível.
 	velocity += current_acceleration * environmental_force_multiplier(&"current") * delta

@@ -202,10 +202,11 @@ inimigo exposto para qualquer personagem finalizar. A armadura usa placas
 azul-petróleo e rebites dourados para comunicar sua regra antes do primeiro golpe.
 
 Plataformas largas de peso afundam gradualmente e travam após Pipo permanecer
-sobre elas. O Mundo 2 usa uma em cada fase de percurso. Pontos de impulso usam
-folhas em leque e uma seta ascendente: Pipo prepara o movimento, o controle passa
-automaticamente para Tico e o esquilo é lançado até uma rota elevada. A área de
-chegada precisa estar livre e oferecer recompensa ou progresso claramente visível.
+sobre elas. O Mundo 2 usa uma em cada fase de percurso. Em 2-1, rajadas visíveis
+impedem Tico de alcançar uma mola artesanal. O peso de Pipo permite atravessar o
+vento, comprimir a mola e alcançar uma plataforma alta sobre o rio. Tico recebe
+apenas um salto curto. Essa travessia não deve possuir plataforma móvel ou rota
+alternativa, e cair na água causa dano e retorna à margem segura.
 
 O transporte de provisões usa cestos colocados em superfícies seguras. Pipo anda
 mais devagar e não salta nem troca de personagem enquanto carrega. AÇÃO solta o
@@ -216,7 +217,7 @@ devem permitir o transporte a pé e deixar o destino visível antes do início.
 
 | Fase | Uso obrigatório de Pipo |
 |---|---|
-| 2-1 | Resistência à correnteza e empurrão do tronco que abre a passagem final |
+| 2-1 | Resistência ao vento, mola de peso, correnteza e empurrão do tronco final |
 | 2-2 | Plataformas de peso e travessia em balsas móveis |
 | 2-3 | Quebra de armaduras e transporte de provisões |
 | 2-4 | Investida para romper a defesa do Guardião do Rio antes do salto de Tico |

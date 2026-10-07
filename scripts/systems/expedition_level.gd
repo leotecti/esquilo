@@ -8,9 +8,10 @@ const NAMES = {
 const BACKGROUNDS = [preload("res://assets/worlds/river.svg"),preload("res://assets/worlds/mountain.svg"),preload("res://assets/worlds/village.svg")]
 var water: Array[Rect2] = []
 var wind_zones: Array[Rect2] = []
+var headwind_zones: Array[Rect2] = []
 var current_zones: Array[Rect2] = []
-var launch_stations: Array[Node2D] = []
-var launching_tico := false
+var weighted_springs: Array[Node2D] = []
+var headwind_hint_shown := false
 var cargo_objects: Array[Node2D] = []
 var carried_object: Node2D
 var cave_roofs: Array[Rect2] = []
@@ -83,20 +84,21 @@ func _river() -> void:
 	_mover(Vector2(740,725),Vector2(320,0),180,5)
 	_mover(Vector2(1680,725),Vector2(180,0),180,4.8)
 	_mover(Vector2(1950,700),Vector2(110,0),180,5.2)
-	_mover(Vector2(2620,730),Vector2(140,0),180,4)
 	_device("TroncoRio",Vector2(3150,760),"log")
 	_bridge("TroncoRio",Rect2(3180,758,150,30))
 	_gate("TroncoRio",Rect2(3330,360,25,400))
 	_weight_platform("PesoCorrente",Vector2(3400,760))
 	_supply_cargo("CargaRio",Vector2(3370,760),Vector2(3520,760))
-	_launch_station(Vector2(2200,720))
-	_platform(Rect2(2140,455,420,45))
-	for point in [Vector2(2200,411),Vector2(2320,411),Vector2(2440,411)]: _nut(point)
+	headwind_zones = [Rect2(2160,500,220,260)]
+	_weighted_spring(Vector2(2440,720))
+	_platform(Rect2(2580,405,210,45))
+	for point in [Vector2(2615,361),Vector2(2685,361),Vector2(2755,361)]: _nut(point)
 	for point in [Vector2(350,715),Vector2(580,715),Vector2(850,650),Vector2(1260,715),Vector2(1520,715),Vector2(1850,620),Vector2(2350,645),Vector2(2970,715),Vector2(3290,715)]: _nut(point)
 	_armored_enemy(Vector2(3070,760),65)
 	_markers(Vector2(1410,760),Vector2(3590,760))
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
+	_sign(Vector2(2170,490),"Vento forte • Pipo alcança a mola")
 	_sign(Vector2(3000,530),"Pipo • Mova o tronco e abra a passagem")
 
 func _mountain() -> void:
@@ -265,13 +267,13 @@ func _weight_platform(id: String, point: Vector2) -> Node2D:
 	device.activated.connect(func(_node): _apply_device(id,true))
 	return device
 
-func _launch_station(point: Vector2) -> Node2D:
-	var station = preload("res://scripts/objects/pipo_launch_marker.gd").new()
-	station.level = self
-	station.position = point
-	actors.add_child(station)
-	launch_stations.append(station)
-	return station
+func _weighted_spring(point: Vector2) -> Node2D:
+	var spring = preload("res://scripts/objects/weighted_spring.gd").new()
+	spring.level = self
+	spring.position = point
+	actors.add_child(spring)
+	weighted_springs.append(spring)
+	return spring
 
 func _supply_cargo(id: String, point: Vector2, destination: Vector2) -> Node2D:
 	var cargo = preload("res://scripts/objects/carryable_supply.gd").new()
@@ -290,7 +292,7 @@ func pipo_is_carrying() -> bool:
 	return is_instance_valid(carried_object) and carried_object.carried
 
 func try_pipo_carry(character: CharacterBody2D) -> bool:
-	if character!=pipo or launching_tico: return false
+	if character!=pipo: return false
 	if pipo_is_carrying():
 		var cargo := carried_object
 		cargo.interact(character)
@@ -313,29 +315,6 @@ func drop_carried_object() -> void:
 	if not pipo_is_carrying(): return
 	carried_object.drop_at(pipo.position)
 	carried_object = null
-
-func try_pipo_launch(character: CharacterBody2D) -> bool:
-	if launching_tico or character!=pipo or not rescued: return false
-	for station in launch_stations:
-		if character.position.distance_to(station.position)>105: continue
-		launching_tico = true
-		character._set_ability("prepare",.24)
-		character.controls_enabled = false
-		touch.release_all()
-		_feedback(station.position,"Impulso em dupla!",Color("ffe394"))
-		sounds.play_notes([262,392,523],.06)
-		var launch_point: Vector2 = station.position+Vector2(0,-72)
-		var tween := create_tween()
-		tween.tween_interval(.24)
-		tween.tween_callback(func():
-			character.controls_enabled = true
-			_activate(squirrel,launch_point)
-			squirrel.velocity = Vector2(character.facing*125.0,-720.0)
-			squirrel.previous_position = launch_point
-			launching_tico = false
-			_say("Pipo lançou Tico! Segure PULO para alcançar o caminho alto."))
-		return true
-	return false
 
 func _bridge(id: String, rect: Rect2) -> void:
 	var body := _solid("Bridge",rect,Color("a8804b"))
@@ -424,6 +403,12 @@ func _physics_process(delta: float) -> void:
 	for zone in wind_zones:
 		if zone.has_point(tico.position) and tico==squirrel and Input.is_action_pressed("jump"):
 			tico.wind_acceleration = Vector2(160,-500)
+	for zone in headwind_zones:
+		if zone.has_point(tico.position):
+			tico.wind_acceleration += Vector2(-4200,0)
+			if tico==squirrel and not headwind_hint_shown:
+				headwind_hint_shown = true
+				_say("O vento empurra Tico para trás. Pipo é pesado o bastante para chegar à mola.")
 	for zone in current_zones:
 		if zone.has_point(tico.position):
 			tico.current_acceleration = Vector2(900,0)

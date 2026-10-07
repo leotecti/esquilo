@@ -30,7 +30,6 @@ func _physics_process(delta: float) -> void:
 		super._physics_process(delta)
 		return
 	if ability == "ready" and is_on_floor() and Input.is_action_just_pressed("action") and _hurt_left <= 0:
-		if level_has_launch_assist(): return
 		if level_has_carry_interaction(): return
 		charge_direction = facing
 		_set_ability("prepare", prepare_duration)
@@ -74,10 +73,6 @@ func _physics_process(delta: float) -> void:
 				pushing = object.push_by(self, direction, delta)
 				_push_speed = object.push_speed
 	_update_animation()
-
-func level_has_launch_assist() -> bool:
-	var parent_level := get_parent()
-	return parent_level.has_method("try_pipo_launch") and parent_level.try_pipo_launch(self)
 
 func level_has_carry_interaction() -> bool:
 	var parent_level := get_parent()

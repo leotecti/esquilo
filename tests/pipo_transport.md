@@ -23,7 +23,7 @@ estava concluída ou tinha checkpoint, preservando o progresso existente.
 
 | Fase | Papel principal de Pipo |
 |---|---|
-| 2-1 | Resistir à correnteza e empurrar o tronco que abre a passagem final |
+| 2-1 | Vencer o vento, usar a mola de peso, resistir à correnteza e empurrar o tronco final |
 | 2-2 | Ativar plataformas de peso e atravessar usando balsas móveis |
 | 2-3 | Romper inimigos blindados e transportar provisões |
 | 2-4 | Romper a defesa do Guardião para que Tico acerte a cabeça |
