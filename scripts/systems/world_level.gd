@@ -86,6 +86,7 @@ func _build_gameplay() -> void:
 		optional_area.z_index = -2
 		add_child(optional_area)
 		optional_area.build()
+		_build_optional_forest_visual()
 	_build_backtracking_secret()
 	for actor in actors.get_children():
 		if actor.has_method("reset_item") and is_instance_valid(campaign) and campaign.has_method("survival_details"): actor.campaign = campaign
@@ -329,6 +330,22 @@ func _build_forest() -> void:
 			chunk.drop_platforms = drop_platforms
 			add_child(chunk)
 			chunk_start += 1800
+
+func _build_optional_forest_visual() -> void:
+	# Copa e Galeria são criadas depois dos trechos visuais da rota principal.
+	# Estes trechos estáticos desenham o piso distante sem voltar ao desenho
+	# integral do mapa, que foi removido para preservar o desempenho em celulares.
+	if world_stage not in [0,1] or not is_instance_valid(optional_area): return
+	var bounds := Vector2(60000.0,64000.0) if world_stage==0 else Vector2(float(optional_area.LEFT_EDGE),float(optional_area.RIGHT_EDGE))
+	var chunk = FOREST_ART.new()
+	chunk.name = "ForestOptionalCanopy" if world_stage==0 else "ForestOptionalGallery"
+	chunk.draw_base = false
+	chunk.coop_details = false
+	chunk.clip_start = bounds.x
+	chunk.clip_end = bounds.y
+	chunk.platforms = terrain
+	chunk.drop_platforms = drop_platforms
+	add_child(chunk)
 
 func switch_character() -> bool:
 	if is_instance_valid(optional_area) and optional_area.transitioning: return false

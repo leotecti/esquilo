@@ -27,6 +27,8 @@ func run() -> void:
 	check(hearts>=7,"Rota e galeria oferecem recuperação")
 	check(level.checkpoint.position.x>level.optional_area.ENTRY.x and level.checkpoint.position.x<level.exit_marker.position.x,"Bandeira única fica depois da área secundária")
 	check(level.optional_area.ENTRY==Vector2(19400,475) and level.optional_area.LEFT_EDGE==46000,"Galeria fica no meio e usa espaço próprio")
+	var gallery_floor_visual := level.get_node_or_null("ForestOptionalGallery")
+	check(is_instance_valid(gallery_floor_visual) and gallery_floor_visual.platforms.any(func(rect): return rect==Rect2(46000,760,5200,220)),"Galeria possui piso visual em toda a área caminhável")
 	check(level.optional_area.enemies.size()==3 and is_instance_valid(level.optional_area.bonus_life),"Galeria contém inimigos, vida e recompensa especial")
 	level.optional_area.travel(true)
 	await create_timer(.45,true).timeout

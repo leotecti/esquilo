@@ -8,6 +8,13 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
+**Correção visual da Galeria (0.36.8):** a área secundária de 1-2 voltou a
+desenhar o solo e os degraus da Galeria das Pedras com um trecho estático próprio.
+
+**Correção visual da Copa (0.36.7):** o piso da área secundária de 1-1 voltou a
+ser desenhado por um trecho estático próprio. A colisão existente foi preservada
+e a correção mantém a divisão visual usada para desempenho em celulares.
+
 **Estrutura de Pipo no Mundo 2 (0.36.6):** a fase 2-1 combina resistência à
 correnteza com um tronco que Pipo precisa empurrar; 2-2 usa plataformas de peso
 e balsas; 2-3 reúne besouros blindados e transporte de provisões. No Guardião do
