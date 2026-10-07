@@ -9,6 +9,9 @@ var _time := 0.0
 func _ready() -> void:
 	object = get_parent()
 	object.self_modulate.a = 0
+	# A arte comercial substitui integralmente o desenho-base dos coletáveis.
+	# Evita centenas de callbacks invisíveis em fases longas.
+	if object.has_method("reset_item"): object.set_process(false)
 
 func _process(delta: float) -> void:
 	_time += delta

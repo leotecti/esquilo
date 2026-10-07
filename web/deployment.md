@@ -10,14 +10,14 @@ controles, faro e percurso completo.
 ## Pacote
 
 VersÃ£o atual: **ValidaÃ§Ã£o intermediÃ¡ria 2 â€” aventura completa em miniatura
-(0.34.3)**. Inclui as correÃ§Ãµes localizadas das fases 1-2 e 1-3, o localizador temporÃ¡rio, a expansÃ£o de 1-3 e a Gruta Fria, preservando a identidade visual e o Save V2.
+(0.35.0)**. Inclui as correÃ§Ãµes localizadas das fases 1-2 e 1-3, o localizador temporÃ¡rio, a expansÃ£o de 1-3 e a Gruta Fria, preservando a identidade visual e o Save V2.
 
 Ao tocar em `Jogar`, o navegador solicita tela cheia e tenta fixar a orientaÃ§Ã£o
 horizontal. A PWA instalada abre diretamente no modo `fullscreen`; nÃ£o hÃ¡ botÃ£o
 flutuante sobre o jogo para alternar esse estado.
 [RelatÃ³rio e roteiro da validaÃ§Ã£o](../tests/validacao_intermediaria_2.md).
 
-`builds/web/Tico-0.34.3-solo-gruta-fria-web.zip` contÃ©m os arquivos que devem ficar diretamente
+`builds/web/Tico-0.35.0-e25-performance-web.zip` contÃ©m os arquivos que devem ficar diretamente
 na pasta pÃºblica correspondente a `/tico/`, incluindo `index.html`, `index.js`,
 `index.wasm`, `index.pck`, manifesto, service worker e Ã­cones.
 NÃ£o coloque outra pasta `validacao_intermediaria_2` entre `/tico/` e os arquivos.
@@ -127,14 +127,18 @@ A primeira migraÃ§Ã£o a partir da 0.29.3 ainda precisa formar o cache com as
 as atualizaÃ§Ãµes posteriores passam a aproveitar o mecanismo incremental.
 
 
-### Refino visual 0.34.3
+### Refino visual 0.34.1
 
 A Gruta Fria agora usa cenário próprio, sombras ambientais de morcegos e pingos com animação refinada. O novo pacote altera recursos do jogo e deve substituir integralmente a versão anterior na hospedagem.
 
-### Correções de percurso 0.34.3
+### Correções de percurso 0.34.2
 
 A revisão nivela T08 e corrige os obstáculos e inimigos dos trechos T08, T09 e T10 da fase 1-3. Substitua integralmente os arquivos da versão anterior.
 
 ### Solo da Gruta Fria 0.34.3
 
 As plataformas da caverna receberam acabamento mineral coerente com o cenário. Substitua integralmente os arquivos da versão anterior.
+
+### E25 Performance 0.35.0
+
+Esta revisão reduz processamento e desenho fora da câmera. Substitua integralmente os arquivos anteriores para que o service worker aplique o novo pacote.

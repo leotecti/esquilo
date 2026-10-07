@@ -79,8 +79,8 @@ func _build_gameplay() -> void:
 		preload("res://scripts/systems/new_friend_layout.gd").build(self)
 	else:
 		_build_solo_or_arena()
-	if world_stage in [0,1,2] and is_instance_valid(campaign) and campaign.has_method("progress_summary"):
-		var area_scripts := [preload("res://scripts/systems/optional_area.gd"),preload("res://scripts/systems/blocks_secrets_area.gd"),preload("res://scripts/systems/friend_cave_area.gd")]
+	if world_stage in [0,1,2,3] and is_instance_valid(campaign) and campaign.has_method("progress_summary"):
+		var area_scripts := [preload("res://scripts/systems/optional_area.gd"),preload("res://scripts/systems/blocks_secrets_area.gd"),preload("res://scripts/systems/friend_cave_area.gd"),preload("res://scripts/systems/waterfall_grotto_area.gd")]
 		optional_area = area_scripts[world_stage].new()
 		optional_area.level = self
 		optional_area.z_index = -2
@@ -189,16 +189,8 @@ func _build_solo_or_arena() -> void:
 			preload("res://scripts/systems/blocks_secrets_layout.gd").build(self)
 	else:
 		for point in [Vector2(380,715),Vector2(720,715),Vector2(1100,715),Vector2(1600,715)]: _nut(point)
-		_nut(Vector2(2250,715),true)
-		_markers(Vector2(2150,760),Vector2(3530,760))
-		guardian = preload("res://scripts/enemies/forest_guardian.gd").new()
-		guardian.name = "Guardian"
-		guardian.level = self
-		guardian.position = Vector2(2850,760)
-		actors.add_child(guardian)
-		guardian.calmed.connect(_on_guardian_calmed)
-		_sign(Vector2(500,530),"O bosque precisa de ajuda")
-		_sign(Vector2(1590,540),"Asas abertas: prepare o salto\nPeriquito pousado: pule na cabeça")
+		_markers(Vector2(25100,760),Vector2(37780,760))
+		preload("res://scripts/systems/guardian_route_layout.gd").build(self)
 
 func _platform(rect: Rect2) -> void:
 	terrain.append(rect)
@@ -312,12 +304,31 @@ func _sign(point: Vector2, text: String) -> void:
 
 func _build_forest() -> void:
 	super._build_forest()
+	var base_forest: Node2D
 	for child in get_children():
 		if child.get_script()==FOREST_ART:
+			base_forest = child
 			child.coop_details = world_stage==2
 			child.platforms = terrain
 			child.drop_platforms = drop_platforms
+			child.draw_base = true
+			child.clip_start = -1000.0
+			child.clip_end = 4000.0
 			child.queue_redraw()
+	# Cada trecho estático possui limites próprios, permitindo descarte pela câmera.
+	if is_instance_valid(base_forest) and main_right>4000:
+		var chunk_start := 4000
+		while chunk_start<mini(main_right,int(FOREST_ART.CAVE_VISUAL_START)):
+			var chunk = FOREST_ART.new()
+			chunk.name = "ForestChunk%d" % chunk_start
+			chunk.draw_base = false
+			chunk.coop_details = false
+			chunk.clip_start = float(chunk_start)
+			chunk.clip_end = float(mini(chunk_start+1800,main_right))
+			chunk.platforms = terrain
+			chunk.drop_platforms = drop_platforms
+			add_child(chunk)
+			chunk_start += 1800
 
 func switch_character() -> bool:
 	if is_instance_valid(optional_area) and optional_area.transitioning: return false

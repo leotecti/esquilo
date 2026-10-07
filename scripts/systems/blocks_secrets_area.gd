@@ -16,6 +16,7 @@ var checkpoint := false
 var transitioning := false
 var veil: ColorRect
 var hints: Array[Label] = []
+var _visual_elapsed := 0.0
 var bonus_life: StaticBody2D
 var enemies: Array[Node2D] = []
 
@@ -97,8 +98,11 @@ func _add_hint(point: Vector2, message: String, entry: bool) -> void:
 	add_child(label)
 	hints.append(label)
 
-func _physics_process(_delta: float) -> void:
-	queue_redraw()
+func _physics_process(delta: float) -> void:
+	_visual_elapsed += delta
+	if (active or level.tico.position.distance_to(ENTRY)<850.0) and _visual_elapsed>=1.0/30.0:
+		_visual_elapsed = 0.0
+		queue_redraw()
 	for hint in hints:
 		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<(180 if hint.get_meta("entry_portal") else 110)
 	if transitioning or level.completed or level.respawning: return

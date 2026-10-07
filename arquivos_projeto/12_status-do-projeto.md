@@ -1,8 +1,13 @@
 # Status do projeto
 
-**Data:** 2026-10-06
-**VersÃ£o atual:** 0.34.3, com as correÃ§Ãµes localizadas de 1-2 e 1-3, o localizador de
-mapa, a fase 1-3 ampliada e a Gruta Fria opcional.
+**Data:** 2026-10-07
+**VersÃ£o atual:** 0.36.0, com a fase 1-4 ampliada, o Refúgio da Cachoeira
+opcional e as otimizações mobile da E25.
+
+**Expansão de 1-4 em 0.36.0:** Periquito do Bosque possui 38.000 unidades,
+onze trechos, alimentos, blocos e inimigos variados. A passagem atrás da
+cachoeira leva a uma área secundária própria e retorna antes da bandeira única.
+O confronto aprovado contra o Periquito permanece no final da jornada.
 
 **CorreÃ§Ãµes 1-2 em 0.33.2:** o besouro inicial apoia visualmente as patas no
 solo; os blocos suspensos ficam ao alcance de um salto normal; e os oito
@@ -39,7 +44,7 @@ superfÃ­cies da Galeria e da chegada foram preservadas.
 atravessÃ¡veis em `y=700` e `y=630`. Uma queda em T06 permite retornar Ã 
 plataforma da saÃ­da em `y=570`.
 
-**CorreÃ§Ãµes 1-3 em 0.34.3:** os oito inimigos acompanham as plataformas da rota;
+**CorreÃ§Ãµes 1-3 em 0.35.0:** os oito inimigos acompanham as plataformas da rota;
 o bloco fora do padrÃ£o fica no solo e quebra com a caudada; recompensas
 soterradas no tÃºnel foram substituÃ­das; e o portal recebeu acabamento mineral,
 luz, partÃ­culas e nÃ©voa.
@@ -688,8 +693,10 @@ AnimaÃ§Ãµes de empurrar e regras fÃ­sicas mantidas. Pacotes E01 atualizado
 detalhes em [evoluÃ§Ã£o E01](../tests/evolucao_e01.md).
 
 
-**Refino da Gruta Fria em 0.34.3:** a área secundária de 1-3 ganhou pintura de fundo própria em tons frios, sombras distantes e esporádicas de morcegos e goteiras com formação, aviso, rastro de queda e respingo mais legíveis. A mecânica e o tempo de dano foram preservados.
+**Refino da Gruta Fria em 0.34.1:** a área secundária de 1-3 ganhou pintura de fundo própria em tons frios, sombras distantes e esporádicas de morcegos e goteiras com formação, aviso, rastro de queda e respingo mais legíveis. A mecânica e o tempo de dano foram preservados.
 
-**Correções T08–T10 em 0.34.3:** o piso de T08 foi nivelado; seu bloco está apoiado e aceita a caudada; os inimigos de T08 e T09 ocupam plataformas acessíveis; e a parede alta de T10 foi substituída por um obstáculo baixo, saltável e quebrável pela caudada.
+**Correções T08–T10 em 0.34.2:** o piso de T08 foi nivelado; seu bloco está apoiado e aceita a caudada; os inimigos de T08 e T09 ocupam plataformas acessíveis; e a parede alta de T10 foi substituída por um obstáculo baixo, saltável e quebrável pela caudada.
 
 **Solo da Gruta Fria em 0.34.3:** as plataformas da área secundária de 1-3 usam rocha azul-ardósia escura, bordas minerais, veios e umidade sutil. O renderizador exclui a terra marrom e a grama do bosque nas coordenadas da caverna, preservando as colisões e a leitura dos saltos.
+
+**E25 Performance em 0.35.0:** fases longas usam ativação por proximidade para animações e inimigos, o solo é dividido em trechos visuais descartáveis, áreas secundárias atualizam animações a 30 Hz somente quando relevantes e goteiras pausam fora da caverna. Em 1-3, 8 de 298 animações permanecem ativas no início e as chamadas de desenho caíram de 341 para 146. A validação final depende de novos testes nos celulares reais.

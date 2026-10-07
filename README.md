@@ -8,6 +8,11 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 
 ## Estado atual
 
+**Fase 1-4 ampliada (0.36.0):** Periquito do Bosque agora possui uma jornada de
+38.000 unidades, encontros variados, alimentos, blocos e o Refúgio da Cachoeira.
+A passagem secundária retorna perto da bandeira e a arena do chefe encerra a
+fase. [Estrutura e validação](tests/fase_1_4_expansao.md).
+
 **ValidaÃ§Ã£o intermediÃ¡ria 2 â€” aventura completa em miniatura (0.25.0):** o
 Mundo 1 agora Ã© a referÃªncia integrada da campanha, da abertura ao chefe e Ã 
 prÃ³xima pista de Valda. Mapa, trÃªs fases, copa opcional, coletÃ¡veis, Pipo,
@@ -214,7 +219,7 @@ As cenas das etapas anteriores continuam disponÃ­veis para abrir com F6.
 ## Web/PWA â€” validaÃ§Ã£o intermediÃ¡ria 2
 
 Destino: **https://projetosdoleo.com/tico/**. Pacote local:
-`builds/web/Tico-0.34.3-solo-gruta-fria-web.zip`. Consulte [publicaÃ§Ã£o e teste no celular](web/deployment.md).
+`builds/web/Tico-0.36.0-fase-1-4-web.zip`. Consulte [publicaÃ§Ã£o e teste no celular](web/deployment.md).
 Os builds anteriores foram preservados. O usuÃ¡rio confirmou o teste e a aprovaÃ§Ã£o da etapa 8.
 
 Com Node.js instalado e templates Web 4.7.2 disponÃ­veis:
@@ -233,7 +238,7 @@ Para os testes de navegador, use `npm.cmd run test:web` com Google Chrome instal
 ## Build Windows da validaÃ§Ã£o intermediÃ¡ria 2
 
 Abra `builds/windows/validacao_intermediaria_2/Tico.exe`. Mantenha `Tico.pck` na mesma pasta.
-O pacote `builds/windows/Tico-0.34.3-solo-gruta-fria-windows.zip` contÃ©m os dois arquivos.
+O pacote `builds/windows/Tico-0.35.0-e25-performance-windows.zip` contÃ©m os dois arquivos.
 As ilustraÃ§Ãµes em `assets/slice/` seguem as pranchas de `img/`, com aprovaÃ§Ã£o
 artÃ­stica ainda pendente. A etapa 7 representa o acabamento proposto para o jogo.
 

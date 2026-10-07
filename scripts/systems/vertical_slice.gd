@@ -21,6 +21,7 @@ var _elapsed := 0.0
 var _last_frame_usec := 0
 var feedback: CanvasLayer
 var location_diagnostic: CanvasLayer
+var activity_manager: Node
 
 func _ready() -> void:
 	super._ready()
@@ -42,6 +43,10 @@ func _ready() -> void:
 	location_diagnostic.level = self
 	add_child(location_diagnostic)
 	_skin_objects()
+	activity_manager = preload("res://scripts/systems/mobile_activity_manager.gd").new()
+	activity_manager.name = "MobileActivityManager"
+	activity_manager.level = self
+	add_child(activity_manager)
 	_skin_ui()
 	_art_ready = true
 	_update_layout()

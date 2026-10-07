@@ -182,3 +182,17 @@ imediatamente anterior à bandeira, mantendo o checkpoint como conquista do joga
 ## Navegação em dois níveis
 
 As fases podem reutilizar áreas inferiores já visíveis, sem ampliar sua extensão horizontal. Pontes marcadas com uma seta dourada aceitam **Baixo**, **S** ou o botão **▼** para descer. A rota inferior deve conter recompensas ou riscos, manter piso seguro e oferecer retorno por salto ou degrau. Superfícies comuns continuam sólidas para evitar descidas acidentais.
+
+### Aplicação em 1-4 — Periquito do Bosque
+
+A fase 1-4 passa a ter **38.000 unidades** e onze trechos antes do portal final.
+A trilha alterna clareiras, plataformas reversíveis, blocos, provisões e cinco
+tipos de inimigo. A entrada da área secundária fica aproximadamente em
+**x = 18.400**, atrás de uma cachoeira com abertura rochosa, névoa e indicação
+contextual. A saída retorna em **x = 24.600** e a bandeira única fica adiante,
+em **x = 25.100**.
+
+O Refúgio da Cachoeira possui cenário, terreno e recompensas próprios. Todos os
+coletáveis e inimigos se apoiam em superfícies navegáveis. A aproximação final
+fica mais calma e a arena do Periquito permanece limpa para que o jogador leia
+voo, pouso, cansaço e vulnerabilidade sem interferência de inimigos comuns.

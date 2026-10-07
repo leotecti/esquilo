@@ -18,6 +18,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if level.completed or level.respawning: return
+	# As goteiras só avançam quando a caverna está próxima da câmera.
+	if absf(level.tico.global_position.x-global_position.x)>1500.0: return
 	clock = fmod(clock+delta,cycle)
 	var phase := clock/cycle
 	dangerous = phase>=.42 and phase<.77

@@ -6,23 +6,33 @@ const CAVE_VISUAL_START := 64000.0
 var coop_details := true
 var platforms: Array[Rect2] = []
 var drop_platforms: Array[Rect2] = []
+var draw_base := true
+var clip_start := -1000.0
+var clip_end := 4000.0
 
 func _ready() -> void:
 	z_index = -1
 
 func _draw() -> void:
-	var ground_rects: Array[Rect2] = [Rect2(0,760,3800,200)]
-	var forest_platforms: Array[Rect2] = platforms.filter(func(rect: Rect2): return rect.position.x<CAVE_VISUAL_START)
-	ground_rects.append_array(forest_platforms)
+	var source_rects: Array[Rect2] = platforms.filter(func(rect: Rect2): return rect.position.x<CAVE_VISUAL_START and rect.end.x>clip_start and rect.position.x<clip_end)
+	var all_ground_rects: Array[Rect2] = [Rect2(0,760,3800,200)]
+	all_ground_rects.append_array(platforms.filter(func(rect: Rect2): return rect.position.x<CAVE_VISUAL_START))
+	var ground_rects: Array[Rect2] = []
+	if draw_base: ground_rects.append(Rect2(0,760,3800,200))
+	var clip_rect := Rect2(clip_start,-1000,clip_end-clip_start,3000)
+	for rect in source_rects:
+		var clipped := rect.intersection(clip_rect)
+		if clipped.has_area(): ground_rects.append(clipped)
 	for rect in ground_rects: ground(rect)
-	for rect in forest_platforms:
-		organic_side(rect,true,ground_rects)
-		organic_side(rect,false,ground_rects)
-	for rect in drop_platforms:
+	for rect in source_rects:
+		if rect.position.x>=clip_start: organic_side(rect,true,all_ground_rects)
+		if rect.end.x<=clip_end: organic_side(rect,false,all_ground_rects)
+	for rect in drop_platforms.filter(func(item: Rect2): return item.end.x>clip_start and item.position.x<clip_end):
 		var center := Vector2(rect.get_center().x,rect.position.y+10)
 		draw_colored_polygon(PackedVector2Array([center+Vector2(-13,-4),center+Vector2(0,10),center+Vector2(13,-4)]),Color("f6dc83"))
-	if coop_details:
+	if draw_base and coop_details:
 		_draw_coop()
+	if not draw_base: return
 	# Vegetação compartilhada por todas as trilhas.
 	for x in [90,400,930,1230,1820,2380,2630,3100]:
 		draw_texture_rect(ATLAS.frame("props",9),Rect2(x-40,687,76,73),false)

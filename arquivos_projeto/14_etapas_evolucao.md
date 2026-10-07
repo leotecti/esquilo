@@ -1355,6 +1355,12 @@ As dificuldades reais deverão orientar esse sistema.
 
 Com o conteúdo completo, verificar desempenho.
 
+**Implementação inicial concluída em 0.35.0:** processamento de animações e
+inimigos limitado à vizinhança da câmera, cenários longos divididos em trechos
+descartáveis, áreas secundárias animadas a 30 Hz e goteiras suspensas fora da
+caverna. A fase 1-3 caiu de 341 para 146 chamadas de desenho no p95 local.
+Permanece necessária a validação nos celulares reais que apresentaram lentidão.
+
 Especial atenção porque o jogo será PWA.
 
 Testar:

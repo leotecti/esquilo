@@ -26,6 +26,7 @@ var transitioning := false
 var flag: Area2D
 var veil: ColorRect
 var hints: Array[Label] = []
+var _visual_elapsed := 0.0
 var bonus_life: StaticBody2D
 var slugs: Array[Node2D] = []
 
@@ -101,8 +102,11 @@ func build() -> void:
 	layer.add_child(veil)
 	queue_redraw()
 
-func _physics_process(_delta: float) -> void:
-	queue_redraw()
+func _physics_process(delta: float) -> void:
+	_visual_elapsed += delta
+	if (active or level.tico.position.distance_to(ENTRY)<850.0) and _visual_elapsed>=1.0/30.0:
+		_visual_elapsed = 0.0
+		queue_redraw()
 	for hint in hints:
 		var radius := 250.0 if hint.get_meta("entry_portal",false) else 115.0
 		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<radius
