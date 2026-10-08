@@ -12,6 +12,12 @@ Para configurar outra mÃ¡quina apÃ³s clonar o repositÃ³rio, consulte o
 Pipo para testes diretos, sem alterar o save da campanha. O botão do mapa ou
 `Ctrl + F10` ativa e encerra a sessão isolada. [Implementação e testes](tests/test_mode_map.md).
 
+**Foco em Pipo na fase 2-1 (0.37.4):** o vento contrário percorre toda a fase.
+Tico corre com 10% da velocidade normal, enquanto Pipo mantém 95% e resiste às
+rajadas. Os inimigos desse percurso são derrotados com um salto ou uma investida
+de Pipo, tornando sua força a mecânica principal da travessia.
+[Regras e validação](tests/fase_2_1_foco_pipo.md).
+
 **Correção visual da Galeria (0.36.9):** a área secundária de 1-2 voltou a
 desenhar o solo e os degraus da Galeria das Pedras. Os trechos opcionais usam
 coordenadas locais para evitar descarte do desenho distante pelo renderizador.
@@ -28,7 +34,7 @@ Rio, Pipo rompe a defesa e Tico completa cada abertura com um salto.
 **Transporte de objetos (refinado em 0.37.1):** Pipo ergue e leva acima da cabeça
 cestas de provisões nas três fases de percurso do Mundo 2. Seus passos, braços e
 expressão demonstram o peso. Carregar reduz sua velocidade, impede salto e troca,
-permite soltar e recolher e exige entrega em um estrado sinalizado.
+permite soltar e recolher e exige entrega na carroça do burrinho, que leva os alimentos ao vilarejo.
 [Implementação e testes](tests/pipo_transport.md).
 
 **Mola de peso e vento (0.37.0):** na fase 2-1, Pipo resiste às rajadas e usa

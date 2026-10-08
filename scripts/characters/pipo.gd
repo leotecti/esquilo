@@ -13,8 +13,9 @@ var pushing: bool = false
 var _push_speed: float = 0.0
 const CARRY_MOVE_SPEED := 150.0
 const KNOCKBACK_MULTIPLIER := 0.45
-const WIND_MULTIPLIER := 0.30
+const WIND_MULTIPLIER := 0.10
 const CURRENT_MULTIPLIER := 0.25
+var movement_speed_multiplier := 1.0
 
 func _ready() -> void:
 	tail_enabled = false
@@ -58,7 +59,7 @@ func _physics_process(delta: float) -> void:
 		_update_animation()
 		return
 	# Manter o contato sem reacelerar do zero a cada colisão com a pedra.
-	move_speed = CARRY_MOVE_SPEED if is_carrying() else 220.0
+	move_speed = (CARRY_MOVE_SPEED if is_carrying() else 220.0) * movement_speed_multiplier
 	jump_velocity = 0.0 if is_carrying() else BALANCE.PIPO_JUMP_VELOCITY
 	if pushing and is_on_floor() and _hurt_left <= 0:
 		velocity.x = Input.get_axis("move_left", "move_right") * _push_speed

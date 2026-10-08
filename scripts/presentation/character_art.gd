@@ -2,6 +2,7 @@ extends Node2D
 const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
 const CHROMA = preload("res://scripts/presentation/chroma_key.gdshader")
 const TAIL_SPIN = preload("res://assets/slice/tico_tail_spin.png")
+const PIPO_CARRY = preload("res://assets/characters/pipo/carry_sheet.png")
 const TAIL_SPIN_FRAME_COUNT := 6
 # Cada pose ocupa uma célula de 512 px com margem transparente lateral. Isso
 # preserva o tamanho de Tico e impede fragmentos dos quadros vizinhos.
@@ -14,6 +15,7 @@ const PIPO_VISUAL_HEIGHT := 98.0
 const PIPO_CHARGE_HEIGHT := 69.0
 const PIPO_PREPARE_HEIGHT := 78.0
 const PIPO_PUSH_HEIGHT := 86.0
+const PIPO_CARRY_HEIGHT := 158.0
 var character: CharacterBody2D
 var level: Node2D
 var pig := false
@@ -29,6 +31,7 @@ var _last_position := Vector2.ZERO
 var run_frame := 0
 var _run_distance := 0.0
 var _tail_frames: Array[Texture2D] = []
+var _carry_frames: Array[Texture2D] = []
 var tail_spin_frame := 0
 
 func _ready() -> void:
@@ -44,6 +47,13 @@ func _ready() -> void:
 		var frame_width := TAIL_SPIN.get_width()/float(TAIL_SPIN_FRAME_COUNT)
 		frame.region = Rect2(frame_width*index,TAIL_SPIN_CROP_Y,frame_width,TAIL_SPIN_CROP_HEIGHT)
 		_tail_frames.append(frame)
+	for index in 4:
+		var frame := AtlasTexture.new()
+		frame.atlas = PIPO_CARRY
+		var frame_width := PIPO_CARRY.get_width()/4.0
+		frame.region = Rect2(frame_width*index,0,frame_width,PIPO_CARRY.get_height())
+		frame.filter_clip = true
+		_carry_frames.append(frame)
 
 func _process(delta: float) -> void:
 	if not character.visible:
@@ -125,8 +135,9 @@ func _draw() -> void:
 			var recovery: float = 1.0-character.tail_phase_left/character.tail_recovery_duration
 			tail_spin_frame = 4 if recovery<0.35 else 5
 		texture = _tail_frames[tail_spin_frame]
-	if pose == "run" or (pose=="carry" and absf(character.velocity.x)>20):
+	if pose == "run":
 		texture = ATLAS.frame("run",(4 if pig else 0)+run_frame)
+	if pose == "carry": texture = _carry_frames[run_frame if absf(character.velocity.x)>20 else 0]
 	if pose in ["push", "push_attempt"]:
 		texture = ATLAS.frame("push",(4 if pig else 0)+push_frame)
 	var height := PIPO_VISUAL_HEIGHT if pig else TICO_VISUAL_HEIGHT
@@ -134,7 +145,8 @@ func _draw() -> void:
 	if pose == "glide": height = 82
 	if pose == "charge": height = PIPO_CHARGE_HEIGHT
 	if pose == "prepare": height = PIPO_PREPARE_HEIGHT
-	if pose in ["push", "push_attempt", "carry"]: height = PIPO_PUSH_HEIGHT if pig else 72
+	if pose in ["push", "push_attempt"]: height = PIPO_PUSH_HEIGHT if pig else 72
+	if pose == "carry": height = PIPO_CARRY_HEIGHT
 	if pose.begins_with("tail_"): height = 82
 	var size := texture.get_size() * (height / texture.get_height())
 	var bob := sin(_time*3)*1.0
@@ -161,16 +173,3 @@ func _draw() -> void:
 		# As mãos ficam junto à lateral física da pedra, também ao virar à esquerda.
 		right_edge = 26.0 if pig else 18.0
 	draw_texture_rect(texture,Rect2(Vector2(right_edge-size.x,-size.y),size),false)
-	if pig and pose=="carry":
-		# Braços sustentam a cesta acima da cabeça; sobrancelhas, boca e suor
-		# comunicam peso sem exigir textura ou animação adicional.
-		var skin := Color("a9d83f")
-		var sleeve := Color("f2ead2")
-		for side in [-1.0,1.0]:
-			draw_line(Vector2(side*25,-48),Vector2(side*32,-89),Color("17613c"),13,true)
-			draw_line(Vector2(side*29,-70),Vector2(side*32,-89),sleeve,10,true)
-			draw_circle(Vector2(side*32,-96),8,skin)
-		draw_line(Vector2(-13,-70),Vector2(-4,-66),Color("334424"),3,true)
-		draw_line(Vector2(10,-66),Vector2(19,-70),Color("334424"),3,true)
-		draw_arc(Vector2(4,-55),7,PI+.25,TAU-.25,12,Color("6e382e"),3,true)
-		draw_colored_polygon(PackedVector2Array([Vector2(-24,-73),Vector2(-18,-86),Vector2(-13,-74)]),Color("dff4ddcc"))

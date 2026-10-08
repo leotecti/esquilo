@@ -1,4 +1,4 @@
-# Pipo e o transporte de objetos — 0.36.5
+# Pipo e o transporte de objetos — refinamento 0.37.3
 
 As três fases de percurso do Mundo 2 receberam cestos de provisões destinados
 ao vilarejo. O sistema torna a força de Pipo parte da missão principal.
@@ -14,8 +14,10 @@ ao vilarejo. O sistema torna a força de Pipo parte da missão principal.
 - Sofrer dano faz Pipo soltar a carga no local.
 
 A cesta possui trama de madeira, aro, tecido e alimentos legíveis. O destino usa
-estrado de madeira, círculo dourado, bandeira verde e indicação `ENTREGA • AÇÃO`.
-Não há textura adicional, partículas contínuas ou física aplicada ao objeto. A
+carroça de madeira conduzida por um burrinho simpático e indicação `ENTREGA • AÇÃO`.
+Pipo usa uma sequência própria de quatro poses enquanto leva a cesta acima da cabeça,
+com passada pesada e expressão de esforço. A cesta, a carroça e o burrinho usam arte
+ilustrada coerente com as frutas, personagens e objetos do bosque. A
 posição acompanha Pipo somente enquanto ele o carrega.
 
 Saves anteriores recebem as novas entregas automaticamente quando a fase já

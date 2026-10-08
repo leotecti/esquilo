@@ -6,7 +6,7 @@ var hint: Label
 var cooldown := 0.0
 var compression := 0.0
 var last_strength := 0.0
-const PIPO_LAUNCH := Vector2(285.0,-900.0)
+const PIPO_LAUNCH := Vector2(340.0,-1020.0)
 const TICO_LAUNCH := Vector2(75.0,-330.0)
 
 func _ready() -> void:

@@ -21,12 +21,18 @@ var connections: Dictionary = {}
 var scenery: Node2D
 var safe_spot := Vector2(160,755)
 var hazard_delay := 0.0
+const RIVER_TICO_SPEED_SCALE := 0.10
+const RIVER_PIPO_SPEED_SCALE := 0.95
 
 func _ready() -> void:
 	world_stage = 3
 	$Geometry/SafetyFloor.collision_layer = 0
 	$FollowCamera.limit_top = -260
 	super._ready()
+	if biome==2 and section==0:
+		squirrel.move_speed *= RIVER_TICO_SPEED_SCALE
+		pipo.movement_speed_multiplier = RIVER_PIPO_SPEED_SCALE
+		pipo.move_speed = 220.0*RIVER_PIPO_SPEED_SCALE
 	next_button.text = "Próxima fase" if section<2 else ("Encontrar o Guardião" if section==2 else ("Seguir para a Montanha" if biome==2 else "Seguir para a Vila" if biome==3 else "Jogar novamente"))
 	_say(["O rio leva pistas! Espere os troncos e salte entre as margens.","Siga as penas! Tico pode planar nas correntes de vento.","Os castores precisam de ajuda. Pipo aciona os mecanismos!"][biome-2])
 	_message_time = 7
@@ -36,6 +42,9 @@ func _build_gameplay() -> void:
 	if biome==2: _river()
 	elif biome==3: _mountain()
 	else: _village()
+	if biome==2 and section==0:
+		for actor in actors.get_children():
+			if actor.is_in_group("enemies"): actor.set_meta("pipo_one_hit",true)
 	for actor in actors.get_children():
 		if actor.has_method("reset_item") or actor.has_method("reset_block"):
 			actor.set_meta("save_id","%d:%d" % [actor.position.x,actor.position.y])
@@ -88,14 +97,16 @@ func _river() -> void:
 	_bridge("TroncoRio",Rect2(3180,758,150,30))
 	_gate("TroncoRio",Rect2(3330,360,25,400))
 	_weight_platform("PesoCorrente",Vector2(3400,760))
-	_supply_cargo("CargaRio",Vector2(3370,760),Vector2(3520,760))
-	headwind_zones = [Rect2(2160,500,220,260)]
+	_supply_cargo("CargaRio",Vector2(3320,760),Vector2(3500,760))
+	# A corrente de ar atravessa toda a fase: Tico sente a rajada desde a entrada,
+	# enquanto o peso de Pipo permite manter o avanço.
+	headwind_zones = [Rect2(-120,-260,4040,1220)]
 	_weighted_spring(Vector2(2440,720))
-	_platform(Rect2(2580,405,210,45))
+	_platform(Rect2(2580,405,330,45))
 	for point in [Vector2(2615,361),Vector2(2685,361),Vector2(2755,361)]: _nut(point)
 	for point in [Vector2(350,715),Vector2(580,715),Vector2(850,650),Vector2(1260,715),Vector2(1520,715),Vector2(1850,620),Vector2(2350,645),Vector2(2970,715),Vector2(3290,715)]: _nut(point)
 	_armored_enemy(Vector2(3070,760),65)
-	_markers(Vector2(1410,760),Vector2(3590,760))
+	_markers(Vector2(1410,760),Vector2(3740,760))
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
 	_sign(Vector2(2170,490),"Vento forte • Pipo alcança a mola")
@@ -409,6 +420,11 @@ func _physics_process(delta: float) -> void:
 			if tico==squirrel and not headwind_hint_shown:
 				headwind_hint_shown = true
 				_say("O vento empurra Tico para trás. Pipo é pesado o bastante para chegar à mola.")
+	if biome==2 and section==0 and tico==pipo and pipo.ability=="charge":
+		for enemy in get_tree().get_nodes_in_group("enemies"):
+			if enemy.get_parent()==actors and enemy.get_meta("pipo_one_hit",false) and enemy.visible and pipo.position.distance_to(enemy.position)<78:
+				if enemy.has_method("receive_charge"): enemy.receive_charge(pipo)
+				elif enemy.has_method("_defeat"): enemy._defeat(pipo)
 	for zone in current_zones:
 		if zone.has_point(tico.position):
 			tico.current_acceleration = Vector2(900,0)
@@ -437,7 +453,7 @@ func _on_exit(marker: Node2D) -> void:
 	for device in mechanisms.values():
 		if not device.active:
 			marker.activated = false
-			_say("Ative o mecanismo para completar o caminho.")
+			_say("A carroça ainda espera as provisões de Pipo." if device.has_method("drop_at") else "Ative o mecanismo para completar o caminho.")
 			return
 	if is_instance_valid(guardian) and guardian.health>0:
 		marker.activated = false

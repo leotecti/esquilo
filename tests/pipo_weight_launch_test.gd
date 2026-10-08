@@ -5,7 +5,7 @@ func run() -> void:
 	root.content_scale_size = Vector2i(1280,720)
 	await open_stage(2,"1")
 	check(level.mechanisms.has("PesoCorrente") and level.weighted_springs.size()==1,"2-1 combina plataforma de peso e mola exclusiva de Pipo")
-	check(level.headwind_zones.size()==1,"Corredor antes da mola possui vento contrário visível")
+	check(level.headwind_zones.size()==1 and level.headwind_zones[0].position.x<=0 and level.headwind_zones[0].end.x>=3800,"Toda a fase 2-1 possui vento contrário visível")
 	check(level.movers.size()==3,"Travessia da mola não possui plataforma móvel alternativa sobre o rio")
 	var spring: Node2D = level.weighted_springs[0]
 	check(spring.position==Vector2(2440,720),"Mola está na margem indicada em T01")
@@ -34,8 +34,8 @@ func run() -> void:
 	spring.cooldown = 0.0
 	level.pipo.velocity = Vector2.ZERO
 	spring.launch(level.pipo)
-	check(level.tico==level.pipo and spring.last_strength==900.0,"Mola lança Pipo sem trocar o personagem ativo")
-	check(level.pipo.velocity.x>0 and level.pipo.velocity.y<=-900,"Pipo segue em arco para a plataforma sobre o rio")
+	check(level.tico==level.pipo and spring.last_strength==1020.0,"Mola lança Pipo sem trocar o personagem ativo")
+	check(level.pipo.velocity.x>0 and level.pipo.velocity.y<=-1020,"Pipo segue em arco para a plataforma sobre o rio")
 	check(level.squirrel.environmental_force_multiplier(&"wind")==1.0,"Tico recebe toda a força do vento")
 	check(level.pipo.environmental_force_multiplier(&"wind")<0.5,"Peso de Pipo oferece resistência suficiente ao vento")
 	var high_route: Array = level.terrain.filter(func(rect: Rect2): return rect.position.y==405 and rect.position.x==2580)
@@ -48,7 +48,7 @@ func run() -> void:
 	key(KEY_D,true)
 	await frames(105)
 	key(KEY_D,false)
-	check(level.pipo.position.x>=2580 and level.pipo.position.y<430,"Pipo pousa na plataforma alta durante a travessia jogável")
+	check(level.pipo.position.x>=2580 and level.pipo.position.x<=2910 and level.pipo.position.y<430,"Pipo pousa com margem segura na plataforma alta durante a travessia jogável")
 
 	await place(level.mechanisms.PesoCorrente.position,35)
 	check(level.mechanisms.PesoCorrente.active,"Pipo mantém a plataforma de peso do restante da fase")

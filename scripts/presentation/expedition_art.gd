@@ -40,9 +40,12 @@ func _draw() -> void:
 	# Rajadas horizontais deixam visível a barreira que Tico não vence pelo peso baixo.
 	for zone in level.headwind_zones:
 		draw_rect(zone,Color(0.78,0.90,0.88,.035))
-		for i in 6:
-			var y: float = zone.position.y+38+i*34
-			var x: float = zone.end.x-fmod(clock*105+i*71,zone.size.x+80)
+		var gust_count := mini(36,maxi(6,ceili(zone.size.x/220.0)))
+		for i in gust_count:
+			var y: float = zone.position.y+80+(i%7)*92
+			var lane: float = floorf(i/7.0)*220.0
+			var x: float = zone.end.x-fmod(clock*105+i*71,zone.size.x+80)-lane
+			if x<zone.position.x-60: x += zone.size.x+80
 			draw_line(Vector2(x,y),Vector2(x-54,y+sin(clock*3+i)*4),Color("e7f5d9a8"),4,true)
 			draw_colored_polygon(PackedVector2Array([Vector2(x-54,y),Vector2(x-42,y-7),Vector2(x-42,y+7)]),Color("e7f5d9a8"))
 	for rect in level.cave_roofs:

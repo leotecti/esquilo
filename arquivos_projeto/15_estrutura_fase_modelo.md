@@ -210,7 +210,7 @@ alternativa, e cair na água causa dano e retorna à margem segura.
 
 O transporte de provisões usa cestos colocados em superfícies seguras. Pipo anda
 mais devagar e não salta nem troca de personagem enquanto carrega. AÇÃO solta o
-cesto ou o entrega em um estrado com aro dourado, bandeira verde e indicação
+cesto ou o entrega na carroça do burrinho, com indicação
 `ENTREGA • AÇÃO`; dano também solta a carga. Pipo ergue a cesta acima da cabeça,
 mantém os braços elevados e caminha com expressão de esforço. As rotas devem
 permitir o transporte a pé e deixar o destino visível antes do início.

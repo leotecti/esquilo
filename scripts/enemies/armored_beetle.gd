@@ -53,13 +53,15 @@ func _physics_process(delta: float) -> void:
 		if player.is_in_group("pipo") and player.ability=="charge":
 			receive_charge(player)
 		elif player.velocity.y>0 and player.previous_position.y<=position.y-30:
-			if armored: _block_attack(player,"A carapaça bloqueou o pisão!")
+			if player.is_in_group("pipo") and get_meta("pipo_one_hit",false): receive_pipo_stomp(player)
+			elif armored: _block_attack(player,"A carapaça bloqueou o pisão!")
 			else: _defeat(player)
 		else:
 			player.take_damage(position)
 
 func receive_charge(character: Node2D) -> bool:
 	if defeated or not character.is_in_group("pipo") or character.ability!="charge": return false
+	if get_meta("pipo_one_hit",false): return _defeat(character)
 	if armored:
 		armored = false
 		armor_broken = true
@@ -68,6 +70,10 @@ func receive_charge(character: Node2D) -> bool:
 		armor_broken_signal.emit(self)
 		queue_redraw()
 		return true
+	return _defeat(character)
+
+func receive_pipo_stomp(character: Node2D) -> bool:
+	if defeated or not get_meta("pipo_one_hit",false) or not character.is_in_group("pipo"): return false
 	return _defeat(character)
 
 func receive_tail(character: Node2D) -> bool:
