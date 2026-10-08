@@ -210,8 +210,8 @@ alternativa, e cair na água causa dano e retorna à margem segura.
 
 O transporte de provisões usa cestos colocados em superfícies seguras. Pipo anda
 mais devagar e não salta nem troca de personagem enquanto carrega. AÇÃO solta o
-cesto ou o entrega na carroça do burrinho, com indicação
-`ENTREGA • AÇÃO`; dano também solta a carga. Pipo ergue a cesta acima da cabeça,
+cesto durante o percurso. Ao se aproximar da carroça do burrinho, o controle é
+suspenso e a entrega começa automaticamente. Pipo ergue a cesta acima da cabeça,
 mantém os braços elevados e caminha com expressão de esforço. As rotas devem
 permitir o transporte a pé e deixar o destino visível antes do início.
 
@@ -228,6 +228,13 @@ jogador fique preso carregando-a durante o mecanismo.
 | 2-2 | Plataformas de peso e travessia em balsas móveis |
 | 2-3 | Quebra de armaduras e transporte de provisões |
 | 2-4 | Investida para romper a defesa do Guardião do Rio antes do salto de Tico |
+
+A fase 2-1 usa **38.000 unidades**. O trecho inicial aprovado permanece intacto;
+depois da entrega, dez trechos alternam margens, correntezas, plataformas móveis,
+blocos, alimentos e inimigos. Uma caverna em **x = 18.418** leva à área
+secundária e retorna em **x = 24.600**. A bandeira única fica em **x = 25.800**
+e o portal final em **x = 37.740**. O vento contrário cobre toda a trilha e os
+inimigos seguem a regra especial de derrota com um salto ou uma investida de Pipo.
 
 Na fase 2-4, os três acertos repetem a cooperação completa. Pipo rompe a
 proteção, o jogo mantém uma janela segura para a troca e somente o salto de Tico

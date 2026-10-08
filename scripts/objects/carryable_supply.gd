@@ -32,6 +32,8 @@ const CARRY_OFFSET := Vector2(0,-108)
 const PLACEMENT_DURATION := 0.90
 const DEPARTURE_DELAY := 0.65
 const DEPARTURE_DURATION := 2.35
+const CART_GROUND_OFFSET := 5.0
+const BASKET_GROUND_OFFSET := 14.0
 
 func _ready() -> void:
 	origin = position
@@ -64,7 +66,9 @@ func _ready() -> void:
 		var frame := AtlasTexture.new()
 		frame.atlas = DONKEY_CART_WALK
 		var frame_width := DONKEY_CART_WALK.get_width()/4.0
-		frame.region = Rect2(frame_width*index,150,frame_width,390)
+		# A arte possui uma margem transparente grande abaixo das patas. Recortar
+		# somente a faixa ocupada mantém rodas e cascos apoiados durante a partida.
+		frame.region = Rect2(frame_width*index,170,frame_width,315)
 		frame.filter_clip = true
 		_cart_frames.append(frame)
 	queue_redraw()
@@ -176,8 +180,8 @@ func _draw() -> void:
 	var cart_at := target+Vector2(departure_offset,0)
 	# A cesta fica atrás da parede frontal da carroça, encaixada no compartimento.
 	if active and not departed: _draw_basket_in_cart(cart_at)
-	elif placing: _draw_basket(Vector2.ZERO,lerpf(88.0,46.0,placement_progress))
-	elif should_draw_waiting_basket(): _draw_basket(Vector2.ZERO)
+	elif placing: _draw_basket(Vector2(0,lerpf(BASKET_GROUND_OFFSET,0.0,placement_progress)),lerpf(88.0,46.0,placement_progress))
+	elif should_draw_waiting_basket(): _draw_basket(Vector2(0,BASKET_GROUND_OFFSET))
 	_draw_delivery_area(cart_at)
 
 func should_draw_waiting_basket() -> bool:
@@ -193,7 +197,7 @@ func _draw_delivery_area(at: Vector2) -> void:
 	var cart_height := 130.0 if departing else 122.0
 	var cart_size := cart_texture.get_size()*(cart_height/cart_texture.get_height())
 	# O centro da carroça coincide com o ponto de entrega; o burrinho aguarda à direita.
-	draw_texture_rect(cart_texture,Rect2(at+Vector2(-65,-cart_height),cart_size),false)
+	draw_texture_rect(cart_texture,Rect2(at+Vector2(-65,-cart_height+CART_GROUND_OFFSET),cart_size),false)
 	if departing and departure_time>DEPARTURE_DELAY:
 		for i in 4:
 			var dust_x := at.x-52-i*15-fmod(departure_time*70+i*11,24)

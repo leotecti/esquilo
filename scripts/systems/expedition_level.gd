@@ -5,7 +5,7 @@ const NAMES = {
 	2:["2-1 • Atravessando o Rio","2-2 • Correnteza","2-3 • A Grande Ponte","2-4 • Guardião do Rio"],
 	3:["3-1 • Vento nas Alturas","3-2 • Cavernas da Montanha","3-3 • O Ninho das Corujas","3-4 • Gavião da Montanha"],
 	4:["4-1 • A Vila Mecânica","4-2 • A Grande Barragem","4-3 • As Engrenagens","4-4 • Rei Castor"]}
-const BACKGROUNDS = [preload("res://assets/worlds/river.svg"),preload("res://assets/worlds/mountain.svg"),preload("res://assets/worlds/village.svg")]
+const BACKGROUNDS = [preload("res://assets/worlds/river_painted.png"),preload("res://assets/worlds/mountain.svg"),preload("res://assets/worlds/village.svg")]
 var water: Array[Rect2] = []
 var wind_zones: Array[Rect2] = []
 var headwind_zones: Array[Rect2] = []
@@ -53,6 +53,13 @@ func _build_gameplay() -> void:
 	elif biome==3: _mountain()
 	else: _village()
 	if biome==2 and section==0:
+		# 2-1 possui uma exploração própria atrás da cachoeira. A campanha
+		# expedicionária não cria automaticamente as áreas do Mundo 1.
+		optional_area = preload("res://scripts/systems/waterfall_grotto_area.gd").new()
+		optional_area.level = self
+		optional_area.z_index = -2
+		add_child(optional_area)
+		optional_area.build()
 		for actor in actors.get_children():
 			if actor.is_in_group("enemies"): actor.set_meta("pipo_one_hit",true)
 	for actor in actors.get_children():
@@ -123,6 +130,7 @@ func _river() -> void:
 	for point in [Vector2(350,715),Vector2(580,715),Vector2(850,650),Vector2(1260,715),Vector2(1520,715),Vector2(1850,620),Vector2(2350,645),Vector2(2970,715),Vector2(3290,715)]: _nut(point)
 	_armored_enemy(Vector2(3155,760),45)
 	_markers(Vector2(1410,760),Vector2(3740,760))
+	preload("res://scripts/systems/river_crossing_layout.gd").build(self)
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
 	_sign(Vector2(2170,490),"Vento forte • Pipo alcança a mola")
@@ -414,7 +422,10 @@ func _gate(id: String, rect: Rect2) -> void:
 
 func _apply_device(id: String, announce: bool) -> void:
 	var device: Node2D = mechanisms[id]
-	device.activate(false)
+	# A rocha precisa terminar sua queda visual. Sua corda já abre a barreira,
+	# mas a ativação genérica não deve teleportá-la para o quadro final.
+	if not device.has_method("is_falling") or not device.is_falling():
+		device.activate(false)
 	for target in connections[id]:
 		if target.has("body"):
 			target.body.get_node("Collision").set_deferred("disabled",false)
@@ -491,6 +502,9 @@ func _physics_process(delta: float) -> void:
 		if zone.has_point(tico.position) and tico==squirrel and Input.is_action_pressed("jump"):
 			tico.wind_acceleration = Vector2(160,-500)
 	for zone in headwind_zones:
+		# A rajada pertence à trilha aberta. Dentro da Caverna do Rio o ar fica
+		# calmo e a troca para Tico é exigida pela altura das formações rochosas.
+		if is_instance_valid(optional_area) and optional_area.get("active"): continue
 		if zone.has_point(tico.position):
 			# Intervalos mais suaves deixam Tico dar passos curtos; a rajada seguinte
 			# cresce e o empurra novamente para trás.
@@ -524,6 +538,7 @@ func _physics_process(delta: float) -> void:
 
 func tico_struggling_against_wind(character: CharacterBody2D) -> bool:
 	if biome!=2 or section!=0 or character!=squirrel or not character.controls_enabled or not character.is_on_floor(): return false
+	if is_instance_valid(optional_area) and optional_area.get("active"): return false
 	if is_zero_approx(Input.get_axis("move_left","move_right")): return false
 	return headwind_zones.any(func(zone: Rect2): return zone.has_point(character.position))
 
