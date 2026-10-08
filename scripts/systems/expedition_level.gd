@@ -113,14 +113,8 @@ func _river() -> void:
 	_mover(Vector2(820,725),Vector2(250,0),180,5)
 	_mover(Vector2(1680,725),Vector2(180,0),180,4.8)
 	_mover(Vector2(1950,700),Vector2(110,0),180,5.2)
-	# Pipo contorna a rocha, empurra-a para a esquerda e a derruba no rio. A
-	# corda presa nela baixa a alavanca e abre o portão antes da cesta.
-	var lever_rock := _river_lever_rock("RochaAlavanca",Vector2(2960,760),Vector2(3290,760))
-	lever_rock.fall_distance = 100.0
-	_gate("RochaAlavanca",Rect2(3290,360,30,400))
 	_weight_platform("PesoCorrente",Vector2(3425,760))
-	var river_cargo := _supply_cargo("CargaRio",Vector2(3480,760),Vector2(3650,760))
-	river_cargo.required_mechanism = &"RochaAlavanca"
+	_supply_cargo("CargaRio",Vector2(3480,760),Vector2(3650,760))
 	# A corrente de ar atravessa toda a fase: Tico sente a rajada desde a entrada,
 	# enquanto o peso de Pipo permite manter o avanço.
 	headwind_zones = [Rect2(-120,-260,4040,1220)]
@@ -134,7 +128,7 @@ func _river() -> void:
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
 	_sign(Vector2(2170,490),"Vento forte • Pipo alcança a mola")
-	_sign(Vector2(2940,505),"Pipo • Empurre a rocha para a esquerda\nA corda acionará a alavanca")
+	_sign(Vector2(2940,505),"Pipo • Leve as provisões até a carroça")
 
 func _mountain() -> void:
 	if section==3:
@@ -323,25 +317,6 @@ func _supply_cargo(id: String, point: Vector2, destination: Vector2) -> Node2D:
 	cargo.delivered.connect(func(_node): _apply_device(id,true))
 	return cargo
 
-func _river_lever_rock(id: String, point: Vector2, lever: Vector2) -> Node2D:
-	var rock = preload("res://scripts/objects/river_lever_rock.gd").new()
-	rock.name = id
-	rock.level = self
-	rock.position = point
-	rock.lever_position = lever
-	var collision := CollisionShape2D.new()
-	collision.name = "Collision"
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(92,72)
-	collision.position = Vector2(0,-36)
-	collision.shape = shape
-	rock.add_child(collision)
-	actors.add_child(rock)
-	mechanisms[id] = rock
-	connections[id] = []
-	rock.activated.connect(func(_node): _apply_device(id,true))
-	return rock
-
 func pipo_is_carrying() -> bool:
 	return is_instance_valid(carried_object) and carried_object.carried
 
@@ -422,10 +397,7 @@ func _gate(id: String, rect: Rect2) -> void:
 
 func _apply_device(id: String, announce: bool) -> void:
 	var device: Node2D = mechanisms[id]
-	# A rocha precisa terminar sua queda visual. Sua corda já abre a barreira,
-	# mas a ativação genérica não deve teleportá-la para o quadro final.
-	if not device.has_method("is_falling") or not device.is_falling():
-		device.activate(false)
+	device.activate(false)
 	for target in connections[id]:
 		if target.has("body"):
 			target.body.get_node("Collision").set_deferred("disabled",false)

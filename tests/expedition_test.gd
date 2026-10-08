@@ -69,11 +69,7 @@ func run() -> void:
 	await frames(65)
 	key(KEY_E,false)
 	check(armored_enemy.defeated,"Investida de Pipo derrota o inimigo da fase 2-1")
-	var lever_rock: Node2D = level.mechanisms.RochaAlavanca
-	await place(Vector2(3060,760),8)
-	for i in 140: lever_rock.push_by(level.pipo,-1.0,1.0/60.0)
-	await frames(55)
-	check(lever_rock.active and lever_rock.position.y>800,"2-1: Pipo derruba a rocha no rio e a corda abre a passagem final")
+	check(not level.mechanisms.has("RochaAlavanca") and level.mechanisms.CargaRio._passage_is_open(),"2-1: cesta acessível sem o antigo mecanismo da rocha")
 	await place(level.mechanisms.PesoCorrente.position,35)
 	check(level.mechanisms.PesoCorrente.active,"Pipo aciona a plataforma de peso antes da chegada")
 	var cargo: Node2D = level.mechanisms.CargaRio

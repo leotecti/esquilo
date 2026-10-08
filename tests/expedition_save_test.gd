@@ -92,7 +92,6 @@ func run() -> void:
 	var manager = CAMPAIGN_SAVE.new()
 	var old_river_save := fixture(4)
 	old_river_save.save_version = 2
-	old_river_save.levels["4"].mechanisms.erase("RochaAlavanca")
 	old_river_save.levels["4"].mechanisms.TroncoRio = true
 	old_river_save.survival = {"lives":3,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":true,"claimed":[]}
 	old_river_save.tutorials = {}
@@ -100,7 +99,7 @@ func run() -> void:
 	old_river_save.collectibles = {"golden_nuts":{}}
 	old_river_save.story = {"events":[],"village":{}}
 	var migrated_river := manager.migrate(old_river_save)
-	check(migrated_river.levels["4"].mechanisms.get("RochaAlavanca",false) and not migrated_river.levels["4"].mechanisms.has("TroncoRio"),"Save anterior converte o tronco ativado na nova rocha com alavanca")
+	check(not migrated_river.levels["4"].mechanisms.has("RochaAlavanca") and not migrated_river.levels["4"].mechanisms.has("TroncoRio"),"Save anterior remove mecanismos descontinuados da fase 2-1")
 	var invalid := fixture(14)
 	invalid.levels["14"].checkpoint = true
 	invalid.levels["14"].mechanisms.Roda = false

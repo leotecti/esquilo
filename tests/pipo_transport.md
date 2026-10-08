@@ -13,10 +13,9 @@ ao vilarejo. O sistema torna a força de Pipo parte da missão principal.
 - Aproximar-se da carroça inicia automaticamente a entrega e conclui o mecanismo.
 - Sofrer dano faz Pipo soltar a carga no local.
 
-Em 2-1, a cesta fica depois de um portão e não aceita coleta enquanto ele está
-fechado. Pipo deve passar para o lado direito da rocha e empurrá-la para a
-esquerda, até que ela caia no rio. A queda tensiona uma corda presa à rocha,
-baixa a alavanca e abre o portão. Só então Pipo alcança as provisões.
+Em 2-1, Pipo alcança a cesta diretamente depois da travessia da mola. O antigo
+mecanismo de rocha, corda, alavanca e barreira foi removido. A missão preserva
+o transporte das provisões e a entrega à carroça.
 
 A cesta possui trama de madeira, aro, tecido e alimentos legíveis. O destino usa
 carroça de madeira conduzida por um burrinho simpático e indicação `ENTREGA • AÇÃO`.
@@ -57,3 +56,7 @@ estava concluída ou tinha checkpoint, preservando o progresso existente.
 Cada um dos três acertos do chefe exige a investida de Pipo seguida pelo salto
 de Tico. A abertura permanece ativa durante a troca, e Pipo fica protegido do
 contato depois de romper a defesa.
+
+## Refinamento 0.40.5
+
+A cesta entregue mant�m 68 px de altura, fica centralizada dentro do compartimento e termina o arco na mesma posi��o usada pela carro�a em movimento. A parede frontal cobre sua base para criar um encaixe com profundidade, sem flutua��o ou redu��o brusca.

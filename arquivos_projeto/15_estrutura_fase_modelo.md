@@ -215,16 +215,15 @@ suspenso e a entrega começa automaticamente. Pipo ergue a cesta acima da cabeç
 mantém os braços elevados e caminha com expressão de esforço. As rotas devem
 permitir o transporte a pé e deixar o destino visível antes do início.
 
-Em 2-1, a cesta fica fisicamente depois do portão. Pipo empurra uma rocha para
-a esquerda até o rio; a queda tensiona a corda, aciona uma alavanca e abre o
-caminho. A cesta não pode ser recolhida antes dessa ativação, evitando que o
-jogador fique preso carregando-a durante o mecanismo.
+Em 2-1, Pipo alcança a cesta diretamente depois da travessia da mola. A missão
+mantém o transporte das provisões e a entrega à carroça, sem o antigo mecanismo
+de rocha, corda, alavanca e barreira.
 
 ### Estrutura do Mundo 2
 
 | Fase | Uso obrigatório de Pipo |
 |---|---|
-| 2-1 | Resistência ao vento, mola de peso, rocha com corda e transporte de provisões |
+| 2-1 | Resistência ao vento, mola de peso e transporte de provisões |
 | 2-2 | Plataformas de peso e travessia em balsas móveis |
 | 2-3 | Quebra de armaduras e transporte de provisões |
 | 2-4 | Investida para romper a defesa do Guardião do Rio antes do salto de Tico |

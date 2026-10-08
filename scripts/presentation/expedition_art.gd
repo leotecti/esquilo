@@ -23,7 +23,9 @@ func _draw() -> void:
 			x += width
 	for rect in level.water:
 		if not rect.intersects(visible_band): continue
-		draw_rect(rect,Color("408eaeaf"))
+		# A pintura do Rio das Pedras já contém água. A camada leve mantém as
+		# ondas animadas sem formar um retângulo opaco nos vãos entre margens.
+		draw_rect(rect,Color(0.25,0.56,0.68,.16) if level.biome==2 else Color("408eaeaf"))
 		for x in range(int(rect.position.x),int(rect.end.x),45):
 			var y: float = rect.position.y+sin(clock*2+x)*4
 			draw_line(Vector2(x,y),Vector2(x+30,y),Color("bcf0e5"),3)

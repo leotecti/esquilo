@@ -1,5 +1,5 @@
 extends "res://scripts/systems/world_save.gd"
-const DEVICES = {4:["RochaAlavanca","PesoCorrente","CargaRio"],5:["Tronco","PesoMargem","CargaMargem"],6:["Ponte","PesoPonte","CargaPonte"],7:[],8:[],9:["Rocha"],10:[],11:[],12:["Peso"],13:["Comporta"],14:["Tora","Roda","Engrenagem"],15:["Arena"]}
+const DEVICES = {4:["PesoCorrente","CargaRio"],5:["Tronco","PesoMargem","CargaMargem"],6:["Ponte","PesoPonte","CargaPonte"],7:[],8:[],9:["Rocha"],10:[],11:[],12:["Peso"],13:["Comporta"],14:["Tora","Roda","Engrenagem"],15:["Arena"]}
 func _init() -> void:
 	current_version = 2
 	max_stage = 15
@@ -57,7 +57,7 @@ func valid(data: Variant) -> bool:
 			if data.levels[id].route_checkpoint>0 and not data.levels[id].checkpoint: return false
 		if data.levels[id].has("optional_area"):
 			var area: Variant = data.levels[id].optional_area
-			if index not in [0,1,2,3] or not area is Dictionary or area.size()!=2: return false
+			if index not in [0,1,2,3,4] or not area is Dictionary or area.size()!=2: return false
 			if not area.get("active") is bool or not area.get("checkpoint") is bool: return false
 			if area.active and data.levels[id].completed: return false
 		if index<4: continue
@@ -118,10 +118,6 @@ func _sync_devices(data: Dictionary) -> void:
 		if index<4 or not DEVICES.has(index): continue
 		var state: Dictionary = data.levels[id]
 		if not state.has("mechanisms") or not state.mechanisms is Dictionary: state.mechanisms = {}
-		# O tronco da primeira versão de 2-1 virou a rocha ligada à alavanca.
-		# Preservar sua ativação evita fechar novamente o caminho em saves existentes.
-		if index==4 and state.mechanisms.has("TroncoRio") and not state.mechanisms.has("RochaAlavanca"):
-			state.mechanisms.RochaAlavanca = state.mechanisms.TroncoRio
 		for device in DEVICES[index]:
 			if not state.mechanisms.has(device): state.mechanisms[device] = bool(state.get("completed",false) or state.get("checkpoint",false))
 		for device in state.mechanisms.keys():

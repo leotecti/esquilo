@@ -10,7 +10,7 @@ const RIVER_EXIT := Vector2(77930,525)
 const PORTAL_STYLE_VERSION := 1
 const BACKGROUND_STYLE_VERSION := 1
 const TERRAIN_STYLE_VERSION := 2
-const RIVER_CAVE_STYLE_VERSION := 2
+const RIVER_CAVE_STYLE_VERSION := 3
 const GROTTO_BACKGROUND = preload("res://assets/environment/waterfall_grotto_background.png")
 const RIVER_CAVE_BACKGROUND = preload("res://assets/environment/river_cave_background.png")
 const RIVER_ENTRY := Vector2(18418,720)
@@ -166,6 +166,7 @@ func travel(entering: bool) -> void:
 	tween.tween_property(veil,"modulate:a",1.0,.18)
 	tween.tween_callback(func():
 		active=entering
+		_apply_river_cave_movement()
 		apply_camera()
 		level.sounds.set_environment("night" if entering else "forest")
 		level.tico.reset_at(START if entering else RETURN)
@@ -179,12 +180,21 @@ func apply_camera() -> void:
 	level.camera.limit_left = LEFT_EDGE if active else 0
 	level.camera.limit_right = RIGHT_EDGE if active else level.main_right
 func restore_player() -> void:
+	_apply_river_cave_movement()
 	apply_camera()
 	if active: level.tico.reset_at(START)
 	level.camera.snap_to_target()
 func snapshot() -> Dictionary: return {"active":active,"checkpoint":false}
 func entry_point() -> Vector2: return RIVER_ENTRY if river_cave else ENTRY
 func exit_point() -> Vector2: return RIVER_EXIT if river_cave else EXIT
+
+func _apply_river_cave_movement() -> void:
+	if not river_cave: return
+	# A redução de velocidade representa o vento da trilha aberta. Dentro da
+	# caverna Tico recupera seu movimento normal e vence os degraus altos.
+	level.squirrel.move_speed = 300.0 if active else 300.0*level.RIVER_TICO_SPEED_SCALE
+	level.pipo.movement_speed_multiplier = 1.0 if active else level.RIVER_PIPO_SPEED_SCALE
+	level.pipo.move_speed = 220.0*level.pipo.movement_speed_multiplier
 func restore(state: Dictionary) -> void:
 	active = state.get("active",false) and not level.completed
 	checkpoint = false
@@ -203,11 +213,15 @@ func _draw() -> void:
 			draw_line(Vector2(x+8,400),Vector2(x+4,700),Color(0.80,1.0,1.0,.38),3,true)
 		for i in 7:
 			draw_circle(Vector2(18240+i*54,715+(i%2)*7),42,Color(0.72,0.95,0.91,.10))
-	# A ilustração cobre todo o refúgio, em painéis contínuos e sem colisões falsas.
+	# A ilustração cobre toda a altura que a câmera pode revelar. Na caverna do
+	# rio, painéis espelhados unem a mesma borda da pintura e evitam cortes.
 	var area_background: Texture2D = RIVER_CAVE_BACKGROUND if river_cave else GROTTO_BACKGROUND
-	for panel in 4:
-		draw_texture_rect(area_background,Rect2(LEFT_EDGE+panel*1600,0,1600,760),false,Color("d0ece4"))
-	draw_rect(Rect2(LEFT_EDGE,0,RIGHT_EDGE-LEFT_EDGE,760),Color(0.02,0.12,0.13,.18))
+	if river_cave:
+		_draw_continuous_river_cave_background(area_background)
+	else:
+		for panel in 4:
+			draw_texture_rect(area_background,Rect2(LEFT_EDGE+panel*1600,-120,1600,1120),false,Color("d0ece4"))
+	draw_rect(Rect2(LEFT_EDGE,-120,RIGHT_EDGE-LEFT_EDGE,1120),Color(0.02,0.12,0.13,.18))
 	var cave_platforms: Array = RIVER_CAVE_PLATFORMS if river_cave else GROTTO_PLATFORMS
 	for rect in cave_platforms: _draw_grotto_ground(rect)
 	for point in [START,exit_point()]:
@@ -215,6 +229,27 @@ func _draw() -> void:
 		draw_circle(point+Vector2(0,-43),49,Color(0.35,0.76,0.72,.48))
 		for stripe in 6:
 			draw_line(point+Vector2(-36+stripe*14,-88),point+Vector2(-40+stripe*14,8),Color(0.74,0.97,0.91,.30),5,true)
+
+func _draw_continuous_river_cave_background(texture: Texture2D) -> void:
+	# O fundo anterior terminava em Y 760 e revelava a paisagem principal nos
+	# vãos. Esta base fecha toda a faixa antes de aplicar a pintura.
+	var total_width := RIGHT_EDGE-LEFT_EDGE
+	draw_rect(Rect2(LEFT_EDGE,-120,total_width,1120),Color("102b31"))
+	var panel_width := total_width/4.0
+	var source_height := float(texture.get_height())
+	var source_width := source_height*(panel_width/1120.0)
+	var source_x := (float(texture.get_width())-source_width)*0.5
+	var source := Rect2(source_x,0,source_width,source_height)
+	for panel in 4:
+		var left := LEFT_EDGE+panel*panel_width
+		if panel%2==0:
+			draw_texture_rect_region(texture,Rect2(left,-120,panel_width,1120),source,Color("d0ece4"))
+		else:
+			# Espelhar faz as duas laterais da junção usarem exatamente os mesmos
+			# pixels, removendo a faixa vertical sem criar outra emenda.
+			draw_set_transform(Vector2(left+panel_width,0),0.0,Vector2(-1,1))
+			draw_texture_rect_region(texture,Rect2(0,-120,panel_width,1120),source,Color("d0ece4"))
+			draw_set_transform(Vector2.ZERO,0.0,Vector2.ONE)
 
 func _draw_river_cave_entrance() -> void:
 	var center := RIVER_ENTRY

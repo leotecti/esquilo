@@ -34,6 +34,8 @@ const DEPARTURE_DELAY := 0.65
 const DEPARTURE_DURATION := 2.35
 const CART_GROUND_OFFSET := 5.0
 const BASKET_GROUND_OFFSET := 14.0
+const CART_BASKET_HEIGHT := 68.0
+const CART_BASKET_CENTER := Vector2(-22,-34)
 
 func _ready() -> void:
 	origin = position
@@ -97,7 +99,9 @@ func _process(delta: float) -> void:
 		placement_progress = clampf(placement_time/PLACEMENT_DURATION,0.0,1.0)
 		var eased_place := placement_progress*placement_progress*(3.0-2.0*placement_progress)
 		# Um arco curto faz Pipo baixar o cesto para dentro do compartimento.
-		var fitted_anchor := destination+Vector2(-24,-66)
+		# O último quadro coincide com a posição usada dentro da carroça. Assim a
+		# cesta não encolhe nem salta para cima quando a entrega é concluída.
+		var fitted_anchor := destination+CART_BASKET_CENTER
 		position = placement_from.lerp(fitted_anchor,eased_place)+Vector2(0,-sin(placement_progress*PI)*18.0)
 		if placement_progress>=1.0:
 			placing = false
@@ -178,11 +182,14 @@ func start_departure() -> void:
 func _draw() -> void:
 	var target := destination-position
 	var cart_at := target+Vector2(departure_offset,0)
-	# A cesta fica atrás da parede frontal da carroça, encaixada no compartimento.
-	if active and not departed: _draw_basket_in_cart(cart_at)
-	elif placing: _draw_basket(Vector2(0,lerpf(BASKET_GROUND_OFFSET,0.0,placement_progress)),lerpf(88.0,46.0,placement_progress))
-	elif should_draw_waiting_basket(): _draw_basket(Vector2(0,BASKET_GROUND_OFFSET))
 	_draw_delivery_area(cart_at)
+	# A carroça forma a base; a cesta aparece sobre a caixa e uma travessa cobre
+	# apenas sua base. Assim ela fica dentro do compartimento e continua legível.
+	if active and not departed:
+		_draw_basket_in_cart(cart_at)
+		_draw_cart_front_lip(cart_at)
+	elif placing: _draw_basket(Vector2(0,lerpf(BASKET_GROUND_OFFSET,0.0,placement_progress)),lerpf(88.0,CART_BASKET_HEIGHT,placement_progress))
+	elif should_draw_waiting_basket(): _draw_basket(Vector2(0,BASKET_GROUND_OFFSET))
 
 func should_draw_waiting_basket() -> bool:
 	# Depois da entrega, a cesta pertence à carroça e não pode reaparecer
@@ -213,8 +220,23 @@ func _draw_basket(at: Vector2, height := 88.0) -> void:
 	draw_texture_rect(BASKET,Rect2(at+Vector2(-size.x/2,-height),size),false)
 
 func _draw_basket_in_cart(at: Vector2) -> void:
-	var height := 46.0
+	var height := CART_BASKET_HEIGHT
 	var size := BASKET.get_size()*(height/BASKET.get_height())
-	# Centro do cesto alinhado ao interior da caixa; a carroça desenhada depois
-	# cobre a parte inferior e cria o encaixe visual.
-	draw_texture_rect(BASKET,Rect2(at+Vector2(-24-size.x/2,-112),size),false)
+	# A cesta ocupa o compartimento sem ultrapassar sua borda. A carroça é
+	# desenhada depois e cobre a base, criando profundidade e contato visual.
+	draw_texture_rect(BASKET,Rect2(at+Vector2(CART_BASKET_CENTER.x-size.x/2,CART_BASKET_CENTER.y-height),size),false)
+
+func _draw_cart_front_lip(at: Vector2) -> void:
+	# A travessa preserva frutas, alça e trama visíveis, mas cobre a base do cesto.
+	var y := at.y-42.0
+	draw_style_box(_wood_lip_style(),Rect2(at.x-61,y,78,17))
+	draw_circle(Vector2(at.x-53,y+8),4,Color("d7a348"))
+	draw_circle(Vector2(at.x+9,y+8),4,Color("d7a348"))
+
+func _wood_lip_style() -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("9b5b2d")
+	style.border_color = Color("e2a64d")
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(5)
+	return style
