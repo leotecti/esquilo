@@ -44,12 +44,15 @@ func run() -> void:
 	key(KEY_D,true)
 	await frames(25)
 	phases.clear()
+	var push_gaps := 0
 	var start_x: float = level.stone.position.x
 	for i in 100:
 		await frames(1)
 		if art.pose == "push": phases[art.push_frame] = true
+		elif level.stone.position.x<level.stone.origin.x+level.stone.max_travel-4: push_gaps += 1
 	check(level.stone.position.x>start_x+80,"Pipo mantém o deslocamento normal da pedra")
 	check(phases.size()==4,"Pipo alterna quatro passadas enquanto empurra")
+	check(push_gaps==0 and art._push_grace>0,"Ciclo de Pipo permanece contínuo entre os contatos com a pedra móvel")
 	check(level.sounds.played.get("step",0)>0,"Empurrar acompanha os passos com áudio")
 	await frames(200)
 	check(art.pose=="push_attempt" and art.push_frame==0,"No limite da pedra, Pipo faz força sem andar parado")

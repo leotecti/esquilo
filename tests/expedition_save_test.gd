@@ -44,6 +44,8 @@ func run() -> void:
 	check(FileAccess.get_file_as_string(LEGACY)==original,"CAMPAIGN_SAVE antigo permanece intacto")
 	await advance()
 	check(campaign.data.stage==4 and level.biome==2 and not level.completed,"Resultado do Bosque avança para Rio")
+	var river_life: Node2D = level.actors.get_node("LifeCache")
+	check(river_life.position.y==625 and 760.0-(river_life.position.y+29.0)>level.pipo.get_node("Collision").shape.size.y,"Bloco de vida deixa Pipo passar por baixo na fase 2-1")
 	check(campaign.store.valid(campaign.data),"Campanha migrada atende às regras novas")
 	await close_world()
 	await open_campaign()
@@ -88,6 +90,17 @@ func run() -> void:
 			check(campaign.data.stage==index+1 and not level.completed,"Transição para cena %d" % (index+1))
 		await close_world()
 	var manager = CAMPAIGN_SAVE.new()
+	var old_river_save := fixture(4)
+	old_river_save.save_version = 2
+	old_river_save.levels["4"].mechanisms.erase("RochaAlavanca")
+	old_river_save.levels["4"].mechanisms.TroncoRio = true
+	old_river_save.survival = {"lives":3,"nut_total":0,"food_total":0,"pending_return":false,"return_stage":0,"replay":false,"pipo_unlocked":true,"claimed":[]}
+	old_river_save.tutorials = {}
+	old_river_save.context_hints_seen = []
+	old_river_save.collectibles = {"golden_nuts":{}}
+	old_river_save.story = {"events":[],"village":{}}
+	var migrated_river := manager.migrate(old_river_save)
+	check(migrated_river.levels["4"].mechanisms.get("RochaAlavanca",false) and not migrated_river.levels["4"].mechanisms.has("TroncoRio"),"Save anterior converte o tronco ativado na nova rocha com alavanca")
 	var invalid := fixture(14)
 	invalid.levels["14"].checkpoint = true
 	invalid.levels["14"].mechanisms.Roda = false

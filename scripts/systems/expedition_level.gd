@@ -21,6 +21,9 @@ var connections: Dictionary = {}
 var scenery: Node2D
 var safe_spot := Vector2(160,755)
 var hazard_delay := 0.0
+var headwind_clock := 0.0
+var supply_departure_active := false
+var supply_placement_active := false
 const RIVER_TICO_SPEED_SCALE := 0.10
 const RIVER_PIPO_SPEED_SCALE := 0.95
 
@@ -37,6 +40,13 @@ func _ready() -> void:
 	_say(["O rio leva pistas! Espere os troncos e salte entre as margens.","Siga as penas! Tico pode planar nas correntes de vento.","Os castores precisam de ajuda. Pipo aciona os mecanismos!"][biome-2])
 	_message_time = 7
 	_update_layout()
+
+func _process(delta: float) -> void:
+	super._process(delta)
+	# A classe-base recalcula o botão de troca a cada quadro. A sequência de
+	# entrega precisa mantê-lo bloqueado até a carroça sair da tela.
+	if supply_departure_active:
+		switch_button.disabled = true
 
 func _build_gameplay() -> void:
 	if biome==2: _river()
@@ -87,17 +97,23 @@ func _river() -> void:
 		_sign(Vector2(1180,460),"Pipo • Invista na engrenagem")
 		return
 	# A primeira fase é validada antes da produção das demais.
-	for rect in [Rect2(0,760,680,200),Rect2(1140,760,460,200),Rect2(2080,720,460,240),Rect2(2840,760,960,200)]: _platform(rect)
-	water = [Rect2(680,810,460,180),Rect2(1600,810,480,180),Rect2(2540,810,300,180)]
+	for rect in [Rect2(0,760,760,200),Rect2(1140,760,460,200),Rect2(2080,720,460,240),Rect2(2840,760,960,200)]: _platform(rect)
+	# A água começa após a margem estendida; assim as ondas não atravessam o solo.
+	water = [Rect2(760,810,380,180),Rect2(1600,810,480,180),Rect2(2540,810,300,180)]
 	current_zones = [Rect2(1140,650,460,150),Rect2(2080,610,460,150),Rect2(2840,650,520,150)]
-	_mover(Vector2(740,725),Vector2(320,0),180,5)
+	# A primeira plataforma permanece inteiramente sobre o rio: sua altura segue
+	# acessível, mas ela não cria mais um teto baixo sobre a trilha de Pipo.
+	_mover(Vector2(820,725),Vector2(250,0),180,5)
 	_mover(Vector2(1680,725),Vector2(180,0),180,4.8)
 	_mover(Vector2(1950,700),Vector2(110,0),180,5.2)
-	_device("TroncoRio",Vector2(3150,760),"log")
-	_bridge("TroncoRio",Rect2(3180,758,150,30))
-	_gate("TroncoRio",Rect2(3330,360,25,400))
-	_weight_platform("PesoCorrente",Vector2(3400,760))
-	_supply_cargo("CargaRio",Vector2(3320,760),Vector2(3500,760))
+	# Pipo contorna a rocha, empurra-a para a esquerda e a derruba no rio. A
+	# corda presa nela baixa a alavanca e abre o portão antes da cesta.
+	var lever_rock := _river_lever_rock("RochaAlavanca",Vector2(2960,760),Vector2(3290,760))
+	lever_rock.fall_distance = 100.0
+	_gate("RochaAlavanca",Rect2(3290,360,30,400))
+	_weight_platform("PesoCorrente",Vector2(3425,760))
+	var river_cargo := _supply_cargo("CargaRio",Vector2(3480,760),Vector2(3650,760))
+	river_cargo.required_mechanism = &"RochaAlavanca"
 	# A corrente de ar atravessa toda a fase: Tico sente a rajada desde a entrada,
 	# enquanto o peso de Pipo permite manter o avanço.
 	headwind_zones = [Rect2(-120,-260,4040,1220)]
@@ -105,12 +121,12 @@ func _river() -> void:
 	_platform(Rect2(2580,405,330,45))
 	for point in [Vector2(2615,361),Vector2(2685,361),Vector2(2755,361)]: _nut(point)
 	for point in [Vector2(350,715),Vector2(580,715),Vector2(850,650),Vector2(1260,715),Vector2(1520,715),Vector2(1850,620),Vector2(2350,645),Vector2(2970,715),Vector2(3290,715)]: _nut(point)
-	_armored_enemy(Vector2(3070,760),65)
+	_armored_enemy(Vector2(3155,760),45)
 	_markers(Vector2(1410,760),Vector2(3740,760))
 	_sign(Vector2(370,535),"Espere o tronco • Pule")
 	_sign(Vector2(1240,560),"Bandeira • Um passo de cada vez")
 	_sign(Vector2(2170,490),"Vento forte • Pipo alcança a mola")
-	_sign(Vector2(3000,530),"Pipo • Mova o tronco e abra a passagem")
+	_sign(Vector2(2940,505),"Pipo • Empurre a rocha para a esquerda\nA corda acionará a alavanca")
 
 func _mountain() -> void:
 	if section==3:
@@ -299,6 +315,25 @@ func _supply_cargo(id: String, point: Vector2, destination: Vector2) -> Node2D:
 	cargo.delivered.connect(func(_node): _apply_device(id,true))
 	return cargo
 
+func _river_lever_rock(id: String, point: Vector2, lever: Vector2) -> Node2D:
+	var rock = preload("res://scripts/objects/river_lever_rock.gd").new()
+	rock.name = id
+	rock.level = self
+	rock.position = point
+	rock.lever_position = lever
+	var collision := CollisionShape2D.new()
+	collision.name = "Collision"
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(92,72)
+	collision.position = Vector2(0,-36)
+	collision.shape = shape
+	rock.add_child(collision)
+	actors.add_child(rock)
+	mechanisms[id] = rock
+	connections[id] = []
+	rock.activated.connect(func(_node): _apply_device(id,true))
+	return rock
+
 func pipo_is_carrying() -> bool:
 	return is_instance_valid(carried_object) and carried_object.carried
 
@@ -307,12 +342,7 @@ func try_pipo_carry(character: CharacterBody2D) -> bool:
 	if pipo_is_carrying():
 		var cargo := carried_object
 		cargo.interact(character)
-		if cargo.active:
-			_feedback(cargo.destination,"Provisões entregues!",Color("ffe394"))
-			_say("Muito bem, Pipo! A comida seguirá para o vilarejo.")
-			sounds.play_notes([523,659,784],.07)
-		carried_object = null
-		return true
+		if cargo.placing: return true
 	for cargo in cargo_objects:
 		if cargo.active or character.position.distance_to(cargo.position)>105: continue
 		if cargo.interact(character):
@@ -322,10 +352,55 @@ func try_pipo_carry(character: CharacterBody2D) -> bool:
 			return true
 	return false
 
+func _start_supply_placement(cargo: Node2D) -> void:
+	if supply_placement_active or supply_departure_active or cargo.active or not cargo.carried: return
+	supply_placement_active = true
+	supply_departure_active = true
+	squirrel.controls_enabled = false
+	pipo.controls_enabled = false
+	squirrel.velocity = Vector2.ZERO
+	pipo.velocity = Vector2.ZERO
+	pipo.facing = 1.0 if cargo.destination.x>=pipo.position.x else -1.0
+	pipo.state = &"idle"
+	switch_button.disabled = true
+	carried_object = null
+	cargo.placement_finished.connect(_finish_supply_placement,CONNECT_ONE_SHOT)
+	cargo.start_placement()
+	_say("Pipo está colocando as provisões na carroça…")
+
+func _finish_supply_placement(cargo: Node2D) -> void:
+	supply_placement_active = false
+	cargo.activate()
+	_feedback(cargo.destination,"Provisões prontas!",Color("ffe394"))
+	_say("A comida seguirá agora para o vilarejo!")
+	sounds.play_notes([523,659,784],.07)
+	cargo.departure_finished.connect(_finish_supply_departure,CONNECT_ONE_SHOT)
+	cargo.start_departure()
+
 func drop_carried_object() -> void:
 	if not pipo_is_carrying(): return
 	carried_object.drop_at(pipo.position)
 	carried_object = null
+
+func _start_supply_departure(cargo: Node2D) -> void:
+	if supply_departure_active or cargo.departed: return
+	supply_departure_active = true
+	squirrel.controls_enabled = false
+	pipo.controls_enabled = false
+	squirrel.velocity = Vector2.ZERO
+	pipo.velocity = Vector2.ZERO
+	switch_button.disabled = true
+	cargo.departure_finished.connect(_finish_supply_departure,CONNECT_ONE_SHOT)
+	cargo.start_departure()
+
+func _finish_supply_departure(_cargo: Node2D) -> void:
+	supply_departure_active = false
+	squirrel.controls_enabled = tico==squirrel
+	pipo.controls_enabled = tico==pipo
+	switch_button.disabled = false
+	_say("As provisões seguem para o vilarejo. Agora, vá até o portal!")
+	_feedback(tico.position+Vector2(0,-90),"Siga para o portal",Color("bfe69c"))
+	sounds.play_notes([659,784,988],.075)
 
 func _bridge(id: String, rect: Rect2) -> void:
 	var body := _solid("Bridge",rect,Color("a8804b"))
@@ -407,6 +482,7 @@ func _build_forest() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not world_ready: return
+	headwind_clock += delta
 	tico.wind_acceleration = Vector2.ZERO
 	tico.current_acceleration = Vector2.ZERO
 	if get_tree().paused or completed or respawning: return
@@ -416,7 +492,10 @@ func _physics_process(delta: float) -> void:
 			tico.wind_acceleration = Vector2(160,-500)
 	for zone in headwind_zones:
 		if zone.has_point(tico.position):
-			tico.wind_acceleration += Vector2(-4200,0)
+			# Intervalos mais suaves deixam Tico dar passos curtos; a rajada seguinte
+			# cresce e o empurra novamente para trás.
+			var gust := pow(maxf(0.0,sin(headwind_clock*1.8)),3.0)
+			tico.wind_acceleration += Vector2(-lerpf(650.0,4200.0,gust),0)
 			if tico==squirrel and not headwind_hint_shown:
 				headwind_hint_shown = true
 				_say("O vento empurra Tico para trás. Pipo é pesado o bastante para chegar à mola.")
@@ -442,6 +521,11 @@ func _physics_process(delta: float) -> void:
 			tico.reset_at(safe_spot)
 			camera.snap_to_target()
 			_say("Tudo bem! Tente de novo a partir da margem.")
+
+func tico_struggling_against_wind(character: CharacterBody2D) -> bool:
+	if biome!=2 or section!=0 or character!=squirrel or not character.controls_enabled or not character.is_on_floor(): return false
+	if is_zero_approx(Input.get_axis("move_left","move_right")): return false
+	return headwind_zones.any(func(zone: Rect2): return zone.has_point(character.position))
 
 func _update_layout() -> void:
 	super._update_layout()

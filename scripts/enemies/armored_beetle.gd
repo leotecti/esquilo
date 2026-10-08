@@ -96,6 +96,10 @@ func _block_attack(player: Node2D, message: String) -> void:
 func _defeat(player: Node2D = null) -> bool:
 	if defeated: return false
 	defeated = true
+	# Inimigo invisível não pode continuar servindo de piso ou parede.
+	collision_layer = 0
+	collision_mask = 0
+	get_node("Collision").set_deferred("disabled",true)
 	if is_instance_valid(player) and player.has_method("bounce"): player.bounce()
 	stomped.emit(self)
 	hide()
@@ -111,5 +115,8 @@ func reset_enemy() -> void:
 	armor_broken = false
 	armor_flash = 0.0
 	_blocked_cooldown = 0.0
+	collision_layer = 1
+	collision_mask = 1
+	get_node("Collision").set_deferred("disabled",false)
 	show()
 	queue_redraw()

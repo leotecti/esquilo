@@ -346,7 +346,9 @@ func _load_stage(index: int) -> void:
 		life_cache.name = "LifeCache"
 		life_cache.campaign = self
 		life_cache.stage_id = index
-		life_cache.position = Vector2(450,660)
+		# Pipo precisa de folga sob o bloco: nas fases da dupla, a base fica 106 px
+		# acima do chão para o corpo de 72 px passar e ainda acertar o bloco saltando.
+		life_cache.position = Vector2(450,625 if index>=4 else 660)
 		level.actors.add_child(life_cache)
 	level.contextual_help = preload("res://scripts/ui/contextual_help.gd").new()
 	level.contextual_help.level = level

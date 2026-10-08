@@ -61,22 +61,26 @@ func run() -> void:
 	check(level.tico==level.pipo,"2-1 mantém Pipo diante do primeiro besouro blindado")
 	await frames(12)
 	var armored_enemy: Node2D = level.actors.get_children().filter(func(actor): return actor.get("armor_broken")!=null)[0]
-	await place(armored_enemy.position+Vector2(-180,0),12)
+	# A aproximação começa depois da rocha, dentro do corredor entre o mecanismo
+	# e o besouro, para exercitar a investida sem atravessar o novo obstáculo.
+	await place(armored_enemy.position+Vector2(-105,0),12)
 	level.tico.facing = 1
 	key(KEY_E,true)
 	await frames(65)
 	key(KEY_E,false)
 	check(armored_enemy.defeated,"Investida de Pipo derrota o inimigo da fase 2-1")
-	await place(Vector2(3040,760),8)
-	await walk_to(3310)
-	check(level.mechanisms.TroncoRio.active,"2-1: Pipo move o tronco e abre a passagem final")
+	var lever_rock: Node2D = level.mechanisms.RochaAlavanca
+	await place(Vector2(3060,760),8)
+	for i in 95: lever_rock.push_by(level.pipo,-1.0,1.0/60.0)
+	await frames(55)
+	check(lever_rock.active and lever_rock.position.y>800,"2-1: Pipo derruba a rocha no rio e a corda abre a passagem final")
 	await place(level.mechanisms.PesoCorrente.position,35)
 	check(level.mechanisms.PesoCorrente.active,"Pipo aciona a plataforma de peso antes da chegada")
 	var cargo: Node2D = level.mechanisms.CargaRio
 	await place(cargo.position,4)
 	level.try_pipo_carry(level.pipo)
 	await place(cargo.destination,4)
-	level.try_pipo_carry(level.pipo)
+	await frames(65)
 	check(cargo.active,"Pipo entrega as provisões antes da chegada")
 	await place(Vector2(3450,760),12)
 	await walk_to(3740)

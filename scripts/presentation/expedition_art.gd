@@ -39,15 +39,26 @@ func _draw() -> void:
 			draw_line(Vector2(x,y),Vector2(x+35,y-12),Color("e9e9d685"),3)
 	# Rajadas horizontais deixam visível a barreira que Tico não vence pelo peso baixo.
 	for zone in level.headwind_zones:
-		draw_rect(zone,Color(0.78,0.90,0.88,.035))
-		var gust_count := mini(36,maxi(6,ceili(zone.size.x/220.0)))
+		draw_rect(zone,Color(0.65,0.86,0.89,.025))
+		var gust_count := mini(32,maxi(8,ceili(zone.size.x/190.0)))
 		for i in gust_count:
-			var y: float = zone.position.y+80+(i%7)*92
-			var lane: float = floorf(i/7.0)*220.0
-			var x: float = zone.end.x-fmod(clock*105+i*71,zone.size.x+80)-lane
-			if x<zone.position.x-60: x += zone.size.x+80
-			draw_line(Vector2(x,y),Vector2(x-54,y+sin(clock*3+i)*4),Color("e7f5d9a8"),4,true)
-			draw_colored_polygon(PackedVector2Array([Vector2(x-54,y),Vector2(x-42,y-7),Vector2(x-42,y+7)]),Color("e7f5d9a8"))
+			var y: float = zone.position.y+105+(i%7)*88+sin(clock*2.2+i)*9
+			var speed: float = 125.0+(i%4)*22.0
+			var x: float = zone.end.x-fmod(clock*speed+i*193.0,zone.size.x+180.0)
+			var length: float = 68.0+(i%3)*24.0
+			var points := PackedVector2Array([Vector2(x,y),Vector2(x-length*.52,y-5+sin(clock*3+i)*5),Vector2(x-length,y+2)])
+			draw_polyline(points,Color(0.91,0.98,0.91,.42),2.5+(i%2),true)
+			draw_line(Vector2(x-length,y+2),Vector2(x-length+15,y-5),Color(0.91,0.98,0.91,.28),2,true)
+		# Folhas grandes e reconhecíveis tornam a direção da rajada explícita.
+		for i in 18:
+			var leaf_x: float = zone.end.x-fmod(clock*(92.0+i*7.0)+i*367.0,zone.size.x+120.0)
+			var leaf_y: float = zone.position.y+120+(i%7)*82+sin(clock*4+i)*18
+			var leaf_color := Color("e0c75dcc") if i%3==0 else (Color("a9c65dcc") if i%2==0 else Color("799f4dcc"))
+			var turn := clock*(3.0+i%4*.45)+i
+			var leaf_transform := Transform2D(turn,Vector2(leaf_x,leaf_y))
+			var leaf := PackedVector2Array([leaf_transform*Vector2(-13,0),leaf_transform*Vector2(-2,-7),leaf_transform*Vector2(13,0),leaf_transform*Vector2(-2,7)])
+			draw_colored_polygon(leaf,leaf_color)
+			draw_line(leaf_transform*Vector2(-16,0),leaf_transform*Vector2(13,0),Color("5f713fbb"),2,true)
 	for rect in level.cave_roofs:
 		draw_rect(rect,Color("4b5368"))
 		for x in range(int(rect.position.x)+15,int(rect.end.x),65):
