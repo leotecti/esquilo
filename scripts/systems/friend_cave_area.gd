@@ -10,6 +10,7 @@ const PORTAL_STYLE_VERSION := 2
 const CAVE_BACKGROUND = preload("res://assets/environment/cold_cave_background.png")
 const BACKGROUND_STYLE_VERSION := 2
 const TERRAIN_STYLE_VERSION := 1
+const PERFORMANCE_STYLE_VERSION := 2
 const CAVE_PLATFORMS := [Rect2(65000,760,5800,220),Rect2(65480,690,360,70),
 	Rect2(65840,620,420,140),Rect2(66480,680,300,80),Rect2(66920,600,500,160),
 	Rect2(67620,680,360,80),Rect2(68120,590,520,170),Rect2(68820,670,400,90),
@@ -93,9 +94,14 @@ func _add_hint(point: Vector2, message: String, entry: bool) -> void:
 
 func _physics_process(delta: float) -> void:
 	_visual_elapsed += delta
-	if (active or level.tico.position.distance_to(ENTRY)<850.0) and _visual_elapsed>=1.0/30.0:
+	# A pintura completa da gruta é estática. Somente o portal da trilha pulsa;
+	# goteiras, inimigos e personagens mantêm suas animações em nós próprios.
+	if not active and level.tico.position.distance_to(ENTRY)<850.0 and _visual_elapsed>=1.0/20.0:
 		_visual_elapsed = 0.0
 		queue_redraw()
+	if not active and not transitioning and level.tico.position.distance_to(ENTRY)>=900.0:
+		for hint in hints: hint.hide()
+		return
 	for hint in hints:
 		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<(180 if hint.get_meta("entry_portal") else 110)
 	if transitioning or level.completed or level.respawning: return
@@ -114,7 +120,7 @@ func travel(entering: bool) -> void:
 	for action in ["move_left","move_right","move_down","jump","action","switch_character"]: Input.action_release(action)
 	var tween := create_tween()
 	tween.tween_property(veil,"modulate:a",1.0,.18)
-	tween.tween_callback(func(): active=entering; apply_camera(); level.sounds.set_environment("night" if entering else "forest"); level.tico.reset_at(START if entering else RETURN); level.camera.snap_to_target(); level._save_progress(); level._say("Gruta Fria • observe o brilho antes dos pingos" if entering else "De volta à trilha, perto da bandeira"))
+	tween.tween_callback(func(): active=entering; queue_redraw(); apply_camera(); level.sounds.set_environment("night" if entering else "forest"); level.tico.reset_at(START if entering else RETURN); level.camera.snap_to_target(); level._save_progress(); level._say("Gruta Fria • observe o brilho antes dos pingos" if entering else "De volta à trilha, perto da bandeira"))
 	tween.tween_property(veil,"modulate:a",0.0,.18)
 	tween.tween_callback(func(): level.tico.controls_enabled=true; transitioning=false)
 
@@ -131,9 +137,15 @@ func snapshot() -> Dictionary: return {"active":active,"checkpoint":false}
 func restore(state: Dictionary) -> void:
 	active = state.get("active",false) and not level.completed
 	checkpoint = false
+	queue_redraw()
 	restore_player()
 
 func _draw() -> void:
+	# Portal e caverna nunca são enviados juntos ao renderizador. Isso mantém o
+	# retângulo visual próximo da câmera em vez de atravessar 45 mil unidades.
+	if active:
+		_draw_active_cave()
+		return
 	# A entrada usa rochas sobrepostas e profundidade, com leitura clara de túnel.
 	var pulse := sin(Time.get_ticks_msec()*.003)
 	draw_colored_polygon(PackedVector2Array([Vector2(19230,760),Vector2(19280,520),Vector2(19380,405),Vector2(19500,365),Vector2(19620,405),Vector2(19720,520),Vector2(19770,760)]),Color("56544e"))
@@ -159,6 +171,8 @@ func _draw() -> void:
 		draw_set_transform(Vector2.ZERO)
 	for rock in [Rect2(19190,690,130,70),Rect2(19260,635,105,125),Rect2(19635,635,105,125),Rect2(19690,695,125,65)]:
 		draw_colored_polygon(PackedVector2Array([rock.position+Vector2(0,rock.size.y),rock.position+Vector2(15,22),rock.position+Vector2(rock.size.x*.55,0),rock.position+Vector2(rock.size.x,28),rock.end]),Color("777166"))
+
+func _draw_active_cave() -> void:
 	# Pintura em painéis preserva a leitura lateral e cobre toda a Gruta Fria.
 	for panel in 3:
 		draw_texture_rect(CAVE_BACKGROUND,Rect2(LEFT_EDGE+panel*1934,-5,1934,765),false,Color("b9d3df"))

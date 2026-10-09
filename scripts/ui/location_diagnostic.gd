@@ -16,6 +16,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_ui()
 	set_process_input(true)
+	set_process(false)
 	_update_layout()
 
 func _build_ui() -> void:
@@ -84,6 +85,7 @@ func _register_title_tap(now_msec: int) -> void:
 func toggle(force: Variant = null) -> void:
 	visible_mode = not visible_mode if force == null else bool(force)
 	panel.visible = visible_mode
+	set_process(visible_mode)
 	if visible_mode:
 		refresh()
 		_update_layout()

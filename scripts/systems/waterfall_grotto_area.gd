@@ -11,6 +11,7 @@ const PORTAL_STYLE_VERSION := 1
 const BACKGROUND_STYLE_VERSION := 1
 const TERRAIN_STYLE_VERSION := 2
 const RIVER_CAVE_STYLE_VERSION := 3
+const PERFORMANCE_STYLE_VERSION := 2
 const GROTTO_BACKGROUND = preload("res://assets/environment/waterfall_grotto_background.png")
 const RIVER_CAVE_BACKGROUND = preload("res://assets/environment/river_cave_background.png")
 const RIVER_ENTRY := Vector2(18418,720)
@@ -146,6 +147,9 @@ func _physics_process(delta: float) -> void:
 	# O cenário e o terreno são estáticos: não redesenhá-los a cada quadro evita
 	# reconstruir milhares de pixels e comandos enquanto o jogador explora a gruta.
 	var _unused_delta := delta
+	if not active and not transitioning and level.tico.position.distance_to(entry_point())>=900.0:
+		for hint in hints: hint.hide()
+		return
 	for hint in hints:
 		hint.visible = not transitioning and not level.completed and not level.respawning and level.tico.position.distance_to(hint.get_meta("portal_point"))<(180 if hint.get_meta("entry_portal") else 115)
 	if transitioning or level.completed or level.respawning: return
@@ -166,6 +170,7 @@ func travel(entering: bool) -> void:
 	tween.tween_property(veil,"modulate:a",1.0,.18)
 	tween.tween_callback(func():
 		active=entering
+		queue_redraw()
 		_apply_river_cave_movement()
 		apply_camera()
 		level.sounds.set_environment("night" if entering else "forest")
@@ -198,9 +203,15 @@ func _apply_river_cave_movement() -> void:
 func restore(state: Dictionary) -> void:
 	active = state.get("active",false) and not level.completed
 	checkpoint = false
+	queue_redraw()
 	restore_player()
 
 func _draw() -> void:
+	# A entrada da trilha e o refúgio ficam muito distantes. Desenhar somente a
+	# região ativa evita uma camada com dezenas de milhares de unidades de largura.
+	if active:
+		_draw_secondary_area()
+		return
 	if river_cave:
 		_draw_river_cave_entrance()
 	else:
@@ -213,6 +224,8 @@ func _draw() -> void:
 			draw_line(Vector2(x+8,400),Vector2(x+4,700),Color(0.80,1.0,1.0,.38),3,true)
 		for i in 7:
 			draw_circle(Vector2(18240+i*54,715+(i%2)*7),42,Color(0.72,0.95,0.91,.10))
+
+func _draw_secondary_area() -> void:
 	# A ilustração cobre toda a altura que a câmera pode revelar. Na caverna do
 	# rio, painéis espelhados unem a mesma borda da pintura e evitam cortes.
 	var area_background: Texture2D = RIVER_CAVE_BACKGROUND if river_cave else GROTTO_BACKGROUND

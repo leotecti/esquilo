@@ -23,6 +23,7 @@ func run() -> void:
 	level.tico.reset_at(Vector2(1000,760))
 	drip._physics_process(1.0)
 	check(is_equal_approx(drip.clock,frozen_clock),"Goteiras distantes ficam suspensas fora da caverna")
+	check(level.optional_area.PERFORMANCE_STYLE_VERSION==2 and level.optional_area.has_method("_draw_active_cave"),"1-3 separa portal e cenário secundário e mantém a pintura da gruta estática")
 	await close_world()
 	DirAccess.remove_absolute(E03_SLOT)
 	print("RESULTADO E25: %d verificacoes, %d falhas" % [checks,failures])
