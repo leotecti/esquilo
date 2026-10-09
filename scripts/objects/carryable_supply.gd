@@ -118,7 +118,9 @@ func _process(delta: float) -> void:
 	var target := destination-position
 	delivery_hint.position = target+Vector2(-115,-142)
 	delivery_hint.visible = carried and carrier.position.distance_to(destination)<330
-	queue_redraw()
+	# A carroça e a cesta estáticas permanecem no display list do CanvasItem.
+	# Só reconstruímos o desenho durante movimento ou feedback de proximidade.
+	if carried or placing or departing or hint.visible or delivery_hint.visible: queue_redraw()
 
 func interact(character: CharacterBody2D) -> bool:
 	if active or not character.is_in_group("pipo") or not _passage_is_open(): return false

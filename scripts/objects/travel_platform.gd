@@ -24,7 +24,8 @@ func _physics_process(delta: float) -> void:
 	if not enabled: return
 	clock += delta
 	position = origin + travel * (0.5-0.5*cos(clock*TAU/duration))
-	queue_redraw()
+	# A aparência não muda durante o percurso. O CanvasItem acompanha a posição
+	# sem reconstruir madeira, parafusos e cordas a cada quadro.
 
 func _draw() -> void:
 	var box := StyleBoxFlat.new()

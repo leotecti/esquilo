@@ -497,6 +497,7 @@ func _physics_process(delta: float) -> void:
 		for rect in terrain:
 			if tico.position.x>rect.position.x+35 and tico.position.x<rect.end.x-35 and absf(tico.position.y-rect.position.y)<4:
 				safe_spot = tico.position+Vector2(0,-4)
+				break
 	var in_hazard: bool = tico.position.y>930
 	for rect in water:
 		if rect.has_point(tico.position): in_hazard = true

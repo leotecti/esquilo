@@ -171,6 +171,7 @@ func travel(entering: bool) -> void:
 	tween.tween_callback(func():
 		active=entering
 		queue_redraw()
+		_set_main_scenery_enabled(not entering)
 		_apply_river_cave_movement()
 		apply_camera()
 		level.sounds.set_environment("night" if entering else "forest")
@@ -185,6 +186,7 @@ func apply_camera() -> void:
 	level.camera.limit_left = LEFT_EDGE if active else 0
 	level.camera.limit_right = RIGHT_EDGE if active else level.main_right
 func restore_player() -> void:
+	_set_main_scenery_enabled(not active)
 	_apply_river_cave_movement()
 	apply_camera()
 	if active: level.tico.reset_at(START)
@@ -200,6 +202,14 @@ func _apply_river_cave_movement() -> void:
 	level.squirrel.move_speed = 300.0 if active else 300.0*level.RIVER_TICO_SPEED_SCALE
 	level.pipo.movement_speed_multiplier = 1.0 if active else level.RIVER_PIPO_SPEED_SCALE
 	level.pipo.move_speed = 220.0*level.pipo.movement_speed_multiplier
+
+func _set_main_scenery_enabled(enabled: bool) -> void:
+	# A expedição possui água e vento animados próprios. Eles ficam totalmente
+	# suspensos enquanto a câmera está na caverna, onde não podem ser vistos.
+	var main_scenery: Node = level.get("scenery")
+	if not is_instance_valid(main_scenery): return
+	main_scenery.visible = enabled
+	main_scenery.set_process(enabled)
 func restore(state: Dictionary) -> void:
 	active = state.get("active",false) and not level.completed
 	checkpoint = false
