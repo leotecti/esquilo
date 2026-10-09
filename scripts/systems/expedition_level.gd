@@ -36,6 +36,11 @@ func _ready() -> void:
 		squirrel.move_speed *= RIVER_TICO_SPEED_SCALE
 		pipo.movement_speed_multiplier = RIVER_PIPO_SPEED_SCALE
 		pipo.move_speed = 220.0*RIVER_PIPO_SPEED_SCALE
+	elif biome==2 and section==2:
+		# A ponte sob chuva usa baixa aderência. O peso de Pipo dá um pouco mais
+		# de controle, enquanto Tico desliza mais ao frear e mudar de direção.
+		squirrel.surface_grip = 0.52
+		pipo.surface_grip = 0.72
 	next_button.text = "Próxima fase" if section<2 else ("Encontrar o Guardião" if section==2 else ("Seguir para a Montanha" if biome==2 else "Seguir para a Vila" if biome==3 else "Jogar novamente"))
 	_say(["O rio leva pistas! Espere os troncos e salte entre as margens.","Siga as penas! Tico pode planar nas correntes de vento.","Os castores precisam de ajuda. Pipo aciona os mecanismos!"][biome-2])
 	_message_time = 7
@@ -101,7 +106,7 @@ func _river() -> void:
 		for point in [Vector2(350,715),Vector2(580,715),Vector2(1260,655),Vector2(1620,655),Vector2(1920,655),Vector2(2150,655),Vector2(2520,655),Vector2(3380,715)]: _nut(point)
 		_armored_enemy(Vector2(2580,700),65)
 		_markers(Vector2(1660,700),Vector2(3580,760))
-		_sign(Vector2(370,540),"A grande ponte • Espere os troncos")
+		_sign(Vector2(370,540),"Chuva forte • O piso molhado é escorregadio")
 		_sign(Vector2(1180,460),"Pipo • Invista na engrenagem")
 		return
 	# A primeira fase é validada antes da produção das demais.
@@ -454,6 +459,8 @@ func _build_forest() -> void:
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if biome==2 and section==2:
+		background.modulate = Color("a5bdc8")
 	$Background.add_child(background)
 	scenery = preload("res://scripts/presentation/expedition_art.gd").new()
 	scenery.level = self

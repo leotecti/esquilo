@@ -24,6 +24,9 @@ var _hurt_left: float = 0.0
 @export var acceleration: float = 2200.0
 @export var deceleration: float = 2600.0
 @export var air_acceleration: float = 1400.0
+## Aderência horizontal do piso. Valores menores preservam o embalo em
+## superfícies molhadas ou congeladas sem alterar o controle no ar.
+@export_range(0.1, 1.0) var surface_grip: float = 1.0
 @export_group("Salto")
 @export var jump_velocity: float = BALANCE.TICO_JUMP_VELOCITY
 @export_range(0.1, 1.0) var jump_cut: float = 0.48
@@ -169,6 +172,8 @@ func _move_character(delta: float) -> void:
 	var rate := acceleration if grounded else air_acceleration
 	if is_zero_approx(direction):
 		rate = deceleration if grounded else air_acceleration
+	if grounded:
+		rate *= surface_grip
 	if _hurt_left <= 0.0:
 		velocity.x = move_toward(velocity.x, direction * move_speed, rate * delta)
 	if not is_zero_approx(direction):
