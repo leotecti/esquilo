@@ -10,7 +10,7 @@ func run() -> void:
 	check(level.optional_area.entry_point()==Vector2(18418,720) and level.optional_area.RETURN==Vector2(24600,760),"Caverna aparece em T06 e devolve o jogador adiante")
 	var activity: Dictionary = level.activity_manager.details()
 	check(activity.tracked_moving_objects>=21 and activity.active_moving_objects<activity.tracked_moving_objects/2,"Plataformas e carga distantes ficam suspensas fora da câmera")
-	check(level.scenery.PERFORMANCE_STYLE_VERSION==2 and is_equal_approx(level.scenery.RIVER_REDRAW_INTERVAL,1.0/24.0),"Água e vento usam atualização visual limitada na fase 2-1")
+	check(level.scenery.PERFORMANCE_STYLE_VERSION==3 and is_equal_approx(level.scenery.RIVER_REDRAW_INTERVAL,1.0/20.0),"Água e vento usam atualização visual limitada na fase 2-1")
 	var route_enemies: Array = level.actors.get_children().filter(func(actor): return actor.has_meta("river_expansion_enemy"))
 	var optional_enemies: Array = level.actors.get_children().filter(func(actor): return actor.has_meta("waterfall_grotto_enemy"))
 	check(route_enemies.size()>=13 and optional_enemies.size()>=6,"Trilha e refúgio possuem encontros variados")

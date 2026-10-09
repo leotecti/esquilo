@@ -5,7 +5,7 @@ func run() -> void:
 	root.content_scale_size = Vector2i(1280,720)
 	await open_stage(2,"3")
 	check(level.background.modulate==Color("a5bdc8"),"Fundo da fase 2-3 recebe tonalidade fria e chuvosa")
-	check(level.scenery.RAINY_BRIDGE_STYLE_VERSION==1 and level.scenery.RAIN_DROP_COUNT==44,"Chuva usa camada visual limitada para celulares")
+	check(level.scenery.RAINY_BRIDGE_STYLE_VERSION==1 and level.scenery.RAIN_DROP_COUNT==30 and is_equal_approx(level.scenery.RAIN_REDRAW_INTERVAL,1.0/18.0),"Chuva usa camada visual limitada para celulares")
 	check(is_equal_approx(level.squirrel.surface_grip,0.52),"Tico desliza no piso molhado")
 	check(is_equal_approx(level.pipo.surface_grip,0.72),"Peso de Pipo oferece mais aderência no piso molhado")
 	var rain_hint: Array = level.actors.get_children().filter(func(actor): return actor is Label and "escorregadio" in actor.text.to_lower())

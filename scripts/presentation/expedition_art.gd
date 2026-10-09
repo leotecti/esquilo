@@ -3,18 +3,19 @@ const GROUND = preload("res://assets/slice/ground.svg")
 var level: Node2D
 var clock := 0.0
 var _redraw_elapsed := 0.0
-const RIVER_REDRAW_INTERVAL := 1.0/24.0
+const RIVER_REDRAW_INTERVAL := 1.0/20.0
+const RAIN_REDRAW_INTERVAL := 1.0/18.0
 const DEFAULT_REDRAW_INTERVAL := 1.0/30.0
-const PERFORMANCE_STYLE_VERSION := 2
+const PERFORMANCE_STYLE_VERSION := 3
 const RAINY_BRIDGE_STYLE_VERSION := 1
-const RAIN_DROP_COUNT := 44
+const RAIN_DROP_COUNT := 30
 
 func _ready() -> void: z_index = -1
 
 func _process(delta: float) -> void:
 	clock += delta
 	_redraw_elapsed += delta
-	var interval := RIVER_REDRAW_INTERVAL if level.biome==2 and level.section==0 else DEFAULT_REDRAW_INTERVAL
+	var interval := (RAIN_REDRAW_INTERVAL if level.section==2 else RIVER_REDRAW_INTERVAL) if level.biome==2 else DEFAULT_REDRAW_INTERVAL
 	if _redraw_elapsed<interval: return
 	_redraw_elapsed = fmod(_redraw_elapsed,interval)
 	queue_redraw()
