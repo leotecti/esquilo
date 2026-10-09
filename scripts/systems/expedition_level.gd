@@ -52,16 +52,17 @@ func _build_gameplay() -> void:
 	if biome==2: _river()
 	elif biome==3: _mountain()
 	else: _village()
-	if biome==2 and section==0:
+	if biome==2 and section in [0,1]:
 		# 2-1 possui uma exploração própria atrás da cachoeira. A campanha
 		# expedicionária não cria automaticamente as áreas do Mundo 1.
-		optional_area = preload("res://scripts/systems/waterfall_grotto_area.gd").new()
+		optional_area = (preload("res://scripts/systems/waterfall_grotto_area.gd") if section==0 else preload("res://scripts/systems/root_tunnel_area.gd")).new()
 		optional_area.level = self
 		optional_area.z_index = -2
 		add_child(optional_area)
 		optional_area.build()
-		for actor in actors.get_children():
-			if actor.is_in_group("enemies"): actor.set_meta("pipo_one_hit",true)
+		if section==0:
+			for actor in actors.get_children():
+				if actor.is_in_group("enemies"): actor.set_meta("pipo_one_hit",true)
 	for actor in actors.get_children():
 		if actor.has_method("reset_item") or actor.has_method("reset_block"):
 			actor.set_meta("save_id","%d:%d" % [actor.position.x,actor.position.y])
@@ -76,15 +77,15 @@ func _river() -> void:
 		current_zones = [Rect2(1450,650,720,150),Rect2(2580,650,520,150)]
 		_device("Tronco",Vector2(700,760),"log")
 		_weight_platform("PesoMargem",Vector2(1760,760))
-		_supply_cargo("CargaMargem",Vector2(1560,760),Vector2(2050,760))
 		_bridge("Tronco",Rect2(900,758,580,30))
 		_gate("Tronco",Rect2(1430,310,25,450))
 		_mover(Vector2(2250,720),Vector2(250,0),180,5)
 		for point in [Vector2(350,715),Vector2(550,715),Vector2(1050,712),Vector2(1260,712),Vector2(1620,715),Vector2(2020,715),Vector2(2360,655),Vector2(2710,715),Vector2(3400,715)]: _nut(point)
 		_armored_enemy(Vector2(2940,760),70)
 		_markers(Vector2(1830,760),Vector2(3570,760))
-		_sign(Vector2(390,540),"Pipo • Empurre o tronco até a água")
+		_sign(Vector2(390,540),"Pipo • Empurre a pedra até a água")
 		_sign(Vector2(1620,550),"Tico • Siga sobre os troncos")
+		preload("res://scripts/systems/river_rafts_layout.gd").build(self)
 		return
 	if section==2:
 		for rect in [Rect2(0,760,720,200),Rect2(1150,700,650,260),Rect2(2300,700,460,260),Rect2(3180,760,620,200)]: _platform(rect)

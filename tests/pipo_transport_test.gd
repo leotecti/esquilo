@@ -58,7 +58,7 @@ func run() -> void:
 	check(level.completed,"Portal permite concluir a fase depois da entrega na carroça")
 	await close_level()
 	await open_stage(2,"2")
-	check(level.mechanisms.has("CargaMargem"),"2-2 possui transporte de provisões")
+	check(not level.mechanisms.has("CargaMargem"),"2-2 não reutiliza a animação de carroça e cesta")
 	await close_level()
 	await open_stage(2,"3")
 	check(level.mechanisms.has("CargaPonte"),"2-3 possui transporte de provisões")
