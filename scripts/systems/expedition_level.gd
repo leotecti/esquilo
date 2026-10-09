@@ -57,10 +57,15 @@ func _build_gameplay() -> void:
 	if biome==2: _river()
 	elif biome==3: _mountain()
 	else: _village()
-	if biome==2 and section in [0,1]:
+	if biome==2 and section in [0,1,2]:
 		# 2-1 possui uma exploração própria atrás da cachoeira. A campanha
 		# expedicionária não cria automaticamente as áreas do Mundo 1.
-		optional_area = (preload("res://scripts/systems/waterfall_grotto_area.gd") if section==0 else preload("res://scripts/systems/root_tunnel_area.gd")).new()
+		if section==0:
+			optional_area = preload("res://scripts/systems/waterfall_grotto_area.gd").new()
+		elif section==1:
+			optional_area = preload("res://scripts/systems/root_tunnel_area.gd").new()
+		else:
+			optional_area = preload("res://scripts/systems/storm_drain_area.gd").new()
 		optional_area.level = self
 		optional_area.z_index = -2
 		add_child(optional_area)
@@ -108,6 +113,7 @@ func _river() -> void:
 		_markers(Vector2(1660,700),Vector2(3580,760))
 		_sign(Vector2(370,540),"Chuva forte • O piso molhado é escorregadio")
 		_sign(Vector2(1180,460),"Pipo • Invista na engrenagem")
+		preload("res://scripts/systems/rainy_bridge_layout.gd").build(self)
 		return
 	# A primeira fase é validada antes da produção das demais.
 	for rect in [Rect2(0,760,760,200),Rect2(1140,760,460,200),Rect2(2080,720,460,240),Rect2(2840,760,960,200)]: _platform(rect)

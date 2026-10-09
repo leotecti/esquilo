@@ -113,6 +113,8 @@ func area_name() -> String:
 	if is_instance_valid(level.get("optional_area")) and level.optional_area.active:
 		if level.get("biome")!=null and int(level.biome)==2 and int(level.section)==1:
 			return "Túnel das Raízes"
+		if level.get("biome")!=null and int(level.biome)==2 and int(level.section)==2:
+			return "Galeria da Tempestade"
 		match int(level.get("world_stage")):
 			0: return "Copa dos Segredos"
 			1: return "Galeria das Pedras"

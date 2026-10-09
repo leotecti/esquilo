@@ -67,7 +67,10 @@ func run() -> void:
 	await select_tico()
 	await glide_to(2690)
 	await glide_to(3310)
-	await finish_at(3590)
+	# A expansão integral é coberta por expansao_fase_2_3_test.gd; esta suíte
+	# mantém o foco nos mecanismos obrigatórios do início da fase.
+	await place(Vector2(37680,760),8)
+	await finish_at(37740)
 
 	await open_stage(3,"2")
 	await walk_to(1330)

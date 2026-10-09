@@ -53,6 +53,7 @@ func run() -> void:
 	check(cargo.departure_offset>0 and cargo.cart_frame in range(4),"Burrinho caminha e leva a carroça em direção ao vilarejo")
 	await frames(150)
 	check(cargo.departed and not level.supply_departure_active and level.pipo.controls_enabled and not level.switch_button.disabled,"Controle retorna ao jogador depois que a carroça sai")
+	check(not cargo.visible and not cargo.is_processing(),"Carroça deixa a fase e não reaparece adiante")
 	check(not cargo.should_draw_waiting_basket(),"Cesta permanece fora da fase depois de seguir para o vilarejo")
 	level._on_exit(level.exit_marker)
 	check(level.completed,"Portal permite concluir a fase depois da entrega na carroça")

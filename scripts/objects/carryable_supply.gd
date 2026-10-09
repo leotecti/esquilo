@@ -86,6 +86,10 @@ func _process(delta: float) -> void:
 		if travel_progress>=1.0:
 			departing = false
 			departed = true
+			# A carroça encerrou sua participação na fase. Removê-la também do
+			# processamento impede que reapareça adiante em fases longas.
+			hide()
+			set_process(false)
 			departure_finished.emit(self)
 	if carried and is_instance_valid(carrier):
 		pickup_progress = minf(1.0,pickup_progress+delta/0.34)
