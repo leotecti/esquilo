@@ -3,6 +3,7 @@ const ATLAS = preload("res://scripts/presentation/atlas_library.gd")
 const CHROMA = preload("res://scripts/presentation/chroma_key.gdshader")
 const TAIL_SPIN = preload("res://assets/slice/tico_tail_spin.png")
 const PIPO_CARRY = preload("res://assets/characters/pipo/carry_sheet.png")
+const PIPO_RUN = preload("res://assets/characters/pipo/run_sheet_v2.png")
 const TICO_WIND_STRUGGLE = preload("res://assets/characters/tico/wind_struggle_sheet.png")
 const TAIL_SPIN_FRAME_COUNT := 6
 # Cada pose ocupa uma célula de 512 px com margem transparente lateral. Isso
@@ -38,6 +39,7 @@ var run_frame := 0
 var _run_distance := 0.0
 var _tail_frames: Array[Texture2D] = []
 var _carry_frames: Array[Texture2D] = []
+var _pipo_run_frames: Array[Texture2D] = []
 var _wind_frames: Array[Texture2D] = []
 var tail_spin_frame := 0
 var _wind_step_time := 0.0
@@ -62,6 +64,15 @@ func _ready() -> void:
 		frame.region = Rect2(frame_width*index,PIPO_CARRY_CROP_Y,frame_width,PIPO_CARRY_CROP_HEIGHT)
 		frame.filter_clip = true
 		_carry_frames.append(frame)
+	for index in 4:
+		var frame := AtlasTexture.new()
+		frame.atlas = PIPO_RUN
+		var frame_width := PIPO_RUN.get_width()/4.0
+		# Recorte comum mantém o chapéu e os pés na mesma escala aprovada das
+		# outras poses, sem deixar a margem transparente encolher Pipo na corrida.
+		frame.region = Rect2(frame_width*index,48,frame_width,278)
+		frame.filter_clip = true
+		_pipo_run_frames.append(frame)
 	for index in 4:
 		var frame := AtlasTexture.new()
 		frame.atlas = TICO_WIND_STRUGGLE
@@ -180,7 +191,7 @@ func _draw() -> void:
 			tail_spin_frame = 4 if recovery<0.35 else 5
 		texture = _tail_frames[tail_spin_frame]
 	if pose in ["run","wind_struggle"]:
-		texture = ATLAS.frame("run",(4 if pig else 0)+run_frame)
+		texture = _pipo_run_frames[run_frame] if pig else ATLAS.frame("run",run_frame)
 	if pose == "wind_struggle": texture = _wind_frames[run_frame]
 	if pose == "carry": texture = _carry_frames[run_frame if absf(character.velocity.x)>20 else 0]
 	if pose in ["push", "push_attempt", "delivery_place"]:
