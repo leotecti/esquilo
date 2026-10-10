@@ -12,6 +12,8 @@ var pause_overlay: Control
 var pause_panel: PanelContainer
 var music_button: Button
 var effects_button: Button
+var controller_settings: CanvasLayer
+var controller_settings_button: Button
 var portrait: TextureRect
 var hud_panel: Panel
 var background: TextureRect
@@ -183,9 +185,23 @@ func _build_pause() -> void:
 	effects_button = _menu_button("Efeitos: ligados",row)
 	music_button.pressed.connect(toggle_music)
 	effects_button.pressed.connect(toggle_effects)
+	controller_settings_button = _menu_button("Configurar controle",column)
+	controller_settings_button.pressed.connect(_open_controller_settings)
 	var again := _menu_button("Recomeçar",column)
 	again.pressed.connect(restart)
+	controller_settings = preload("res://scripts/ui/controller_settings.gd").new()
+	controller_settings.level = self
+	add_child(controller_settings)
+	controller_settings.closed.connect(_close_controller_settings)
 	pause_overlay.hide()
+
+func _open_controller_settings() -> void:
+	pause_overlay.hide()
+	controller_settings.open()
+
+func _close_controller_settings() -> void:
+	pause_overlay.show()
+	controller_settings_button.grab_focus()
 
 func _menu_button(text: String, parent: Node) -> Button:
 	var button := Button.new()
@@ -233,7 +249,7 @@ func _update_layout() -> void:
 	portrait.texture = ATLAS.frame("pipo" if tico == pipo else "tico",0)
 	$Interface/HUD/TopBar/Title.text = "Bosque das Folhas\n" + ("Pipo • Força" if tico == pipo else "Tico • Agilidade")
 	$Interface/HUD/TopBar/Title.add_theme_font_size_override("font_size",20)
-	pause_panel.size = Vector2(600,390)
+	pause_panel.size = Vector2(600,500)
 	pause_panel.position = (size-pause_panel.size)/2
 	background.size = size + Vector2(240,100)
 	background.position = Vector2(-120,-30)
